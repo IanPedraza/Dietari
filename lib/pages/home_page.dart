@@ -1,3 +1,4 @@
+import 'package:dietari/components/AppFloatingActionButton.dart';
 import 'package:dietari/utils/icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,6 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
-        actions: [IconButton(onPressed: () {}, icon: getIcon(AppIcons.Add))],
       ),
       body: Center(
         child: Column(
@@ -27,6 +27,10 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
+      ),
+      floatingActionButton: AppFloatingActionButton(
+        onPressed: () {},
+        child: getIcon(AppIcons.Add),
       ),
     );
   }
