@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "154834735951",
+    "project_id": "dietari-d663e",
+    "storage_bucket": "dietari-d663e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:154834735951:android:9507264f0d7ab85e196b3a",
+        "android_client_info": {
+          "package_name": "com.dietari.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "154834735951-e42lj6krbknf5td0tp3k8omasg14hti9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5Ua40iAQlGfPqeRoAGwox9ZrXxWz9Pjc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "154834735951-e42lj6krbknf5td0tp3k8omasg14hti9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "154834735951-7ra9dr11usvmaamrpbocsc565hhqqppf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.dietari.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

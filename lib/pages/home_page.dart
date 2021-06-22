@@ -1,7 +1,8 @@
-import 'package:dietari/components/AppFloatingActionButton.dart';
-import 'package:dietari/utils/icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'package:dietari/components/AppFloatingActionButton.dart';
+import 'package:dietari/utils/icons.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key, required this.title}) : super(key: key);

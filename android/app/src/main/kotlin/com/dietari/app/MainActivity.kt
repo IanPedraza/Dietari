@@ -1,4 +1,4 @@
-package com.example.dietari
+package com.dietari.app
 
 import io.flutter.embedding.android.FlutterActivity
 
