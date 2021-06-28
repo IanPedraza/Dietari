@@ -20,8 +20,11 @@ class UserFirebaseDataSouce extends UserDataSource {
   @override
   Future<String?> addUser(User user) {
     final reference = _database.collection(USERS_COLLECTION);
-    return reference.add(user.toMap()).then((value) {
-      return value.id;
+    final userId = reference.doc().id;
+    user.id = userId;
+
+    return reference.doc(userId).set(user.toMap()).then((value) {
+      return userId;
     });
   }
 }
