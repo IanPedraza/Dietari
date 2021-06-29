@@ -6,7 +6,7 @@ class AddUserUseCase {
 
   AddUserUseCase({required this.userRepository});
 
-  Future<String?> invoke(User user) {
+  Future<bool> invoke(User user) {
     return userRepository.addUser(user);
   }
 }

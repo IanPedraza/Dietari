@@ -4,6 +4,8 @@ import 'package:dietari/data/domain/User.dart';
 import 'package:dietari/data/framework/Firebase/FirebaseConstants.dart';
 
 class FirebaseUserDataSouce extends UserDataSource {
+  static const TAG = "FirebaseUserDataSouce";
+
   FirebaseFirestore _database = FirebaseFirestore.instance;
 
   @override
@@ -18,12 +20,17 @@ class FirebaseUserDataSouce extends UserDataSource {
   }
 
   @override
-  Future<String?> addUser(User user) {
-    final reference = _database.collection(USERS_COLLECTION);
-    final userId = reference.doc().id;
+  Future<bool> addUser(User user) async {
+    try {
+      await _database
+          .collection(USERS_COLLECTION)
+          .doc(user.id)
+          .set(user.toMap());
 
-    user.id = userId;
-
-    return reference.doc(userId).set(user.toMap()).then((value) => userId);
+      return true;
+    } catch (error) {
+      print("$TAG:addUser:Error: $error");
+      return false;
+    }
   }
 }

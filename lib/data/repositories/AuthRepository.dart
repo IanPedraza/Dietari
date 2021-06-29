@@ -17,4 +17,16 @@ class AuthRepository {
   String? getUserId() {
     return authDataSource.getUserId();
   }
+
+  Future<String?> signInWithEmail(String email, String password) {
+    return authDataSource.signInWithEmail(email, password);
+  }
+
+  Future<String?> signUpWithEmail(String email, String password) {
+    return authDataSource.signUpWithEmail(email, password);
+  }
+
+  Future<bool> sendPasswordResetEmail(String email) {
+    return authDataSource.sendPasswordResetEmail(email);
+  }
 }
