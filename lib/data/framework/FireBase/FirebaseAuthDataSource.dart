@@ -70,4 +70,45 @@ class FirebaseAuthDataSource implements AuthDataSource {
 
     return true;
   }
+
+  @override
+  Future<String?> signInWithEmail(String email, String password) async {
+    try {
+      final userCredential = await _firebaseAuth.signInWithEmailAndPassword(
+          email: email, password: password);
+
+      final user = userCredential.user;
+
+      return user == null ? null : user.uid;
+    } catch (error) {
+      print("$TAG:signInWithEmail:Error: $error");
+      return null;
+    }
+  }
+
+  @override
+  Future<String?> signUpWithEmail(String email, String password) async {
+    try {
+      final userCredential = await _firebaseAuth.createUserWithEmailAndPassword(
+          email: email, password: password);
+
+      final user = userCredential.user;
+
+      return user == null ? null : user.uid;
+    } catch (error) {
+      print("$TAG:signUpWithEmail:Error: $error");
+      return null;
+    }
+  }
+
+  @override
+  Future<bool> sendPasswordResetEmail(String email) async {
+    try {
+      await _firebaseAuth.sendPasswordResetEmail(email: email);
+      return true;
+    } catch (error) {
+      print("$TAG:sendPasswordResetEmail:Error: $error");
+      return false;
+    }
+  }
 }

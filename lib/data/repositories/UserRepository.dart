@@ -10,7 +10,7 @@ class UserRepository {
     return userDataSource.getUser(id);
   }
 
-  Future<String?> addUser(User user) {
+  Future<bool> addUser(User user) {
     return userDataSource.addUser(user);
   }
 }
