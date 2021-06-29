@@ -14,7 +14,7 @@ class MainButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return FloatingActionButton(
       onPressed: onPressed,
-      foregroundColor: ColorTextMainButton,
+      foregroundColor: colorTextMainButton,
       backgroundColor: primaryColor,
       elevation: 3,
       child: Text(text,

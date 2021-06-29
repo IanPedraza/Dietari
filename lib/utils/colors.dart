@@ -15,4 +15,4 @@ const Map<int, Color> _primaryColor = {
   900: Color.fromRGBO(92, 69, 191, 1),
 };
 
-const ColorTextMainButton = Colors.white;
+const colorTextMainButton = Colors.white;

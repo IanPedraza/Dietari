@@ -2,37 +2,24 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dietari/utils/colors.dart';
 
-bool visible=true;
-int aux = 0;
-
-class MainTextField extends StatefulWidget{
+class MainTextField extends StatelessWidget {
+  final Function() onTap;
   final String text;
   final bool isPassword;
-  final TextEditingController TextEditingControl;
-  const MainTextField({Key? key, required this.text,required this.isPassword, required this.TextEditingControl})
-      : super(key: key);
-  @override
-  _MainTextField createState() => _MainTextField();
-}
+  final bool isPasswordTextStatus;
+  final TextEditingController textEditingControl;
 
-class _MainTextField extends State<MainTextField> {
-  void _showPassword(){
-    setState(() {
-      visible = !visible;
-    });
-  }
+  const MainTextField({Key? key, required this.text,required this.isPassword, required this.textEditingControl, required this.isPasswordTextStatus, required this.onTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
     return TextField(
-      controller: widget.TextEditingControl,
+      controller: textEditingControl,
       autofocus: false,
       autocorrect: true,
       textAlign: TextAlign.left,
-      obscureText: widget.isPassword
-        ? visible : false,
-      //obscureText: visible,
+      obscureText: isPasswordTextStatus,
       style: TextStyle(
           color: primaryColor,
           fontSize: 18,
@@ -40,9 +27,9 @@ class _MainTextField extends State<MainTextField> {
       ),
 
       decoration: InputDecoration(
-        labelText: widget.text,
+        labelText: text,
         labelStyle: TextStyle(
-          color: primaryColor,
+            color: primaryColor,
             fontWeight: FontWeight.bold
         ),
         enabledBorder: OutlineInputBorder(
@@ -54,11 +41,11 @@ class _MainTextField extends State<MainTextField> {
           borderSide: BorderSide(color: primaryColor),
         ),
         suffixIcon: InkWell(
-          onTap: widget.isPassword
-              ? _showPassword : null,
+          onTap: isPassword
+              ? onTap : null,
           child: Icon(
-            widget.isPassword
-                ?  (visible
+            isPassword
+                ?  (isPasswordTextStatus
                 ?  Icons.visibility_off : Icons.visibility): null,
             color: primaryColor,
           ),
@@ -66,6 +53,6 @@ class _MainTextField extends State<MainTextField> {
       ),
 
     );
-
   }
+
 }
