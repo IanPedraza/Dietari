@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dietari/utils/colors.dart';
 
-
 class DateTextField extends StatelessWidget {
   final String labelText;
   final String hintText;
