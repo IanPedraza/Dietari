@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dietari/utils/colors.dart';
+import 'package:dietari/utils/icons.dart';
 
 class MainTextField extends StatelessWidget {
   final Function() onTap;
@@ -46,12 +47,11 @@ class MainTextField extends StatelessWidget {
           child: Icon(
             isPassword
                 ?  (isPasswordTextStatus
-                ?  Icons.visibility_off : Icons.visibility): null,
+                ?  getIcon(AppIcons.visibility_off).icon : getIcon(AppIcons.visibility).icon): null,
             color: primaryColor,
           ),
         ),
       ),
-
     );
   }
 
