@@ -1,22 +1,16 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:dietari/components/MainButton.dart';
 import 'package:dietari/components/MainTextField.dart';
 import 'package:dietari/pages/Base_Register_Screen_1.dart';
 import 'package:dietari/utils/colors.dart';
-import 'package:dietari/components/AppFloatingActionButton.dart';
-import 'package:dietari/utils/icons.dart';
+import 'package:flutter/material.dart';
 import 'dart:io';
 
-class HomePage extends StatefulWidget {
-  HomePage({Key? key, required this.title}) : super(key: key);
-  final String title;
-
+class Login extends StatefulWidget {
   @override
-  _HomePageState createState() => _HomePageState();
+  _Login createState() => _Login();
 }
 
-class _HomePageState extends State<HomePage> {
+class _Login extends State<Login> {
   bool _active = false;
 
   void _showPassword() {

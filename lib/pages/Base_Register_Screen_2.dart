@@ -1,14 +1,14 @@
 import 'package:dietari/components/MainButton.dart';
 import 'package:dietari/components/MainTextField.dart';
-import 'package:dietari/pages/Base_Register_Screen_2.dart';
+import 'package:dietari/pages/Base_Register_Screen_3.dart';
 import 'package:flutter/material.dart';
 
-class Base_Register_1 extends StatefulWidget {
+class Base_Register_2 extends StatefulWidget {
   @override
-  _Base_Register_1 createState() => _Base_Register_1();
+  _Base_Register_2 createState() => _Base_Register_2();
 }
 
-class _Base_Register_1 extends State<Base_Register_1> {
+class _Base_Register_2 extends State<Base_Register_2> {
   bool _active = false;
 
   void _showPassword() {
@@ -19,13 +19,13 @@ class _Base_Register_1 extends State<Base_Register_1> {
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController inputControllerEmail = new TextEditingController();
-    TextEditingController inputControllerPassword = new TextEditingController();
-    TextEditingController inputControllerRepeatPassword =
+    TextEditingController inputControllerLastName = new TextEditingController();
+    TextEditingController inputControllerMothersLastName =
         new TextEditingController();
+    TextEditingController inputControllerName = new TextEditingController();
     return Scaffold(
       /*appBar: AppBar(
-        title: Text("Base Register - 1"),
+        title: Text("Base Register - 2"),
       ),*/
       body: ListView(
         children: [
@@ -34,10 +34,10 @@ class _Base_Register_1 extends State<Base_Register_1> {
                 const EdgeInsets.only(left: 30, top: 10, right: 30, bottom: 10),
             child: MainTextField(
               onTap: _showPassword,
-              text: 'Correo Eletrónico',
+              text: 'Apellido Paterno',
               isPassword: false,
               isPasswordTextStatus: false,
-              textEditingControl: inputControllerEmail,
+              textEditingControl: inputControllerLastName,
             ),
           ),
           Container(
@@ -45,10 +45,10 @@ class _Base_Register_1 extends State<Base_Register_1> {
                 const EdgeInsets.only(left: 30, top: 10, right: 30, bottom: 10),
             child: MainTextField(
               onTap: _showPassword,
-              text: 'Contraseña',
-              isPassword: true,
-              isPasswordTextStatus: true,
-              textEditingControl: inputControllerPassword,
+              text: 'Apellido Materno',
+              isPassword: false,
+              isPasswordTextStatus: false,
+              textEditingControl: inputControllerMothersLastName,
             ),
           ),
           Container(
@@ -56,10 +56,10 @@ class _Base_Register_1 extends State<Base_Register_1> {
                 const EdgeInsets.only(left: 30, top: 10, right: 30, bottom: 10),
             child: MainTextField(
               onTap: _showPassword,
-              text: 'Repetir Contraseña',
-              isPassword: true,
-              isPasswordTextStatus: true,
-              textEditingControl: inputControllerRepeatPassword,
+              text: 'Nombre(s)',
+              isPassword: false,
+              isPasswordTextStatus: false,
+              textEditingControl: inputControllerName,
             ),
           ),
           Container(
@@ -70,7 +70,7 @@ class _Base_Register_1 extends State<Base_Register_1> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => Base_Register_2()))
+                              builder: (context) => Base_Register_3()))
                     },
                 text: "Continuar"),
           ),

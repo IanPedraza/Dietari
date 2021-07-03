@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 final _icons = <AppIcons, IconData>{
-  AppIcons.Add: Icons.add,
+  AppIcons.add: Icons.add,
+  AppIcons.visibility_off: Icons.visibility_off,
+  AppIcons.visibility: Icons.visibility,
 };
 
 Icon getIcon(AppIcons name, {Color? color}) {
@@ -12,6 +14,4 @@ Icon getIcon(AppIcons name, {Color? color}) {
   }
 }
 
-enum AppIcons {
-  Add,
-}
+enum AppIcons { add, visibility_off, visibility }
