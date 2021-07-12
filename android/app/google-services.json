@@ -14,6 +14,30 @@
       },
       "oauth_client": [
         {
+          "client_id": "154834735951-56j04t1rgg0d6nln1g23pilu7r9d0guo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dietari.app",
+            "certificate_hash": "b23e15eb505f9a2ac00f2a7da19152cc28d86f81"
+          }
+        },
+        {
+          "client_id": "154834735951-d38cd285gevn4gc6fjgak5q2vlbslo3n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dietari.app",
+            "certificate_hash": "6d99cf3c635a3353482c056b3e03704fac1e959b"
+          }
+        },
+        {
+          "client_id": "154834735951-pe13okt5felqh4ch7b44nqckm5ofktas.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dietari.app",
+            "certificate_hash": "dc17228d278106e2dd2a090eaf4ef89d4a8c6d68"
+          }
+        },
+        {
           "client_id": "154834735951-e42lj6krbknf5td0tp3k8omasg14hti9.apps.googleusercontent.com",
           "client_type": 3
         }

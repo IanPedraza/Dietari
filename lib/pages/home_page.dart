@@ -1,12 +1,15 @@
+import 'package:dietari/data/datasources/AuthDataSource.dart';
+import 'package:dietari/data/domain/User.dart';
+import 'package:dietari/data/framework/FireBase/FirebaseAuthDataSource.dart';
+import 'package:dietari/data/repositories/AuthRepository.dart';
+import 'package:dietari/data/usecases/SignOutUseCase.dart';
+import 'package:dietari/pages/Login.dart';
+import 'package:dietari/utils/arguments.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:dietari/components/MainButton.dart';
-import 'package:dietari/components/MainTextField.dart';
-import 'package:dietari/pages/Base_Register_Screen_1.dart';
-import 'package:dietari/utils/colors.dart';
+
 import 'package:dietari/components/AppFloatingActionButton.dart';
 import 'package:dietari/utils/icons.dart';
-import 'dart:io';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key, required this.title}) : super(key: key);
@@ -17,91 +20,65 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool _active = false;
+  late AuthDataSource _authDataSource = FirebaseAuthDataSource();
 
-  void _showPassword() {
-    setState(() {
-      _active = !_active;
-    });
+  late AuthRepository _authRepository =
+      AuthRepository(authDataSource: _authDataSource);
+
+  late SignOutUseCase _signOutUseCase =
+      SignOutUseCase(authRepository: _authRepository);
+
+  late User newUser;
+
+  void _getArguments() {
+    final args = ModalRoute.of(context)?.settings.arguments as Map;
+
+    if (args.isEmpty) {
+      Navigator.pop(context);
+      return;
+    }
+
+    newUser = args[user_args];
   }
 
   @override
   Widget build(BuildContext context) {
-    TextEditingController inputControllerEmail = new TextEditingController();
-    TextEditingController inputControllerPassword = new TextEditingController();
-    new TextEditingController();
-
-    return WillPopScope(
-      onWillPop: () => exit(0),
-      child: Scaffold(
-        body: ListView(
-          children: [
-            Container(
-              padding: const EdgeInsets.only(
-                  left: 70, top: 10, right: 70, bottom: 10),
-              child: Image.asset(
-                'logo.png',
-                fit: BoxFit.fitWidth,
-              ),
+    _getArguments();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            Text(
+              newUser.firstName +
+                  ': Signed in Successfully ' +
+                  newUser.password,
             ),
-            Container(
-              padding: const EdgeInsets.only(
-                  left: 30, top: 10, right: 30, bottom: 10),
-              child: MainTextField(
-                onTap: _showPassword,
-                text: 'Correo Electronico',
-                isPassword: false,
-                isPasswordTextStatus: false,
-                textEditingControl: inputControllerEmail,
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.only(
-                  left: 30, top: 10, right: 30, bottom: 10),
-              child: MainTextField(
-                onTap: _showPassword,
-                text: 'Contraseña',
-                isPassword: true,
-                isPasswordTextStatus: true,
-                textEditingControl: inputControllerPassword,
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.only(
-                  left: 30, top: 10, right: 30, bottom: 10),
-              child: MainButton(onPressed: () => {}, text: "Iniciar Sesión"),
-            ),
-            Container(
-              padding: const EdgeInsets.only(
-                  left: 30, top: 10, right: 30, bottom: 10),
-              child: Text(
-                '¿Aun no Tienes Cuenta?',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 15),
-              ),
-            ),
-            Container(
-                padding: const EdgeInsets.only(
-                    left: 30, top: 0, right: 30, bottom: 10),
-                child: TextButton(
-                  onPressed: () => {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Base_Register_1()))
-                  },
-                  child: Text(
-                    'Registrarse',
-                    style: TextStyle(decoration: TextDecoration.underline),
-                  ),
-                  style: ButtonStyle(
-                    foregroundColor:
-                        MaterialStateProperty.all<Color>(primaryColor),
-                  ),
-                )),
+            RaisedButton(
+              child: Text('Sing Out'),
+              onPressed: () {
+                _signOut().then((value) => value
+                    ? Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Login()))
+                    : print(false));
+              },
+            )
           ],
         ),
       ),
+      floatingActionButton: AppFloatingActionButton(
+        onPressed: () {},
+        child: getIcon(AppIcons.add),
+      ),
     );
+  }
+
+  Future<bool> _signOut() async {
+    bool exit = await _signOutUseCase.invoke();
+    return exit;
   }
 }

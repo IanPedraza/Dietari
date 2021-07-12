@@ -1,4 +1,3 @@
-import 'package:dietari/pages/Login.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:dietari/utils/routes.dart';
@@ -17,7 +16,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: app_name,
       theme: light,
-      initialRoute: home_route,
+      initialRoute: login_route,
       routes: getApplicationRoutes(),
     );
   }
