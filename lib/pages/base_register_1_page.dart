@@ -132,7 +132,6 @@ class _BaseRegister1 extends State<BaseRegister1> {
   User _saveChange(String email, String password, String id) {
     newUser.id = id;
     newUser.email = email;
-    newUser.password = password;
     return newUser;
   }
 

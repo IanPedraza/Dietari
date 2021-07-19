@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-
 const app_name = "Dietari";
 const registration_form = "Formulario de Registro";
 const login_name = "Iniciar Sesión";
@@ -55,8 +53,3 @@ const alert_content_error_registration =
 const alert_content_email_used =
     "Correo electrónico utilizado por otro usuario";
 const alert_content_incorrect_password = "Contraseña incorrecta";
-
-//Ubicacion de Imagenes
-const image_logo = "lib/assets/logo.png";
-const image_login_google = "lib/assets/google-logo.png";
-const image_login_apple = "lib/assets/apple-logo.png";

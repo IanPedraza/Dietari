@@ -17,6 +17,7 @@ import 'package:dietari/data/usecases/SignInWithEmailUseCase.dart';
 import 'package:dietari/data/usecases/SignOutUseCase.dart';
 import 'package:dietari/utils/arguments.dart';
 import 'package:dietari/utils/colors.dart';
+import 'package:dietari/utils/resources.dart';
 import 'package:dietari/utils/routes.dart';
 import 'package:dietari/utils/strings.dart';
 import 'package:email_validator/email_validator.dart';
@@ -63,7 +64,6 @@ class _Login extends State<Login> {
     firstName: "",
     lastName: "",
     email: "",
-    password: "",
     dateOfBirth: "",
     weight: 0.0,
     height: 0.0,
