@@ -1,22 +1,22 @@
 import 'package:dietari/components/MainButton.dart';
 import 'package:dietari/components/MainTextField.dart';
+import 'package:dietari/components/ShowAlertDialog.dart';
 import 'package:dietari/data/domain/User.dart';
 import 'package:dietari/utils/arguments.dart';
-import 'package:dietari/utils/colors.dart';
 import 'package:dietari/utils/routes.dart';
 import 'package:dietari/utils/strings.dart';
 import 'package:flutter/material.dart';
 
-class Base_Register_2 extends StatefulWidget {
-  const Base_Register_2({
+class BaseRegister2 extends StatefulWidget {
+  const BaseRegister2({
     Key? key,
   }) : super(key: key);
 
   @override
-  _Base_Register_2 createState() => _Base_Register_2();
+  _BaseRegister2 createState() => _BaseRegister2();
 }
 
-class _Base_Register_2 extends State<Base_Register_2> {
+class _BaseRegister2 extends State<BaseRegister2> {
   TextEditingController inputControllerLastName = new TextEditingController();
   TextEditingController inputControllerMsLastName = new TextEditingController();
   TextEditingController inputControllerName = new TextEditingController();
@@ -29,8 +29,10 @@ class _Base_Register_2 extends State<Base_Register_2> {
   Widget build(BuildContext context) {
     _getArguments();
     _autocomplete();
-    //escribir();
     return Scaffold(
+      appBar: AppBar(
+        title: Text(registration_form),
+      ),
       body: ListView(
         children: [
           Container(
@@ -67,8 +69,8 @@ class _Base_Register_2 extends State<Base_Register_2> {
             ),
           ),
           Container(
-            padding: const EdgeInsets.only(
-                left: 30, top: 400, right: 30, bottom: 10),
+            padding:
+                const EdgeInsets.only(left: 30, top: 10, right: 30, bottom: 10),
             child: MainButton(
                 onPressed: () {
                   _continueRegister();
@@ -104,7 +106,7 @@ class _Base_Register_2 extends State<Base_Register_2> {
     newUser = args[user_args];
   }
 
-  User saveChange(String firstName, String lastName) {
+  User _saveChange(String firstName, String lastName) {
     newUser.firstName = firstName;
     newUser.lastName = lastName;
     return newUser;
@@ -120,44 +122,26 @@ class _Base_Register_2 extends State<Base_Register_2> {
         inputControllerMsLastName.text.isNotEmpty &&
         inputControllerName.text.isNotEmpty) {
       _nextScreen(
-        base_register_screen_3_route,
-        saveChange(
+        base_register_3_route,
+        _saveChange(
             inputControllerName.text.toString(),
             inputControllerLastName.text.toString() +
                 espace +
                 inputControllerMsLastName.text.toString()),
       );
     } else {
-      showAlertDialog(alert_title_error, alert_content_imcomplete);
+      _showAlertDialog(context, alert_title_error, alert_content_imcomplete);
     }
   }
 
-  void showAlertDialog(String title, String content) {
+  void _showAlertDialog(BuildContext context, String title, String content) {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            title,
-            style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
-          ),
-          content: Text(
-            content,
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          actions: [
-            FlatButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                text_accept,
-                style:
-                    TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ],
+        return ShowAlertDialog(
+          title: title,
+          content: content,
         );
       },
     );

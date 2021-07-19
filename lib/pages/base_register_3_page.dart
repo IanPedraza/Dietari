@@ -1,26 +1,26 @@
 import 'package:dietari/components/DateTextField.dart';
 import 'package:dietari/components/MainButton.dart';
 import 'package:dietari/components/MainTextField.dart';
+import 'package:dietari/components/ShowAlertDialog.dart';
 import 'package:dietari/data/datasources/UserDataSource.dart';
 import 'package:dietari/data/domain/User.dart';
 import 'package:dietari/data/framework/FireBase/FirebaseUserDataSouce.dart';
 import 'package:dietari/data/repositories/UserRepository.dart';
 import 'package:dietari/data/usecases/AddUserUseCase.dart';
 import 'package:dietari/utils/arguments.dart';
-import 'package:dietari/utils/colors.dart';
 import 'package:dietari/utils/routes.dart';
 import 'package:dietari/utils/strings.dart';
 import 'package:flutter/material.dart';
 
-class Base_Register_3 extends StatefulWidget {
-  const Base_Register_3({
+class BaseRegister3 extends StatefulWidget {
+  const BaseRegister3({
     Key? key,
   }) : super(key: key);
   @override
-  _Base_Register_3 createState() => _Base_Register_3();
+  _BaseRegister3 createState() => _BaseRegister3();
 }
 
-class _Base_Register_3 extends State<Base_Register_3> {
+class _BaseRegister3 extends State<BaseRegister3> {
   late UserDataSource _userDataSource = FirebaseUserDataSouce();
 
   late UserRepository _userRepository =
@@ -43,6 +43,9 @@ class _Base_Register_3 extends State<Base_Register_3> {
     _getArguments();
     _autocomplete();
     return Scaffold(
+      appBar: AppBar(
+        title: Text(registration_form),
+      ),
       body: ListView(
         children: [
           Container(
@@ -77,8 +80,8 @@ class _Base_Register_3 extends State<Base_Register_3> {
             ),
           ),
           Container(
-            padding: const EdgeInsets.only(
-                left: 30, top: 400, right: 30, bottom: 10),
+            padding:
+                const EdgeInsets.only(left: 30, top: 10, right: 30, bottom: 10),
             child: MainButton(
                 onPressed: () {
                   _finishRegister();
@@ -117,7 +120,7 @@ class _Base_Register_3 extends State<Base_Register_3> {
     newUser = args[user_args];
   }
 
-  User saveChange(String dateBirth, double weight, double height) {
+  User _saveChange(String dateBirth, double weight, double height) {
     newUser.dateOfBirth = dateBirth;
     newUser.weight = weight;
     newUser.height = height;
@@ -135,47 +138,29 @@ class _Base_Register_3 extends State<Base_Register_3> {
         inputControllerWeight.text.isNotEmpty) {
       height = double.parse(inputControllerHeight.text);
       weight = double.parse(inputControllerWeight.text);
-      saveChange(inputControllerBirthDate.text.toString(), weight, height);
+      _saveChange(inputControllerBirthDate.text.toString(), weight, height);
       _addUser(newUser).then(
         (value) => value
             ? _nextScreen(home_route, newUser)
             : [
-                showAlertDialog(
-                    alert_title_error, alert_content_error_registration),
+                _showAlertDialog(context, alert_title_error,
+                    alert_content_error_registration),
                 Navigator.pushNamed(context, login_route),
               ],
       );
     } else {
-      showAlertDialog(alert_title_error, alert_content_imcomplete);
+      _showAlertDialog(context, alert_title_error, alert_content_imcomplete);
     }
   }
 
-  void showAlertDialog(String title, String content) {
+  void _showAlertDialog(BuildContext context, String title, String content) {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            title,
-            style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
-          ),
-          content: Text(
-            content,
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          actions: [
-            FlatButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                text_accept,
-                style:
-                    TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
-              ),
-            )
-          ],
+        return ShowAlertDialog(
+          title: title,
+          content: content,
         );
       },
     );
