@@ -22,33 +22,36 @@ class MainTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextField(
-      controller: textEditingControl,
-      autofocus: false,
-      autocorrect: true,
-      textAlign: TextAlign.left,
-      obscureText: isPasswordTextStatus,
-      style: TextStyle(
-          color: primaryColor, fontSize: 18, fontWeight: FontWeight.bold),
-      decoration: InputDecoration(
-        labelText: text,
-        labelStyle: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: primaryColor),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(color: primaryColor),
-        ),
-        suffixIcon: InkWell(
-          onTap: isPassword ? onTap : null,
-          child: (isPassword
-              ? (isPasswordTextStatus
-                  ? getIcon(AppIcons.visibility_off, color: primaryColor)
-                  : getIcon(AppIcons.visibility, color: primaryColor))
-              : null),
-        ),
-      ),
-    );
+        controller: textEditingControl,
+        autofocus: false,
+        autocorrect: true,
+        textAlign: TextAlign.left,
+        obscureText: isPasswordTextStatus,
+        style: TextStyle(
+            color: primaryColor, fontSize: 18, fontWeight: FontWeight.bold),
+        decoration: InputDecoration(
+          labelText: text,
+          labelStyle:
+              TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: primaryColor),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: primaryColor),
+          ),
+          suffixIcon: isPassword
+              ? InkWell(
+                  onTap: isPassword ? onTap : null,
+                  child: (isPassword
+                      ? (isPasswordTextStatus
+                          ? getIcon(AppIcons.visibility_off,
+                              color: primaryColor)
+                          : getIcon(AppIcons.visibility, color: primaryColor))
+                      : null),
+                )
+              : null,
+        ));
   }
 }

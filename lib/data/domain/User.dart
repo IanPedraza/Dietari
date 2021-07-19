@@ -5,7 +5,6 @@ class User {
   String firstName = "";
   String lastName = "";
   String email = "";
-  String password = "";
   String dateOfBirth = "";
   double weight = 0.0;
   double height = 0.0;
@@ -15,7 +14,6 @@ class User {
     required this.firstName,
     required this.lastName,
     required this.email,
-    required this.password,
     required this.dateOfBirth,
     required this.weight,
     required this.height,
@@ -26,7 +24,6 @@ class User {
     String? firstName,
     String? lastName,
     String? email,
-    String? password,
     String? dateOfBirth,
     double? weight,
     double? height,
@@ -36,7 +33,6 @@ class User {
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
       email: email ?? this.email,
-      password: password ?? this.password,
       dateOfBirth: dateOfBirth ?? this.dateOfBirth,
       weight: weight ?? this.weight,
       height: height ?? this.height,
@@ -49,7 +45,6 @@ class User {
       'firstName': firstName,
       'lastName': lastName,
       'email': email,
-      'password': password,
       'dateOfBirth': dateOfBirth,
       'weight': weight,
       'height': height,
@@ -62,7 +57,6 @@ class User {
       firstName: map['firstName'],
       lastName: map['lastName'],
       email: map['email'],
-      password: map['password'],
       dateOfBirth: map['dateOfBirth'],
       weight: map['weight'],
       height: map['height'],
@@ -75,7 +69,7 @@ class User {
 
   @override
   String toString() {
-    return 'User(id: $id, firstName: $firstName, lastName: $lastName, email: $email, password: $password, dateOfBirth: $dateOfBirth, weight: $weight, height: $height)';
+    return 'User(id: $id, firstName: $firstName, lastName: $lastName, email: $email, dateOfBirth: $dateOfBirth, weight: $weight, height: $height)';
   }
 
   @override
@@ -87,7 +81,6 @@ class User {
         other.firstName == firstName &&
         other.lastName == lastName &&
         other.email == email &&
-        other.password == password &&
         other.dateOfBirth == dateOfBirth &&
         other.weight == weight &&
         other.height == height;
@@ -99,7 +92,6 @@ class User {
         firstName.hashCode ^
         lastName.hashCode ^
         email.hashCode ^
-        password.hashCode ^
         dateOfBirth.hashCode ^
         weight.hashCode ^
         height.hashCode;
