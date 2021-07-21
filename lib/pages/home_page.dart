@@ -3,11 +3,10 @@ import 'package:dietari/data/domain/User.dart';
 import 'package:dietari/data/framework/FireBase/FirebaseAuthDataSource.dart';
 import 'package:dietari/data/repositories/AuthRepository.dart';
 import 'package:dietari/data/usecases/SignOutUseCase.dart';
-import 'package:dietari/pages/Login.dart';
+import 'package:dietari/pages/login_page.dart';
 import 'package:dietari/utils/arguments.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
 import 'package:dietari/components/AppFloatingActionButton.dart';
 import 'package:dietari/utils/icons.dart';
 
@@ -32,12 +31,10 @@ class _HomePageState extends State<HomePage> {
 
   void _getArguments() {
     final args = ModalRoute.of(context)?.settings.arguments as Map;
-
     if (args.isEmpty) {
       Navigator.pop(context);
       return;
     }
-
     newUser = args[user_args];
   }
 
@@ -54,16 +51,14 @@ class _HomePageState extends State<HomePage> {
           mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             Text(
-              newUser.firstName +
-                  ': Signed in Successfully ' +
-                  newUser.password,
+              newUser.firstName + ': Signed in Successfully ',
             ),
             RaisedButton(
               child: Text('Sing Out'),
               onPressed: () {
                 _signOut().then((value) => value
                     ? Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Login()))
+                        MaterialPageRoute(builder: (context) => LoginPage()))
                     : print(false));
               },
             )
