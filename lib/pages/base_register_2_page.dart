@@ -7,16 +7,16 @@ import 'package:dietari/utils/routes.dart';
 import 'package:dietari/utils/strings.dart';
 import 'package:flutter/material.dart';
 
-class BaseRegister2 extends StatefulWidget {
-  const BaseRegister2({
+class BaseRegister2Page extends StatefulWidget {
+  const BaseRegister2Page({
     Key? key,
   }) : super(key: key);
 
   @override
-  _BaseRegister2 createState() => _BaseRegister2();
+  _BaseRegister2Page createState() => _BaseRegister2Page();
 }
 
-class _BaseRegister2 extends State<BaseRegister2> {
+class _BaseRegister2Page extends State<BaseRegister2Page> {
   TextEditingController inputControllerLastName = new TextEditingController();
   TextEditingController inputControllerMsLastName = new TextEditingController();
   TextEditingController inputControllerName = new TextEditingController();
@@ -72,10 +72,11 @@ class _BaseRegister2 extends State<BaseRegister2> {
             padding:
                 const EdgeInsets.only(left: 30, top: 10, right: 30, bottom: 10),
             child: MainButton(
-                onPressed: () {
-                  _continueRegister();
-                },
-                text: button_continue),
+              onPressed: () {
+                _continueRegister();
+              },
+              text: button_continue,
+            ),
           ),
         ],
       ),

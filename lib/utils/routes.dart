@@ -9,10 +9,10 @@ import 'package:dietari/pages/login_page.dart';
 Map<String, WidgetBuilder> getApplicationRoutes() {
   return <String, WidgetBuilder>{
     home_route: (BuildContext context) => HomePage(title: app_name),
-    login_route: (BuildContext context) => Login(),
-    base_register_1_route: (BuildContext context) => BaseRegister1(),
-    base_register_2_route: (BuildContext context) => BaseRegister2(),
-    base_register_3_route: (BuildContext context) => BaseRegister3(),
+    login_route: (BuildContext context) => LoginPage(),
+    base_register_1_route: (BuildContext context) => BaseRegister1Page(),
+    base_register_2_route: (BuildContext context) => BaseRegister2Page(),
+    base_register_3_route: (BuildContext context) => BaseRegister3Page(),
   };
 }
 

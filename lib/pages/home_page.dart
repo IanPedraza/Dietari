@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {
                 _signOut().then((value) => value
                     ? Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Login()))
+                        MaterialPageRoute(builder: (context) => LoginPage()))
                     : print(false));
               },
             )

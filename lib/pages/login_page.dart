@@ -25,12 +25,12 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:io';
 
-class Login extends StatefulWidget {
+class LoginPage extends StatefulWidget {
   @override
-  _Login createState() => _Login();
+  _LoginPage createState() => _LoginPage();
 }
 
-class _Login extends State<Login> {
+class _LoginPage extends State<LoginPage> {
   late AuthDataSource _authDataSource = FirebaseAuthDataSource();
 
   late AuthRepository _authRepository =
@@ -112,10 +112,11 @@ class _Login extends State<Login> {
               padding: const EdgeInsets.only(
                   left: 30, top: 10, right: 30, bottom: 10),
               child: MainButton(
-                  onPressed: () {
-                    _loginWithEmail();
-                  },
-                  text: button_login),
+                onPressed: () {
+                  _loginWithEmail();
+                },
+                text: button_login,
+              ),
             ),
             Container(
               padding:
@@ -126,7 +127,9 @@ class _Login extends State<Login> {
                 },
                 child: Text(
                   text_forget_password,
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(
+                    fontSize: 15,
+                  ),
                 ),
               ),
             ),
@@ -165,54 +168,48 @@ class _Login extends State<Login> {
               padding: const EdgeInsets.only(
                   left: 30, top: 5, right: 30, bottom: 10),
               child: SingButton(
-                  onPressed: () {
-                    _loginWithGoogle();
-                  },
-                  text: button_login_google,
-                  rute: image_login_google,
-                  textColor: Colors.blueAccent),
+                onPressed: () {
+                  _loginWithGoogle();
+                },
+                text: button_login_google,
+                rute: image_login_google,
+                textColor: Colors.blueAccent,
+              ),
             ),
-            /*Container(
-              padding: const EdgeInsets.only(
-                  left: 30, top: 10, right: 30, bottom: 10),
-              child: SingButton(
-                  onPressed: () {},
-                  text: button_login_apple,
-                  rute: image_login_apple,
-                  textColor: Colors.black),
-            ),*/
             Container(
               padding: const EdgeInsets.only(
-                  left: 30, top: 20, right: 30, bottom: 50),
-              child: Row(
-                children: <Widget>[
-                  Text(
-                    text_terms_message,
-                    style: TextStyle(
-                      fontSize: 10,
-                    ),
+                  left: 30, top: 20, right: 30, bottom: 40),
+              child: RichText(
+                text: TextSpan(
+                  text: text_message,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 13,
                   ),
-                  Text(
-                    text_terms_conditions,
-                    style: TextStyle(
-                      color: primaryColor,
-                      fontSize: 10,
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: text_tems_conditions,
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontSize: 13,
+                      ),
                     ),
-                  ),
-                  Text(
-                    text_continue_message,
-                    style: TextStyle(
-                      fontSize: 10,
+                    TextSpan(
+                      text: text_message_continuation,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 13,
+                      ),
                     ),
-                  ),
-                  Text(
-                    text_privacy_policy,
-                    style: TextStyle(
-                      color: primaryColor,
-                      fontSize: 10,
+                    TextSpan(
+                      text: text_privacy_policies,
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontSize: 13,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],
@@ -301,8 +298,8 @@ class _Login extends State<Login> {
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 1,
-      textColor: primaryColor,
-      fontSize: 18,
+      textColor: Colors.black,
+      fontSize: 15,
     );
   }
 

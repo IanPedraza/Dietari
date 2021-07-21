@@ -19,15 +19,15 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:async';
 
-class BaseRegister1 extends StatefulWidget {
-  const BaseRegister1({
+class BaseRegister1Page extends StatefulWidget {
+  const BaseRegister1Page({
     Key? key,
   }) : super(key: key);
   @override
-  _BaseRegister1 createState() => _BaseRegister1();
+  _BaseRegister1Page createState() => _BaseRegister1Page();
 }
 
-class _BaseRegister1 extends State<BaseRegister1> {
+class _BaseRegister1Page extends State<BaseRegister1Page> {
   late AuthDataSource _authDataSource = FirebaseAuthDataSource();
 
   late UserDataSource _userDataSource = FirebaseUserDataSouce();
@@ -75,14 +75,16 @@ class _BaseRegister1 extends State<BaseRegister1> {
             ),
           ),
           Container(
-              padding: const EdgeInsets.only(
-                  left: 30, top: 10, right: 30, bottom: 10),
-              child: MainTextField(
-                  text: textfield_password,
-                  isPassword: true,
-                  isPasswordTextStatus: activar1,
-                  textEditingControl: inputControllerPassword,
-                  onTap: _showPassword1)),
+            padding:
+                const EdgeInsets.only(left: 30, top: 10, right: 30, bottom: 10),
+            child: MainTextField(
+              text: textfield_password,
+              isPassword: true,
+              isPasswordTextStatus: activar1,
+              textEditingControl: inputControllerPassword,
+              onTap: _showPassword1,
+            ),
+          ),
           Container(
             padding:
                 const EdgeInsets.only(left: 30, top: 10, right: 30, bottom: 10),
@@ -98,10 +100,11 @@ class _BaseRegister1 extends State<BaseRegister1> {
             padding:
                 const EdgeInsets.only(left: 30, top: 10, right: 30, bottom: 10),
             child: MainButton(
-                onPressed: () {
-                  _continueRegister();
-                },
-                text: button_continue),
+              onPressed: () {
+                _continueRegister();
+              },
+              text: button_continue,
+            ),
           ),
         ],
       ),

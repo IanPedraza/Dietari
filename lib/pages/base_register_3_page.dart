@@ -12,15 +12,15 @@ import 'package:dietari/utils/routes.dart';
 import 'package:dietari/utils/strings.dart';
 import 'package:flutter/material.dart';
 
-class BaseRegister3 extends StatefulWidget {
-  const BaseRegister3({
+class BaseRegister3Page extends StatefulWidget {
+  const BaseRegister3Page({
     Key? key,
   }) : super(key: key);
   @override
-  _BaseRegister3 createState() => _BaseRegister3();
+  _BaseRegister3Page createState() => _BaseRegister3Page();
 }
 
-class _BaseRegister3 extends State<BaseRegister3> {
+class _BaseRegister3Page extends State<BaseRegister3Page> {
   late UserDataSource _userDataSource = FirebaseUserDataSouce();
 
   late UserRepository _userRepository =
