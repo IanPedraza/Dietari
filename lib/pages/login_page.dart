@@ -76,9 +76,6 @@ class _LoginPage extends State<LoginPage> {
     return WillPopScope(
       onWillPop: () => exit(0),
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(login_name),
-        ),
         body: ListView(
           children: [
             Container(

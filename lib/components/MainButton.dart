@@ -7,23 +7,23 @@ class MainButton extends StatelessWidget {
   final Widget? child;
   final String text;
 
-  const MainButton({Key? key, required this.onPressed, this.child, required this.text})
-    : super(key: key);
-    
+  const MainButton(
+      {Key? key, required this.onPressed, this.child, required this.text})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-      onPressed: onPressed,
-      foregroundColor: colorTextMainButton,
-      backgroundColor: primaryColor,
-      elevation: 3,
-      child: Text(text,
-        style: TextStyle(
-          fontSize: 18
-        ),),
-      isExtended: true,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))
-    );
-  }  
-
+        onPressed: onPressed,
+        foregroundColor: colorTextMainButton,
+        backgroundColor: primaryColor,
+        elevation: 3,
+        child: Text(
+          text,
+          textAlign: TextAlign.center,
+          style: TextStyle(fontSize: 18),
+        ),
+        isExtended: true,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)));
+  }
 }

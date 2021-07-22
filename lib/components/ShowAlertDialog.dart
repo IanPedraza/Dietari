@@ -21,7 +21,7 @@ class ShowAlertDialog extends StatelessWidget {
       ),
       title: Text(
         title,
-        textAlign: TextAlign.center,
+        // textAlign: TextAlign.center,
         style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
       ),
       content: Text(
