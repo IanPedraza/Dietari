@@ -1,5 +1,6 @@
 import 'package:dietari/components/MainButton.dart';
 import 'package:dietari/components/MainTextField.dart';
+import 'package:dietari/components/ShowAlertDialog.dart';
 import 'package:dietari/data/datasources/AuthDataSource.dart';
 import 'package:dietari/data/datasources/UserDataSource.dart';
 import 'package:dietari/data/domain/User.dart';
@@ -7,25 +8,26 @@ import 'package:dietari/data/framework/FireBase/FirebaseAuthDataSource.dart';
 import 'package:dietari/data/framework/FireBase/FirebaseUserDataSouce.dart';
 import 'package:dietari/data/repositories/UserRepository.dart';
 import 'package:dietari/data/usecases/GetUserIdUseCase.dart';
-import 'package:dietari/data/usecases/GetUserUseCase.dart';
 import 'package:dietari/data/repositories/AuthRepository.dart';
 import 'package:dietari/data/usecases/SignUpWithEmailUseCase.dart';
 import 'package:dietari/utils/arguments.dart';
-import 'package:dietari/utils/colors.dart';
 import 'package:dietari/utils/routes.dart';
 import 'package:dietari/utils/strings.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter/foundation.dart';
+import 'dart:async';
 
-class Base_Register_1 extends StatefulWidget {
-  const Base_Register_1({
+class BaseRegister1Page extends StatefulWidget {
+  const BaseRegister1Page({
     Key? key,
   }) : super(key: key);
   @override
-  _Base_Register_1 createState() => _Base_Register_1();
+  _BaseRegister1Page createState() => _BaseRegister1Page();
 }
 
-class _Base_Register_1 extends State<Base_Register_1> {
+class _BaseRegister1Page extends State<BaseRegister1Page> {
   late AuthDataSource _authDataSource = FirebaseAuthDataSource();
 
   late UserDataSource _userDataSource = FirebaseUserDataSouce();
@@ -42,9 +44,6 @@ class _Base_Register_1 extends State<Base_Register_1> {
   late SignUpWithEmailUseCase _signUpWithEmailUseCase =
       SignUpWithEmailUseCase(authRepository: _authRepository);
 
-  late GetUserUseCase _getUserUseCase =
-      GetUserUseCase(userRepository: _userRepository);
-
   TextEditingController inputControllerEmail = new TextEditingController();
   TextEditingController inputControllerPassword = new TextEditingController();
   TextEditingController inputControllerRepeatPassword =
@@ -55,20 +54,20 @@ class _Base_Register_1 extends State<Base_Register_1> {
   bool activar1 = true;
   bool activar2 = true;
 
-  String? Id = null;
   @override
   Widget build(BuildContext context) {
     _getArguments();
-    _autocomplete();
-    final args = {user_args: newUser};
     return Scaffold(
+      appBar: AppBar(
+        title: Text(registration_form),
+      ),
       body: ListView(
         children: [
           Container(
             padding:
                 const EdgeInsets.only(left: 30, top: 10, right: 30, bottom: 10),
             child: MainTextField(
-              onTap: showPassword1,
+              onTap: _showPassword1,
               text: textfield_email,
               isPassword: false,
               isPasswordTextStatus: false,
@@ -76,19 +75,21 @@ class _Base_Register_1 extends State<Base_Register_1> {
             ),
           ),
           Container(
-              padding: const EdgeInsets.only(
-                  left: 30, top: 10, right: 30, bottom: 10),
-              child: MainTextField(
-                  text: textfield_password,
-                  isPassword: true,
-                  isPasswordTextStatus: activar1,
-                  textEditingControl: inputControllerPassword,
-                  onTap: showPassword1)),
+            padding:
+                const EdgeInsets.only(left: 30, top: 10, right: 30, bottom: 10),
+            child: MainTextField(
+              text: textfield_password,
+              isPassword: true,
+              isPasswordTextStatus: activar1,
+              textEditingControl: inputControllerPassword,
+              onTap: _showPassword1,
+            ),
+          ),
           Container(
             padding:
                 const EdgeInsets.only(left: 30, top: 10, right: 30, bottom: 10),
             child: MainTextField(
-              onTap: showPassword2,
+              onTap: _showPassword2,
               text: textfield_repeat_password,
               isPassword: true,
               isPasswordTextStatus: activar2,
@@ -96,35 +97,27 @@ class _Base_Register_1 extends State<Base_Register_1> {
             ),
           ),
           Container(
-            padding: const EdgeInsets.only(
-                left: 30, top: 400, right: 30, bottom: 10),
+            padding:
+                const EdgeInsets.only(left: 30, top: 10, right: 30, bottom: 10),
             child: MainButton(
-                onPressed: () {
-                  _continueRegister();
-                },
-                text: button_continue),
+              onPressed: () {
+                _continueRegister();
+              },
+              text: button_continue,
+            ),
           ),
         ],
       ),
     );
   }
 
-  void _autocomplete() {
-    if (newUser.email.isNotEmpty) {
-      inputControllerEmail.text = newUser.email.toString();
-    }
-    if (newUser.password.isNotEmpty) {
-      inputControllerPassword.text = newUser.password.toString();
-    }
-  }
-
-  void showPassword1() {
+  void _showPassword1() {
     setState(() {
       activar1 = !activar1;
     });
   }
 
-  void showPassword2() {
+  void _showPassword2() {
     setState(() {
       activar2 = !activar2;
     });
@@ -139,10 +132,9 @@ class _Base_Register_1 extends State<Base_Register_1> {
     newUser = args[user_args];
   }
 
-  User saveChange(String email, String password, String id) {
+  User _saveChange(String email, String password, String id) {
     newUser.id = id;
     newUser.email = email;
-    newUser.password = password;
     return newUser;
   }
 
@@ -161,8 +153,8 @@ class _Base_Register_1 extends State<Base_Register_1> {
           _getUserId().then(
             (iduser) => iduser != null
                 ? _nextScreen(
-                    base_register_screen_2_route,
-                    saveChange(
+                    base_register_2_route,
+                    _saveChange(
                       inputControllerEmail.text.toString(),
                       inputControllerPassword.text.toString(),
                       iduser,
@@ -173,62 +165,41 @@ class _Base_Register_1 extends State<Base_Register_1> {
                     .then(
                     (idvalue) => idvalue != null
                         ? _nextScreen(
-                            base_register_screen_2_route,
-                            saveChange(
+                            base_register_2_route,
+                            _saveChange(
                               inputControllerEmail.text.toString(),
                               inputControllerPassword.text.toString(),
                               idvalue,
                             ),
                           )
-                        : showAlertDialog(
-                            alert_title_error, alert_content_email_used),
+                        : _showAlertDialog(context, alert_title_error,
+                            alert_content_email_used),
                   ),
           );
         } else {
-          showAlertDialog(alert_title_error, alert_content_incorrect_password);
+          _showAlertDialog(
+              context, alert_title_error, alert_content_incorrect_password);
         }
       } else {
-        showAlertDialog(alert_title_error, alert_content_not_valid_email);
+        _showAlertDialog(
+            context, alert_title_error, alert_content_not_valid_email);
       }
     } else {
-      showAlertDialog(alert_title_error, alert_content_imcomplete);
+      _showAlertDialog(context, alert_title_error, alert_content_imcomplete);
     }
   }
 
-  void showAlertDialog(String title, String content) {
+  void _showAlertDialog(BuildContext context, String title, String content) {
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            title,
-            style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
-          ),
-          content: Text(
-            content,
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          actions: [
-            FlatButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                text_accept,
-                style:
-                    TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ],
+        return ShowAlertDialog(
+          title: title,
+          content: content,
         );
       },
     );
-  }
-
-  Future<User?> _UserRegistered(String id) async {
-    User? user = await _getUserUseCase.invoke(id);
-    return user;
   }
 
   Future<String?> _getUserId() async {

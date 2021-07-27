@@ -1,5 +1,6 @@
 import 'package:dietari/components/MainButton.dart';
 import 'package:dietari/components/MainTextField.dart';
+import 'package:dietari/components/ShowAlertDialog.dart';
 import 'package:dietari/components/SingButton.dart';
 import 'package:dietari/data/datasources/AuthDataSource.dart';
 import 'package:dietari/data/datasources/UserDataSource.dart';
@@ -16,6 +17,7 @@ import 'package:dietari/data/usecases/SignInWithEmailUseCase.dart';
 import 'package:dietari/data/usecases/SignOutUseCase.dart';
 import 'package:dietari/utils/arguments.dart';
 import 'package:dietari/utils/colors.dart';
+import 'package:dietari/utils/resources.dart';
 import 'package:dietari/utils/routes.dart';
 import 'package:dietari/utils/strings.dart';
 import 'package:email_validator/email_validator.dart';
@@ -23,12 +25,12 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:io';
 
-class Login extends StatefulWidget {
+class LoginPage extends StatefulWidget {
   @override
-  _Login createState() => _Login();
+  _LoginPage createState() => _LoginPage();
 }
 
-class _Login extends State<Login> {
+class _LoginPage extends State<LoginPage> {
   late AuthDataSource _authDataSource = FirebaseAuthDataSource();
 
   late AuthRepository _authRepository =
@@ -62,7 +64,6 @@ class _Login extends State<Login> {
     firstName: "",
     lastName: "",
     email: "",
-    password: "",
     dateOfBirth: "",
     weight: 0.0,
     height: 0.0,
@@ -79,12 +80,12 @@ class _Login extends State<Login> {
           children: [
             Container(
               padding: const EdgeInsets.only(
-                  left: 70, top: 40, right: 70, bottom: 10),
+                  left: 70, top: 20, right: 70, bottom: 10),
               child: Image.asset(image_logo),
             ),
             Container(
               padding: const EdgeInsets.only(
-                  left: 30, top: 40, right: 30, bottom: 10),
+                  left: 30, top: 20, right: 30, bottom: 10),
               child: MainTextField(
                 onTap: _showPassword,
                 text: textfield_email,
@@ -108,69 +109,105 @@ class _Login extends State<Login> {
               padding: const EdgeInsets.only(
                   left: 30, top: 10, right: 30, bottom: 10),
               child: MainButton(
-                  onPressed: () {
-                    _loginWithEmail();
-                  },
-                  text: button_login),
+                onPressed: () {
+                  _loginWithEmail();
+                },
+                text: button_login,
+              ),
             ),
             Container(
-              padding: const EdgeInsets.only(
-                  left: 30, top: 0, right: 30, bottom: 10),
+              padding:
+                  const EdgeInsets.only(left: 30, top: 0, right: 30, bottom: 0),
               child: TextButton(
                 onPressed: () {
-                  _sendEmailResetPassword();
+                  _showDialogResetPassword(context);
                 },
                 child: Text(
                   text_forget_password,
-                  style: TextStyle(fontSize: 15),
+                  style: TextStyle(
+                    fontSize: 15,
+                  ),
                 ),
               ),
             ),
             Container(
-              padding: const EdgeInsets.only(
-                  left: 30, top: 10, right: 30, bottom: 10),
-              child: Text(
-                text_havent_account,
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 15),
+              padding:
+                  const EdgeInsets.only(left: 30, top: 0, right: 30, bottom: 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    text_havent_account,
+                    style: TextStyle(
+                      fontSize: 15,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      _nextScreen(base_register_1_route, newUser);
+                    },
+                    child: Text(
+                      text_registry,
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        fontSize: 15,
+                      ),
+                    ),
+                    style: ButtonStyle(
+                      foregroundColor:
+                          MaterialStateProperty.all<Color>(primaryColor),
+                    ),
+                  ),
+                ],
               ),
             ),
             Container(
               padding: const EdgeInsets.only(
-                  left: 30, top: 0, right: 30, bottom: 10),
-              child: TextButton(
+                  left: 30, top: 5, right: 30, bottom: 10),
+              child: SingButton(
                 onPressed: () {
-                  _nextScreen(base_register_screen_1_route, newUser);
+                  _loginWithGoogle();
                 },
-                child: Text(
-                  text_registry,
-                  style: TextStyle(decoration: TextDecoration.underline),
-                ),
-                style: ButtonStyle(
-                  foregroundColor:
-                      MaterialStateProperty.all<Color>(primaryColor),
-                ),
+                text: button_login_google,
+                rute: image_login_google,
+                textColor: Colors.blueAccent,
               ),
             ),
             Container(
               padding: const EdgeInsets.only(
-                  left: 30, top: 10, right: 30, bottom: 10),
-              child: SingButton(
-                  onPressed: () {
-                    _loginWithGoogle();
-                  },
-                  text: button_login_google,
-                  rute: image_login_google,
-                  textColor: Colors.blueAccent),
-            ),
-            Container(
-              padding: const EdgeInsets.only(
-                  left: 30, top: 10, right: 30, bottom: 10),
-              child: SingButton(
-                  onPressed: () {},
-                  text: button_login_apple,
-                  rute: image_login_apple,
-                  textColor: Colors.black),
+                  left: 30, top: 20, right: 30, bottom: 40),
+              child: RichText(
+                text: TextSpan(
+                  text: text_message,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 13,
+                  ),
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: text_tems_conditions,
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontSize: 13,
+                      ),
+                    ),
+                    TextSpan(
+                      text: text_message_continuation,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 13,
+                      ),
+                    ),
+                    TextSpan(
+                      text: text_privacy_policies,
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
@@ -184,7 +221,7 @@ class _Login extends State<Login> {
     });
   }
 
-  User saveGoogleUser(ExternalUser googleUser) {
+  User _saveGoogleUser(ExternalUser googleUser) {
     newUser.id = googleUser.uid;
     newUser.email = googleUser.email.toString();
     newUser.firstName = googleUser.displayName.toString();
@@ -204,86 +241,121 @@ class _Login extends State<Login> {
                 inputControllerPassword.text.toString())
             .then(
           (userId) => userId != null
-              ? (_UserRegistered(userId).then(
+              ? _userRegistered(userId).then(
                   (usered) => usered != null
                       ? _nextScreen(home_route, usered)
-                      : showAlertDialog(
-                          alert_title_error, alert_content_not_registered),
-                ))
-              : showAlertDialog(alert_title_error, alert_content_incorrect),
+                      : _showAlertDialog(context, alert_title_error,
+                          alert_content_not_registered),
+                )
+              : _showAlertDialog(
+                  context, alert_title_error, alert_content_incorrect),
         );
       } else {
-        showAlertDialog(alert_title_error, alert_content_not_valid_email);
+        _showAlertDialog(
+            context, alert_title_error, alert_content_not_valid_email);
       }
     } else {
-      showAlertDialog(alert_title_error, alert_content_email_password);
+      _showAlertDialog(
+          context, alert_title_error, alert_content_email_password);
     }
   }
 
   void _loginWithGoogle() {
     _signInWithGoogle().then((googleUser) => googleUser != null
-        ? _UserRegistered(googleUser.uid).then(
+        ? _userRegistered(googleUser.uid).then(
             (usered) => usered != null
                 ? _nextScreen(home_route, usered)
                 : _nextScreen(
-                    base_register_screen_1_route, saveGoogleUser(googleUser)),
+                    base_register_2_route, _saveGoogleUser(googleUser)),
           )
-        : showAlertDialog(alert_title_error, alert_content_error_login_google));
+        : _showAlertDialog(
+            context, alert_title_error, alert_content_error_login_google));
   }
 
-  void _sendEmailResetPassword() {
-    if (inputControllerEmail.text.isNotEmpty) {
-      if (EmailValidator.validate(inputControllerEmail.text)) {
-        _sendPasswordResetEmail(inputControllerEmail.text).then(
+  void _sendEmailResetPassword(TextEditingController emailController) {
+    if (emailController.text.isNotEmpty) {
+      if (EmailValidator.validate(emailController.text)) {
+        _sendPasswordResetEmail(emailController.text).then(
           (value) => value
-              ? showToast(alert_title_send_email)
-              : showToast(alert_title_error_not_registered),
+              ? _showToast(alert_title_send_email)
+              : _showToast(alert_title_error_not_registered),
         );
       } else {
-        showAlertDialog(alert_title_error, alert_content_not_valid_email);
+        _showAlertDialog(
+            context, alert_title_error, alert_content_not_valid_email);
       }
     } else {
-      showAlertDialog(alert_title_error, alert_content_email);
+      _showAlertDialog(context, alert_title_error, alert_content_email);
     }
   }
 
-  void showToast(String content) {
+  void _showToast(String content) {
     Fluttertoast.showToast(
       msg: content,
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 1,
-      textColor: primaryColor,
-      fontSize: 18,
+      textColor: Colors.black,
+      fontSize: 15,
     );
   }
 
-  void showAlertDialog(String title, String content) {
+  void _showAlertDialog(BuildContext context, String title, String content) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return ShowAlertDialog(
+          title: title,
+          content: content,
+        );
+      },
+    );
+  }
+
+  void _showDialogResetPassword(BuildContext context) {
+    TextEditingController emailController = new TextEditingController();
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (BuildContext context) {
         return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
           title: Text(
-            title,
+            alert_title_reset,
+            textAlign: TextAlign.center,
             style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
           ),
-          content: Text(
-            content,
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          actions: [
-            FlatButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                text_accept,
-                style:
-                    TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
-              ),
+          content: Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height / 4,
+            color: Colors.white,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                MainTextField(
+                  text: textfield_email,
+                  isPassword: false,
+                  textEditingControl: emailController,
+                  isPasswordTextStatus: false,
+                  onTap: _showPassword,
+                ),
+                Container(
+                  padding: EdgeInsets.all(15),
+                  width: MediaQuery.of(context).size.width,
+                  child: MainButton(
+                    text: button_reset,
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      _sendEmailResetPassword(emailController);
+                    },
+                  ),
+                )
+              ],
             ),
-          ],
+          ),
         );
       },
     );
@@ -294,7 +366,7 @@ class _Login extends State<Login> {
     return googleUser;
   }
 
-  Future<User?> _UserRegistered(String id) async {
+  Future<User?> _userRegistered(String id) async {
     User? user = await _getUserUseCase.invoke(id);
     return user;
   }
