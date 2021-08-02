@@ -16,3 +16,5 @@ const Map<int, Color> _primaryColor = {
 };
 
 const colorTextMainButton = Colors.white;
+const backgroundColorLinkComponent = Color.fromARGB(255, 235, 231, 255);
+const colorBlack = Colors.black;
