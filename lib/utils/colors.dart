@@ -16,3 +16,4 @@ const Map<int, Color> _primaryColor = {
 };
 
 const colorTextMainButton = Colors.white;
+const colorBlack = Colors.black;
