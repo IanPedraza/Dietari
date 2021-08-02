@@ -4,6 +4,7 @@ final _icons = <AppIcons, IconData>{
   AppIcons.add: Icons.add,
   AppIcons.visibility_off: Icons.visibility_off,
   AppIcons.visibility: Icons.visibility,
+  AppIcons.arrow_back: Icons.arrow_back_ios_outlined,
 };
 
 Icon getIcon(AppIcons name, {Color? color}) {
@@ -14,4 +15,9 @@ Icon getIcon(AppIcons name, {Color? color}) {
   }
 }
 
-enum AppIcons { add, visibility_off, visibility }
+enum AppIcons { 
+  add,
+  visibility_off, 
+  visibility,
+  arrow_back 
+}
