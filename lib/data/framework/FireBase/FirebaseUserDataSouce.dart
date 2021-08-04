@@ -50,7 +50,10 @@ class FirebaseUserDataSouce extends UserDataSource {
       } else {
         return null;
       }
-    } catch (error) {}
+    } catch (error) {
+      print("$TAG:getUserTest:Error: $error");
+      return null;
+    }
   }
 
   @override
