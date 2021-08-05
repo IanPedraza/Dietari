@@ -4,6 +4,7 @@ final _icons = <AppIcons, IconData>{
   AppIcons.add: Icons.add,
   AppIcons.visibility_off: Icons.visibility_off,
   AppIcons.visibility: Icons.visibility,
+  AppIcons.open: Icons.open_in_new,
   AppIcons.light: Icons.lightbulb_outline_sharp,
   AppIcons.arrow_back: Icons.arrow_back_ios_outlined,
   AppIcons.check: Icons.check_circle,
@@ -25,5 +26,6 @@ enum AppIcons {
   arrow_back,
   check,
   uncheck,
-  light
+  light,
+  open
 }
