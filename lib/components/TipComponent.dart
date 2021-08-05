@@ -5,10 +5,9 @@ import 'package:dietari/utils/icons.dart';
 
 class TipComponent extends StatelessWidget {
   final Function() onPressed;
-  final Widget? child;
   final String textTip;
 
-  const TipComponent({Key? key, required this.onPressed, this.child, required this.textTip})
+  const TipComponent({Key? key, required this.onPressed, required this.textTip})
       : super(key: key);
 
   @override
