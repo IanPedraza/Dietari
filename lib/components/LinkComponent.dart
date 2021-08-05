@@ -5,10 +5,9 @@ import 'package:dietari/utils/icons.dart';
 
 class LinkComponent extends StatelessWidget {
   final Function() onPressed;
-  final Widget? child;
   final String textLink;
 
-  const LinkComponent({Key? key, required this.onPressed, this.child, required this.textLink})
+  const LinkComponent({Key? key, required this.onPressed, required this.textLink})
       : super(key: key);
 
   @override
