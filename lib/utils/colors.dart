@@ -16,3 +16,4 @@ const Map<int, Color> _primaryColor = {
 };
 
 const colorTextMainButton = Colors.white;
+const colorAnswerOptionCard = Color.fromARGB(255, 154, 138, 247);
