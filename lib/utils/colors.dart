@@ -22,4 +22,3 @@ const colorLight = Colors.amber;
 const colorAnswerOptionCard = Color.fromARGB(255, 154, 138, 247);
 const backgroundColorTestItem = Color.fromARGB(255, 136, 186, 255);
 const backgroundColorLinkComponent = Color.fromARGB(255, 235, 231, 255);
-
