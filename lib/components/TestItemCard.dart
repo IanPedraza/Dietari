@@ -5,11 +5,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class TestItemCard extends StatelessWidget {
   final Function() onPressed;
-  final Widget? child;
   final String textTestItem;
   final bool check;
 
-  const TestItemCard({Key? key, required this.onPressed, this.child, required this.textTestItem,required this.check})
+  const TestItemCard({Key? key, required this.onPressed, required this.textTestItem,required this.check})
       : super(key: key);
 
   @override
