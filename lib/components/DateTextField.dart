@@ -49,7 +49,7 @@ class DateTextField extends StatelessWidget {
         showDatePicker(
           context: context,
           initialDate: _dateTime == null ? DateTime.now() : _dateTime,
-          firstDate: DateTime(1980),
+          firstDate: DateTime(1900),
           lastDate: DateTime(2022),
         ).then((date) {
           if(date!=null){
