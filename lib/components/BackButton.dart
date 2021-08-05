@@ -5,9 +5,8 @@ import 'package:dietari/utils/icons.dart';
 
 class BackButtonDietari extends StatelessWidget {
   final Function() onPressed;
-  final Widget? child;
 
-  const BackButtonDietari({Key? key, required this.onPressed, this.child,})
+  const BackButtonDietari({Key? key, required this.onPressed})
       : super(key: key);
 
   @override
