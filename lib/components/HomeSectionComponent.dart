@@ -4,11 +4,10 @@ import 'package:dietari/utils/colors.dart';
 
 class HomeSectionComponent extends StatelessWidget {
   final Function() onPressed;
-  final Widget? child;
   final String textHomeSectionComponent;
   final Widget content;
 
-  const HomeSectionComponent({Key? key, required this.onPressed, this.child, required this.textHomeSectionComponent,required this.content})
+  const HomeSectionComponent({Key? key, required this.onPressed, required this.textHomeSectionComponent,required this.content})
       : super(key: key);
 
   @override
