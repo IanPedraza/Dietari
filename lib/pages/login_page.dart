@@ -275,11 +275,9 @@ class _LoginPage extends State<LoginPage> {
   void _sendEmailResetPassword(TextEditingController emailController) {
     if (emailController.text.isNotEmpty) {
       if (EmailValidator.validate(emailController.text)) {
-        _sendPasswordResetEmail(emailController.text).then(
-          (value) => value
-              ? _showToast(alert_title_send_email)
-              : _showToast(alert_title_error_not_registered),
-        );
+        _sendPasswordResetEmail(emailController.text).then((value) => value
+            ? _showToast(alert_title_send_email)
+            : _showToast(alert_title_error_not_registered));
       } else {
         _showAlertDialog(
             context, alert_title_error, alert_content_not_valid_email);
@@ -289,7 +287,7 @@ class _LoginPage extends State<LoginPage> {
     }
   }
 
-  void _showToast(String content) {
+  /*void _showToast(String content) {
     Fluttertoast.showToast(
       msg: content,
       toastLength: Toast.LENGTH_SHORT,
@@ -298,6 +296,22 @@ class _LoginPage extends State<LoginPage> {
       textColor: Colors.black,
       fontSize: 15,
     );
+  }*/
+
+  void _showToast(String content) {
+    final snackBar = SnackBar(
+      content: Text(
+        content,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 16,
+        ),
+      ),
+      backgroundColor: colorTextMainButton,
+      behavior: SnackBarBehavior.floating,
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   void _showAlertDialog(BuildContext context, String title, String content) {
@@ -314,6 +328,60 @@ class _LoginPage extends State<LoginPage> {
   }
 
   void _showDialogResetPassword(BuildContext context) {
+    TextEditingController emailController = new TextEditingController();
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          title: Text(
+            alert_title_reset,
+            style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
+          ),
+          content: MainTextField(
+            text: textfield_email,
+            isPassword: false,
+            textEditingControl: emailController,
+            isPasswordTextStatus: false,
+            onTap: _showPassword,
+          ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                button_cancel,
+                style: TextStyle(
+                  color: primaryColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                ),
+              ),
+            ),
+            FlatButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _sendEmailResetPassword(emailController);
+              },
+              child: Text(
+                button_reset,
+                style: TextStyle(
+                  color: primaryColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+  /*void _showDialogResetPassword(BuildContext context) {
     TextEditingController emailController = new TextEditingController();
     showDialog(
       context: context,
@@ -359,7 +427,7 @@ class _LoginPage extends State<LoginPage> {
         );
       },
     );
-  }
+  }*/
 
   Future<ExternalUser?> _signInWithGoogle() async {
     ExternalUser? googleUser = await _signInWithGoogleUseCase.invoke();
