@@ -287,17 +287,6 @@ class _LoginPage extends State<LoginPage> {
     }
   }
 
-  /*void _showToast(String content) {
-    Fluttertoast.showToast(
-      msg: content,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 1,
-      textColor: Colors.black,
-      fontSize: 15,
-    );
-  }*/
-
   void _showToast(String content) {
     final snackBar = SnackBar(
       content: Text(
@@ -381,53 +370,6 @@ class _LoginPage extends State<LoginPage> {
       },
     );
   }
-  /*void _showDialogResetPassword(BuildContext context) {
-    TextEditingController emailController = new TextEditingController();
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          title: Text(
-            alert_title_reset,
-            textAlign: TextAlign.center,
-            style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
-          ),
-          content: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 4,
-            color: Colors.white,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                MainTextField(
-                  text: textfield_email,
-                  isPassword: false,
-                  textEditingControl: emailController,
-                  isPasswordTextStatus: false,
-                  onTap: _showPassword,
-                ),
-                Container(
-                  padding: EdgeInsets.all(15),
-                  width: MediaQuery.of(context).size.width,
-                  child: MainButton(
-                    text: button_reset,
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      _sendEmailResetPassword(emailController);
-                    },
-                  ),
-                )
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }*/
 
   Future<ExternalUser?> _signInWithGoogle() async {
     ExternalUser? googleUser = await _signInWithGoogleUseCase.invoke();
