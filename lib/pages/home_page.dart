@@ -4,6 +4,7 @@ import 'package:dietari/data/framework/FireBase/FirebaseAuthDataSource.dart';
 import 'package:dietari/data/repositories/AuthRepository.dart';
 import 'package:dietari/data/usecases/SignOutUseCase.dart';
 import 'package:dietari/pages/login_page.dart';
+import 'package:dietari/pages/test_page.dart';
 import 'package:dietari/utils/arguments.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +62,18 @@ class _HomePageState extends State<HomePage> {
                         MaterialPageRoute(builder: (context) => LoginPage()))
                     : print(false));
               },
-            )
+            ),
+            RaisedButton(
+              child: Text('Test'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TestPage(),
+                  ),
+                );
+              },
+            ),
           ],
         ),
       ),

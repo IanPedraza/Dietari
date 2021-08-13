@@ -1,3 +1,4 @@
+import 'package:dietari/utils/resources.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dietari/utils/colors.dart';
@@ -8,7 +9,11 @@ class TestItemCard extends StatelessWidget {
   final String textTestItem;
   final bool check;
 
-  const TestItemCard({Key? key, required this.onPressed, required this.textTestItem,required this.check})
+  const TestItemCard(
+      {Key? key,
+      required this.onPressed,
+      required this.textTestItem,
+      required this.check})
       : super(key: key);
 
   @override
@@ -18,9 +23,7 @@ class TestItemCard extends StatelessWidget {
       backgroundColor: backgroundColorTestItem,
       elevation: 8,
       isExtended: true,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10)
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Row(
         children: [
           Expanded(
@@ -31,23 +34,18 @@ class TestItemCard extends StatelessWidget {
                 style: TextStyle(
                     color: colorTextMainButton,
                     //fontWeight: FontWeight.w900,
-                    fontSize: 22
-                ),
+                    fontSize: 22),
                 textAlign: TextAlign.left,
               ),
             ),
           ),
           Spacer(),
           Container(
-            padding: const EdgeInsets.only(left: 20,right: 25),
-            child: check ?
-              SvgPicture.asset('assets/check.svg',width: 40)
-                :null
-            ,
+            padding: const EdgeInsets.only(left: 20, right: 25),
+            child: check ? SvgPicture.asset(image_check, width: 40) : null,
           ),
         ],
       ),
     );
   }
-
 }
