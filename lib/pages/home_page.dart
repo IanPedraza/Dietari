@@ -13,7 +13,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dietari/components/AppFloatingActionButton.dart';
 import 'package:dietari/utils/icons.dart';
-import 'package:introduction_screen/introduction_screen.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key, required this.title}) : super(key: key);
