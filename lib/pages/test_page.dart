@@ -17,7 +17,9 @@ class _TestPageState extends State<TestPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBarComponent(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
         textAppBar: test_list,
       ),
       body: ListView(
