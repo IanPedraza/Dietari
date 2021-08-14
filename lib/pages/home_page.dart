@@ -5,6 +5,7 @@ import 'package:dietari/data/repositories/AuthRepository.dart';
 import 'package:dietari/data/usecases/SignOutUseCase.dart';
 import 'package:dietari/pages/login_page.dart';
 import 'package:dietari/utils/arguments.dart';
+import 'package:dietari/utils/routes.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dietari/components/AppFloatingActionButton.dart';
@@ -61,7 +62,13 @@ class _HomePageState extends State<HomePage> {
                         MaterialPageRoute(builder: (context) => LoginPage()))
                     : print(false));
               },
-            )
+            ),
+            RaisedButton(
+              child: Text('Question'),
+              onPressed: () {
+                Navigator.pushNamed(context, question_route);
+              },
+            ),
           ],
         ),
       ),
