@@ -275,11 +275,9 @@ class _LoginPage extends State<LoginPage> {
   void _sendEmailResetPassword(TextEditingController emailController) {
     if (emailController.text.isNotEmpty) {
       if (EmailValidator.validate(emailController.text)) {
-        _sendPasswordResetEmail(emailController.text).then(
-          (value) => value
-              ? _showToast(alert_title_send_email)
-              : _showToast(alert_title_error_not_registered),
-        );
+        _sendPasswordResetEmail(emailController.text).then((value) => value
+            ? _showToast(alert_title_send_email)
+            : _showToast(alert_title_error_not_registered));
       } else {
         _showAlertDialog(
             context, alert_title_error, alert_content_not_valid_email);
@@ -290,14 +288,19 @@ class _LoginPage extends State<LoginPage> {
   }
 
   void _showToast(String content) {
-    Fluttertoast.showToast(
-      msg: content,
-      toastLength: Toast.LENGTH_SHORT,
-      gravity: ToastGravity.BOTTOM,
-      timeInSecForIosWeb: 1,
-      textColor: Colors.black,
-      fontSize: 15,
+    final snackBar = SnackBar(
+      content: Text(
+        content,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 16,
+        ),
+      ),
+      backgroundColor: colorTextMainButton,
+      behavior: SnackBarBehavior.floating,
     );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   void _showAlertDialog(BuildContext context, String title, String content) {
@@ -325,37 +328,44 @@ class _LoginPage extends State<LoginPage> {
           ),
           title: Text(
             alert_title_reset,
-            textAlign: TextAlign.center,
             style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
           ),
-          content: Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height / 4,
-            color: Colors.white,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                MainTextField(
-                  text: textfield_email,
-                  isPassword: false,
-                  textEditingControl: emailController,
-                  isPasswordTextStatus: false,
-                  onTap: _showPassword,
-                ),
-                Container(
-                  padding: EdgeInsets.all(15),
-                  width: MediaQuery.of(context).size.width,
-                  child: MainButton(
-                    text: button_reset,
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      _sendEmailResetPassword(emailController);
-                    },
-                  ),
-                )
-              ],
-            ),
+          content: MainTextField(
+            text: textfield_email,
+            isPassword: false,
+            textEditingControl: emailController,
+            isPasswordTextStatus: false,
+            onTap: _showPassword,
           ),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                button_cancel,
+                style: TextStyle(
+                  color: primaryColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                ),
+              ),
+            ),
+            FlatButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _sendEmailResetPassword(emailController);
+              },
+              child: Text(
+                button_reset,
+                style: TextStyle(
+                  color: primaryColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15,
+                ),
+              ),
+            ),
+          ],
         );
       },
     );
