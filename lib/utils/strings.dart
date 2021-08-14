@@ -26,6 +26,10 @@ const button_reset = "Restablecer Contraseña";
 const button_accept = "Aceptar";
 const button_item_test = "Test Item";
 const button_cancel = "Cancelar";
+const button_cancel = "Cancelar";
+const button_mna = "MNA";
+const button_icm = "ICM";
+const button_test3 = "TEST 3";
 
 //Etiquetas
 const text_forget_password = "¿Olvidaste tu Contraseña?";
@@ -35,6 +39,7 @@ const text_message = "Al iniciar el registro estoy aceptando los ";
 const text_tems_conditions = "términos y condiciones";
 const text_message_continuation = " así como la ";
 const text_privacy_policies = "política de privacidad";
+
 //Cuadro de Alerta
 const alert_title_error = "Ha Ocurrido un Error";
 const alert_title_send_email = "Enlace enviado para restablecer contraseña";
