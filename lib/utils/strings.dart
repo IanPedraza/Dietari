@@ -1,7 +1,8 @@
 const app_name = "Dietari";
 const registration_form = "Formulario de Registro";
-const login_name = "Iniciar Sesión";
+const login_form = "Iniciar Sesión";
 const espace = " ";
+const test_list = "Tests";
 
 //Cuadros de Texto
 const textfield_email = "Correo Electrónico";
@@ -23,6 +24,8 @@ const button_continue = "Continuar";
 const button_finish = "Terminar";
 const button_reset = "Restablecer Contraseña";
 const button_accept = "Aceptar";
+const button_item_test = "Test Item";
+const button_cancel = "Cancelar";
 const button_cancel = "Cancelar";
 const button_mna = "MNA";
 const button_icm = "ICM";

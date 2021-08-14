@@ -23,9 +23,7 @@ class TestItemCard extends StatelessWidget {
       backgroundColor: backgroundColorTestItem,
       elevation: 8,
       isExtended: true,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10)
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Row(
         children: [
           Expanded(

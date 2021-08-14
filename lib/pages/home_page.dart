@@ -6,6 +6,7 @@ import 'package:dietari/data/framework/FireBase/FirebaseAuthDataSource.dart';
 import 'package:dietari/data/repositories/AuthRepository.dart';
 import 'package:dietari/data/usecases/SignOutUseCase.dart';
 import 'package:dietari/pages/login_page.dart';
+import 'package:dietari/pages/test_page.dart';
 import 'package:dietari/utils/arguments.dart';
 import 'package:dietari/utils/colors.dart';
 import 'package:dietari/utils/strings.dart';
@@ -125,17 +126,28 @@ class _HomePageState extends State<HomePage> {
                 (index) => buildDot(index, context),
               ),
             ),
-          ),
-          RaisedButton(
-            child: Text('Sing Out'),
-            onPressed: () {
-              _signOut().then((value) => value
-                  ? Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => LoginPage()))
-                  : print(false));
-            },
-          ),
-        ],
+            RaisedButton(
+              child: Text('Sing Out'),
+              onPressed: () {
+                _signOut().then((value) => value
+                    ? Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => LoginPage()))
+                    : print(false));
+              },
+            ),
+            RaisedButton(
+              child: Text('Test'),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => TestPage(),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
       ),
       floatingActionButton: AppFloatingActionButton(
         onPressed: () {},
