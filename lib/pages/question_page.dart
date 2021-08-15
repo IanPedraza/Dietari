@@ -74,7 +74,7 @@ class _QuestionPageState extends State<QuestionPage> {
             child: AnswerOptionCard(
               onPressed: () {},
               textAnswer: "Respuesta 5",
-              choosen: false,
+              choosen: true,
             ),
           ),
           Container(
