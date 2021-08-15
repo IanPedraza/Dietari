@@ -63,12 +63,6 @@ class _HomePageState extends State<HomePage> {
                     : print(false));
               },
             ),
-            RaisedButton(
-              child: Text('Question'),
-              onPressed: () {
-                Navigator.pushNamed(context, question_route);
-              },
-            ),
           ],
         ),
       ),
