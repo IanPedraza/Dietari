@@ -1,10 +1,16 @@
+import 'package:dietari/components/HomeSectionComponent.dart';
+import 'package:dietari/components/TestItemCard.dart';
 import 'package:dietari/data/datasources/AuthDataSource.dart';
 import 'package:dietari/data/domain/User.dart';
 import 'package:dietari/data/framework/FireBase/FirebaseAuthDataSource.dart';
 import 'package:dietari/data/repositories/AuthRepository.dart';
 import 'package:dietari/data/usecases/SignOutUseCase.dart';
 import 'package:dietari/pages/login_page.dart';
+import 'package:dietari/pages/test_page.dart';
 import 'package:dietari/utils/arguments.dart';
+import 'package:dietari/utils/colors.dart';
+import 'package:dietari/utils/routes.dart';
+import 'package:dietari/utils/strings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dietari/components/AppFloatingActionButton.dart';
@@ -28,14 +34,37 @@ class _HomePageState extends State<HomePage> {
       SignOutUseCase(authRepository: _authRepository);
 
   late User newUser;
+  int currentIndex = 0;
+  late PageController _controller;
 
-  void _getArguments() {
-    final args = ModalRoute.of(context)?.settings.arguments as Map;
-    if (args.isEmpty) {
-      Navigator.pop(context);
-      return;
-    }
-    newUser = args[user_args];
+  List<Widget> _widgets = [
+    TestItemCard(
+      onPressed: () {},
+      textTestItem: button_mna,
+      check: true,
+    ),
+    TestItemCard(
+      onPressed: () {},
+      textTestItem: button_icm,
+      check: false,
+    ),
+    TestItemCard(
+      onPressed: () {},
+      textTestItem: button_test3,
+      check: true,
+    ),
+  ];
+
+  @override
+  void initState() {
+    _controller = PageController(initialPage: 0);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -45,25 +74,89 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            Text(
-              newUser.firstName + ': Signed in Successfully ',
+      body: ListView(
+        children: [
+          HomeSectionComponent(
+            onPressed: () {},
+            textHomeSectionComponent: "Tests",
+            content: Container(
+              height: 220,
+              child: PageView.builder(
+                scrollDirection: Axis.horizontal,
+                controller: _controller,
+                onPageChanged: (int index) {
+                  setState(() {
+                    currentIndex = index;
+                  });
+                },
+                itemCount: _widgets.length,
+                itemBuilder: (context, index) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.only(left: 0, top: 10, right: 20),
+                        height: 60,
+                        width: MediaQuery.of(context).size.width / 1.2,
+                        child: _widgets[index],
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(left: 0, top: 10, right: 20),
+                        height: 60,
+                        width: MediaQuery.of(context).size.width / 1.2,
+                        child: _widgets[index],
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(left: 0, top: 10, right: 20),
+                        height: 60,
+                        width: MediaQuery.of(context).size.width / 1.2,
+                        child: _widgets[index],
+                      ),
+                    ],
+                  );
+                },
+              ),
             ),
-            RaisedButton(
-              child: Text('Sing Out'),
-              onPressed: () {
-                _signOut().then((value) => value
-                    ? Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => LoginPage()))
-                    : print(false));
-              },
-            )
-          ],
-        ),
+          ),
+          SizedBox(height: 20),
+          Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                _widgets.length,
+                (index) => buildDot(index, context),
+              ),
+            ),
+          ),
+          RaisedButton(
+            child: Text('Sing Out'),
+            onPressed: () {
+              _signOut().then(
+                (value) => value
+                    ? Navigator.pushNamed(context, login_route)
+                    : print(false),
+              );
+            },
+          ),
+          RaisedButton(
+            child: Text('Test'),
+            onPressed: () {
+              Navigator.pushNamed(context, test_route);
+            },
+          ),
+          RaisedButton(
+            child: Text('Question'),
+            onPressed: () {
+              Navigator.pushNamed(context, question_route);
+            },
+          ),
+          RaisedButton(
+            child: Text('Finished Test'),
+            onPressed: () {
+              Navigator.pushNamed(context, finished_test_route);
+            },
+          ),
+        ],
       ),
       floatingActionButton: AppFloatingActionButton(
         onPressed: () {},
@@ -75,5 +168,27 @@ class _HomePageState extends State<HomePage> {
   Future<bool> _signOut() async {
     bool exit = await _signOutUseCase.invoke();
     return exit;
+  }
+
+  void _getArguments() {
+    final args = ModalRoute.of(context)?.settings.arguments as Map;
+    if (args.isEmpty) {
+      Navigator.pop(context);
+      return;
+    }
+    newUser = args[user_args];
+  }
+
+  Container buildDot(int index, BuildContext context) {
+    return Container(
+      height: 10,
+      width: 10,
+      margin: EdgeInsets.only(right: 5, bottom: 30),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: primaryColor, width: 1),
+        color: currentIndex == index ? primaryColor : Colors.transparent,
+      ),
+    );
   }
 }

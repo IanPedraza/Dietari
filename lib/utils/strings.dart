@@ -1,7 +1,9 @@
 const app_name = "Dietari";
 const registration_form = "Formulario de Registro";
-const login_name = "Iniciar Sesión";
+const login_form = "Iniciar Sesión";
 const espace = " ";
+const test_list = "Tests";
+
 //Cuadros de Texto
 const textfield_email = "Correo Electrónico";
 const textfield_password = "Contraseña";
@@ -22,6 +24,12 @@ const button_continue = "Continuar";
 const button_finish = "Terminar";
 const button_reset = "Restablecer Contraseña";
 const button_accept = "Aceptar";
+const button_next = "Siguiente";
+const button_item_test = "Test Item";
+const button_cancel = "Cancelar";
+const button_mna = "MNA";
+const button_icm = "ICM";
+const button_test3 = "TEST 3";
 
 //Etiquetas
 const text_forget_password = "¿Olvidaste tu Contraseña?";
@@ -31,6 +39,10 @@ const text_message = "Al iniciar el registro estoy aceptando los ";
 const text_tems_conditions = "términos y condiciones";
 const text_message_continuation = " así como la ";
 const text_privacy_policies = "política de privacidad";
+const text_congratulations = "¡Felicidades! Has terminado el test.";
+const text_finished_test =
+    "Regresa al test en unos minutos para ver tus resultados.";
+
 //Cuadro de Alerta
 const alert_title_error = "Ha Ocurrido un Error";
 const alert_title_send_email = "Enlace enviado para restablecer contraseña";
