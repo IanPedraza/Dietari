@@ -1,6 +1,5 @@
 import 'package:dietari/components/AppBarComponent.dart';
 import 'package:dietari/components/TestItemCard.dart';
-import 'package:dietari/utils/colors.dart';
 import 'package:dietari/utils/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
