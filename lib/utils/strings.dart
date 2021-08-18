@@ -39,6 +39,9 @@ const text_message = "Al iniciar el registro estoy aceptando los ";
 const text_tems_conditions = "términos y condiciones";
 const text_message_continuation = " así como la ";
 const text_privacy_policies = "política de privacidad";
+const text_congratulations = "¡Felicidades! Has terminado el test.";
+const text_finished_test =
+    "Regresa al test en unos minutos para ver tus resultados.";
 
 //Cuadro de Alerta
 const alert_title_error = "Ha Ocurrido un Error";

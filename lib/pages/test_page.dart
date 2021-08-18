@@ -26,7 +26,7 @@ class _TestPageState extends State<TestPage> {
         children: [
           Container(
             padding:
-                const EdgeInsets.only(left: 15, top: 0, bottom: 30, right: 20),
+                const EdgeInsets.only(left: 15, top: 15, bottom: 30, right: 20),
             child: TestItemCard(
               onPressed: () {},
               textTestItem: button_item_test,
