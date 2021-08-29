@@ -147,6 +147,7 @@ class _BaseRegister1Page extends State<BaseRegister1Page> {
     if (inputControllerEmail.text.isNotEmpty &&
         inputControllerPassword.text.isNotEmpty &&
         inputControllerRepeatPassword.text.isNotEmpty) {
+      inputControllerEmail.text.split(' ');
       if (EmailValidator.validate(inputControllerEmail.text)) {
         if (inputControllerPassword.text ==
             inputControllerRepeatPassword.text) {

@@ -9,8 +9,13 @@ class AnswerOptionCard extends StatelessWidget {
   final String textAnswer;
   final bool choosen;
 
-  const AnswerOptionCard({Key? key, required this.onPressed, this.child, required this.textAnswer,required this.choosen})
-      : super(key: key);
+  const AnswerOptionCard({
+    Key? key,
+    required this.onPressed,
+    this.child,
+    required this.textAnswer,
+    required this.choosen,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,8 +26,7 @@ class AnswerOptionCard extends StatelessWidget {
       isExtended: true,
       shape: RoundedRectangleBorder(
           side: BorderSide(color: colorAnswerOptionCard),
-          borderRadius: BorderRadius.circular(10)
-      ),
+          borderRadius: BorderRadius.circular(10)),
       child: Row(
         children: [
           Expanded(
@@ -30,24 +34,19 @@ class AnswerOptionCard extends StatelessWidget {
               padding: const EdgeInsets.only(left: 20),
               child: Text(
                 textAnswer,
-                style: TextStyle(
-                    color: primaryColor,
-                    fontSize: 22
-                ),
+                style: TextStyle(color: primaryColor, fontSize: 22),
                 textAlign: TextAlign.left,
               ),
             ),
           ),
           Spacer(),
           Container(
-            padding: const EdgeInsets.only(left: 20,right: 25),
+            padding: const EdgeInsets.only(right: 25),
             child: Transform.scale(
               scale: 1.6,
-              child:
-              choosen ?
-                  getIcon(AppIcons.check,color: colorAnswerOptionCard) :
-                  getIcon(AppIcons.uncheck,color: colorAnswerOptionCard)
-              ,
+              child: choosen
+                  ? getIcon(AppIcons.check, color: colorAnswerOptionCard)
+                  : getIcon(AppIcons.uncheck, color: colorAnswerOptionCard),
               alignment: Alignment.center,
             ),
           ),
@@ -55,5 +54,4 @@ class AnswerOptionCard extends StatelessWidget {
       ),
     );
   }
-
 }
