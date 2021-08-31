@@ -26,7 +26,7 @@ class Question {
   Map<String, dynamic> toMap() {
     return {
       'question': question,
-      'options': options?.map((x) => x.toMap())?.toList(),
+      'options': options.map((x) => x.toMap()).toList(),
     };
   }
 
