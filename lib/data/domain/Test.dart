@@ -8,20 +8,20 @@ class Test {
   String id;
   String title;
   String description;
-  List questions;
+  List<Question> questions;
 
   Test({
     this.id = "",
-    this.title = "",
+    required this.title,
     this.description = "",
-    this.questions = const <Question>[],
+    required this.questions,
   });
 
   Test copyWith({
     String? id,
     String? title,
     String? description,
-    List? questions,
+    List<Question>? questions,
   }) {
     return Test(
       id: id ?? this.id,
@@ -36,7 +36,7 @@ class Test {
       'id': id,
       'title': title,
       'description': description,
-      'questions': questions,
+      'questions': questions.map((x) => x.toMap()).toList(),
     };
   }
 
@@ -45,7 +45,8 @@ class Test {
       id: map['id'],
       title: map['title'],
       description: map['description'],
-      questions: List.from(map['questions']),
+      questions: List<Question>.from(
+          map['questions']?.map((x) => Question.fromMap(x))),
     );
   }
 
