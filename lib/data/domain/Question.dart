@@ -6,13 +6,16 @@ import 'package:dietari/data/domain/Option.dart';
 
 class Question {
   String question;
-  List options;
+  List<Option> options;
 
-  Question({this.question = "", this.options = const <Option>[]});
+  Question({
+    required this.question,
+    required this.options,
+  });
 
   Question copyWith({
     String? question,
-    List? options,
+    List<Option>? options,
   }) {
     return Question(
       question: question ?? this.question,
@@ -23,14 +26,14 @@ class Question {
   Map<String, dynamic> toMap() {
     return {
       'question': question,
-      'options': options,
+      'options': options.map((x) => x.toMap()).toList(),
     };
   }
 
   factory Question.fromMap(Map<String, dynamic> map) {
     return Question(
       question: map['question'],
-      options: List.from(map['options']),
+      options: List<Option>.from(map['options']?.map((x) => Option.fromMap(x))),
     );
   }
 
