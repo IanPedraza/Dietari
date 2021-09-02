@@ -219,7 +219,7 @@ class _LoginPage extends State<LoginPage> {
     );
   }
 
-  void _isLogin() async {
+  void _isLogin() {
     String? id = _getUserIdUseCase.invoke();
     if (id != null) {
       _userRegistered(id).then(
