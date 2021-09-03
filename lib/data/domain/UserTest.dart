@@ -8,22 +8,21 @@ class UserTest {
   String id;
   String title;
   String description;
-  List questions;
+  List<Question> questions;
   bool isComplete;
 
-  UserTest({
-    this.id = "",
-    this.title = "",
-    this.description = "",
-    this.questions = const <Question>[],
-    this.isComplete = false,
-  });
+  UserTest(
+      {this.id = "",
+      required this.title,
+      this.description = "",
+      required this.questions,
+      this.isComplete = false});
 
   UserTest copyWith({
     String? id,
     String? title,
     String? description,
-    List? questions,
+    List<Question>? questions,
     bool? isComplete,
   }) {
     return UserTest(
@@ -40,7 +39,7 @@ class UserTest {
       'id': id,
       'title': title,
       'description': description,
-      'questions': questions,
+      'questions': questions?.map((x) => x.toMap())?.toList(),
       'isComplete': isComplete,
     };
   }
@@ -50,7 +49,8 @@ class UserTest {
       id: map['id'],
       title: map['title'],
       description: map['description'],
-      questions: List.from(map['questions']),
+      questions: List<Question>.from(
+          map['questions']?.map((x) => Question.fromMap(x))),
       isComplete: map['isComplete'],
     );
   }
