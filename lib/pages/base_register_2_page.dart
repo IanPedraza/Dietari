@@ -88,7 +88,17 @@ class _BaseRegister2Page extends State<BaseRegister2Page> {
       inputControllerName.text = newUser.firstName.toString();
     }
     if (newUser.lastName.isNotEmpty) {
-      inputControllerLastName.text = newUser.lastName.toString();
+      String text = newUser.lastName.toString();
+      List<String> lastName = text.split(' ');
+      if (lastName.length == 1) {
+        inputControllerLastName.text = lastName.single;
+      } else {
+        if (lastName.length >= 2) {
+          inputControllerLastName.text =
+              lastName.sublist(0, lastName.length - 1).join(' ');
+          inputControllerMsLastName.text = lastName.last;
+        }
+      }
     }
   }
 
