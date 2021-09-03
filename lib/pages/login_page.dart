@@ -235,9 +235,26 @@ class _LoginPage extends State<LoginPage> {
   }
 
   User _saveGoogleUser(ExternalUser googleUser) {
+    String text = googleUser.displayName.toString();
+    List<String> fullName = text.split(' ');
+    if (fullName.length == 1) {
+      newUser.firstName = fullName.single;
+    } else {
+      if (fullName.length == 2) {
+        newUser.firstName = fullName.first;
+        newUser.lastName = fullName.last;
+      }
+      if (fullName.length == 3) {
+        newUser.firstName = fullName.first;
+        newUser.lastName = fullName.sublist(1, fullName.length).join(' ');
+      }
+      if (fullName.length >= 4) {
+        newUser.firstName = fullName.sublist(0, 1).join(' ');
+        newUser.lastName = fullName.sublist(2, fullName.length).join(' ');
+      }
+    }
     newUser.id = googleUser.uid;
     newUser.email = googleUser.email.toString();
-    newUser.firstName = googleUser.displayName.toString();
     return newUser;
   }
 
