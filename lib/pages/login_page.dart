@@ -10,6 +10,7 @@ import 'package:dietari/data/framework/FireBase/FirebaseAuthDataSource.dart';
 import 'package:dietari/data/framework/FireBase/FirebaseUserDataSouce.dart';
 import 'package:dietari/data/repositories/AuthRepository.dart';
 import 'package:dietari/data/repositories/UserRepository.dart';
+import 'package:dietari/data/usecases/GetUserIdUseCase.dart';
 import 'package:dietari/data/usecases/GetUserUseCase.dart';
 import 'package:dietari/data/usecases/SendPasswordResetEmailUseCase.dart';
 import 'package:dietari/data/usecases/SignInWithGoogleUseCase.dart';
@@ -55,6 +56,9 @@ class _LoginPage extends State<LoginPage> {
   late GetUserUseCase _getUserUseCase =
       GetUserUseCase(userRepository: _userRepository);
 
+  late GetUserIdUseCase _getUserIdUseCase =
+      GetUserIdUseCase(authRepository: _authRepository);
+
   TextEditingController inputControllerEmail = new TextEditingController();
   TextEditingController inputControllerPassword = new TextEditingController();
 
@@ -69,9 +73,10 @@ class _LoginPage extends State<LoginPage> {
   );
 
   bool activar = true;
+
   @override
   Widget build(BuildContext context) {
-    _signOut();
+    _isLogin();
     return WillPopScope(
       onWillPop: () => exit(0),
       child: Scaffold(
@@ -214,6 +219,15 @@ class _LoginPage extends State<LoginPage> {
     );
   }
 
+  void _isLogin() {
+    String? id = _getUserIdUseCase.invoke();
+    if (id != null) {
+      _userRegistered(id).then(
+        (user) => user != null ? _nextScreen(home_route, user) : () {},
+      );
+    }
+  }
+
   void _showPassword() {
     setState(() {
       activar = !activar;
@@ -259,7 +273,8 @@ class _LoginPage extends State<LoginPage> {
           (userId) => userId != null
               ? _userRegistered(userId).then(
                   (usered) => usered != null
-                      ? _nextScreen(home_route, usered)
+                      ? _nextScreen(
+                          home_route, usered) /*_saveLogin(home_route, usered)*/
                       : _showAlertDialog(context, alert_title_error,
                           alert_content_not_registered),
                 )
@@ -280,7 +295,8 @@ class _LoginPage extends State<LoginPage> {
     _signInWithGoogle().then((googleUser) => googleUser != null
         ? _userRegistered(googleUser.uid).then(
             (usered) => usered != null
-                ? _nextScreen(home_route, usered)
+                ? _nextScreen(
+                    home_route, usered) /*_saveLogin(home_route, usered)*/
                 : _nextScreen(
                     base_register_2_route, _saveGoogleUser(googleUser)),
           )

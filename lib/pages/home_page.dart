@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dietari/components/HomeSectionComponent.dart';
 import 'package:dietari/components/TestItemCard.dart';
 import 'package:dietari/data/datasources/AuthDataSource.dart';
@@ -68,100 +70,99 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     _getArguments();
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: ListView(
-        children: [
-          HomeSectionComponent(
-            onPressed: () {},
-            textHomeSectionComponent: "Tests",
-            content: Container(
-              height: 230,
-              child: PageView.builder(
-                scrollDirection: Axis.horizontal,
-                controller: _controller,
-                onPageChanged: (int index) {
-                  setState(() {
-                    currentIndex = index;
-                  });
-                },
-                itemCount: _widgets.length,
-                itemBuilder: (context, index) {
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.only(
-                            left: 0, top: 5, right: 20, bottom: 5),
-                        height: 60,
-                        width: MediaQuery.of(context).size.width / 1.2,
-                        child: _widgets[index],
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(
-                            left: 0, top: 5, right: 20, bottom: 5),
-                        height: 60,
-                        width: MediaQuery.of(context).size.width / 1.2,
-                        child: _widgets[index],
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(
-                            left: 0, top: 5, right: 20, bottom: 5),
-                        height: 60,
-                        width: MediaQuery.of(context).size.width / 1.2,
-                        child: _widgets[index],
-                      ),
-                    ],
-                  );
-                },
+    return WillPopScope(
+      onWillPop: () => exit(0),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(widget.title),
+        ),
+        body: ListView(
+          children: [
+            HomeSectionComponent(
+              onPressed: () {},
+              textHomeSectionComponent: "Tests",
+              content: Container(
+                height: 220,
+                child: PageView.builder(
+                  scrollDirection: Axis.horizontal,
+                  controller: _controller,
+                  onPageChanged: (int index) {
+                    setState(() {
+                      currentIndex = index;
+                    });
+                  },
+                  itemCount: _widgets.length,
+                  itemBuilder: (context, index) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Container(
+                          margin: EdgeInsets.only(left: 0, top: 10, right: 20),
+                          height: 60,
+                          width: MediaQuery.of(context).size.width / 1.2,
+                          child: _widgets[index],
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(left: 0, top: 10, right: 20),
+                          height: 60,
+                          width: MediaQuery.of(context).size.width / 1.2,
+                          child: _widgets[index],
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(left: 0, top: 10, right: 20),
+                          height: 60,
+                          width: MediaQuery.of(context).size.width / 1.2,
+                          child: _widgets[index],
+                        ),
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
-          ),
-          SizedBox(height: 20),
-          Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(
-                _widgets.length,
-                (index) => buildDot(index, context),
+            SizedBox(height: 20),
+            Container(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  _widgets.length,
+                  (index) => buildDot(index, context),
+                ),
               ),
             ),
-          ),
-          RaisedButton(
-            child: Text('Sing Out'),
-            onPressed: () {
-              _signOut().then(
-                (value) => value
-                    ? Navigator.pushNamed(context, login_route)
-                    : print(false),
-              );
-            },
-          ),
-          RaisedButton(
-            child: Text('Test'),
-            onPressed: () {
-              Navigator.pushNamed(context, test_route);
-            },
-          ),
-          RaisedButton(
-            child: Text('Question'),
-            onPressed: () {
-              Navigator.pushNamed(context, question_route);
-            },
-          ),
-          RaisedButton(
-            child: Text('Finished Test'),
-            onPressed: () {
-              Navigator.pushNamed(context, finished_test_route);
-            },
-          ),
-        ],
-      ),
-      floatingActionButton: AppFloatingActionButton(
-        onPressed: () {},
-        child: getIcon(AppIcons.add),
+            RaisedButton(
+              child: Text('Sing Out'),
+              onPressed: () {
+                _signOut().then(
+                  (value) =>
+                      value ? Navigator.pushNamed(context, login_route) : () {},
+                );
+              },
+            ),
+            RaisedButton(
+              child: Text('Test'),
+              onPressed: () {
+                Navigator.pushNamed(context, test_route);
+              },
+            ),
+            RaisedButton(
+              child: Text('Question'),
+              onPressed: () {
+                Navigator.pushNamed(context, question_route);
+              },
+            ),
+            RaisedButton(
+              child: Text('Finished Test'),
+              onPressed: () {
+                Navigator.pushNamed(context, finished_test_route);
+              },
+            ),
+          ],
+        ),
+        floatingActionButton: AppFloatingActionButton(
+          onPressed: () {},
+          child: getIcon(AppIcons.add),
+        ),
       ),
     );
   }
