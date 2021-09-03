@@ -78,7 +78,7 @@ class _HomePageState extends State<HomePage> {
             onPressed: () {},
             textHomeSectionComponent: "Tests",
             content: Container(
-              height: 220,
+              height: 230,
               child: PageView.builder(
                 scrollDirection: Axis.horizontal,
                 controller: _controller,
@@ -93,19 +93,22 @@ class _HomePageState extends State<HomePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Container(
-                        margin: EdgeInsets.only(left: 0, top: 10, right: 20),
+                        margin: EdgeInsets.only(
+                            left: 0, top: 5, right: 20, bottom: 5),
                         height: 60,
                         width: MediaQuery.of(context).size.width / 1.2,
                         child: _widgets[index],
                       ),
                       Container(
-                        margin: EdgeInsets.only(left: 0, top: 10, right: 20),
+                        margin: EdgeInsets.only(
+                            left: 0, top: 5, right: 20, bottom: 5),
                         height: 60,
                         width: MediaQuery.of(context).size.width / 1.2,
                         child: _widgets[index],
                       ),
                       Container(
-                        margin: EdgeInsets.only(left: 0, top: 10, right: 20),
+                        margin: EdgeInsets.only(
+                            left: 0, top: 5, right: 20, bottom: 5),
                         height: 60,
                         width: MediaQuery.of(context).size.width / 1.2,
                         child: _widgets[index],
