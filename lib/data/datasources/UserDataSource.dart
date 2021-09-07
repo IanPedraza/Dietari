@@ -1,9 +1,9 @@
-import 'package:dietari/data/domain/Test.dart';
 import 'package:dietari/data/domain/User.dart';
+import 'package:dietari/data/domain/UserTest.dart';
 
 abstract class UserDataSource {
   Future<User?> getUser(String id);
   Future<bool> addUser(User user);
-  Future<Test?> getUserTest(String userId, String testId);
-  Future<bool> addUserTest(String userId, Test test);
+  Future<UserTest?> getUserTest(String userId, String testId);
+  Future<bool> addUserTest(String userId, UserTest test);
 }
