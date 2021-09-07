@@ -1,22 +1,24 @@
 import 'dart:convert';
 
 class User {
-  String id = "";
-  String firstName = "";
-  String lastName = "";
-  String email = "";
-  String dateOfBirth = "";
-  double weight = 0.0;
-  double height = 0.0;
+  String id;
+  String firstName;
+  String lastName;
+  String email;
+  String dateOfBirth;
+  double weight;
+  double height;
+  double imc;
 
   User({
-    required this.id,
-    required this.firstName,
-    required this.lastName,
-    required this.email,
-    required this.dateOfBirth,
-    required this.weight,
-    required this.height,
+    this.id = "",
+    this.firstName = "",
+    this.lastName = "",
+    this.email = "",
+    this.dateOfBirth = "",
+    this.weight = 0.0,
+    this.height = 0.0,
+    this.imc = 0.0,
   });
 
   User copyWith({
@@ -27,6 +29,7 @@ class User {
     String? dateOfBirth,
     double? weight,
     double? height,
+    double? imc,
   }) {
     return User(
       id: id ?? this.id,
@@ -36,6 +39,7 @@ class User {
       dateOfBirth: dateOfBirth ?? this.dateOfBirth,
       weight: weight ?? this.weight,
       height: height ?? this.height,
+      imc: imc ?? this.imc,
     );
   }
 
@@ -48,6 +52,7 @@ class User {
       'dateOfBirth': dateOfBirth,
       'weight': weight,
       'height': height,
+      'imc': imc,
     };
   }
 
@@ -60,6 +65,7 @@ class User {
       dateOfBirth: map['dateOfBirth'],
       weight: map['weight'],
       height: map['height'],
+      imc: map['imc'],
     );
   }
 
@@ -69,7 +75,7 @@ class User {
 
   @override
   String toString() {
-    return 'User(id: $id, firstName: $firstName, lastName: $lastName, email: $email, dateOfBirth: $dateOfBirth, weight: $weight, height: $height)';
+    return 'User(id: $id, firstName: $firstName, lastName: $lastName, email: $email, dateOfBirth: $dateOfBirth, weight: $weight, height: $height, imc: $imc)';
   }
 
   @override
@@ -83,7 +89,8 @@ class User {
         other.email == email &&
         other.dateOfBirth == dateOfBirth &&
         other.weight == weight &&
-        other.height == height;
+        other.height == height &&
+        other.imc == imc;
   }
 
   @override
@@ -94,6 +101,7 @@ class User {
         email.hashCode ^
         dateOfBirth.hashCode ^
         weight.hashCode ^
-        height.hashCode;
+        height.hashCode ^
+        imc.hashCode;
   }
 }
