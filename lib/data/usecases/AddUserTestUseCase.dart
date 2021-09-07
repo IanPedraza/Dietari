@@ -1,4 +1,4 @@
-import 'package:dietari/data/domain/Test.dart';
+import 'package:dietari/data/domain/UserTest.dart';
 import 'package:dietari/data/repositories/UserRepository.dart';
 
 class AddUserTestUseCase {
@@ -6,7 +6,7 @@ class AddUserTestUseCase {
 
   AddUserTestUseCase({required this.userRepository});
 
-  Future<Test?> invoke(String userId, String testId) {
-    return userRepository.getUserTest(userId, testId);
+  Future<bool> invoke(String userId, UserTest test) {
+    return userRepository.addUserTest(userId, test);
   }
 }
