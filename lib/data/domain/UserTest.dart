@@ -1,28 +1,27 @@
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
-
-import 'Question.dart';
+import 'package:dietari/data/domain/UserQuestion.dart';
 
 class UserTest {
   String id;
   String title;
   String description;
-  List<Question> questions;
+  List<UserQuestion> questions;
   bool isComplete;
 
-  UserTest(
-      {this.id = "",
-      required this.title,
-      this.description = "",
-      required this.questions,
-      this.isComplete = false});
+  UserTest({
+    this.id = "",
+    required this.title,
+    this.description = "",
+    required this.questions,
+    this.isComplete = false,
+  });
 
   UserTest copyWith({
     String? id,
     String? title,
     String? description,
-    List<Question>? questions,
+    List<UserQuestion>? questions,
     bool? isComplete,
   }) {
     return UserTest(
@@ -49,8 +48,8 @@ class UserTest {
       id: map['id'],
       title: map['title'],
       description: map['description'],
-      questions: List<Question>.from(
-          map['questions']?.map((x) => Question.fromMap(x))),
+      questions: List<UserQuestion>.from(
+          map['questions']?.map((x) => UserQuestion.fromMap(x))),
       isComplete: map['isComplete'],
     );
   }
