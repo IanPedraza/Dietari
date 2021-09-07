@@ -39,7 +39,7 @@ class UserTest {
       'id': id,
       'title': title,
       'description': description,
-      'questions': questions?.map((x) => x.toMap())?.toList(),
+      'questions': questions.map((x) => x.toMap()).toList(),
       'isComplete': isComplete,
     };
   }
