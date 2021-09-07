@@ -9,6 +9,7 @@ class User {
   double weight;
   double height;
   double imc;
+  String status;
 
   User({
     this.id = "",
@@ -19,6 +20,7 @@ class User {
     this.weight = 0.0,
     this.height = 0.0,
     this.imc = 0.0,
+    this.status = "",
   });
 
   User copyWith({
@@ -30,6 +32,7 @@ class User {
     double? weight,
     double? height,
     double? imc,
+    String? status,
   }) {
     return User(
       id: id ?? this.id,
@@ -40,6 +43,7 @@ class User {
       weight: weight ?? this.weight,
       height: height ?? this.height,
       imc: imc ?? this.imc,
+      status: status ?? this.status,
     );
   }
 
@@ -53,6 +57,7 @@ class User {
       'weight': weight,
       'height': height,
       'imc': imc,
+      'status': status,
     };
   }
 
@@ -66,6 +71,7 @@ class User {
       weight: map['weight'],
       height: map['height'],
       imc: map['imc'],
+      status: map['status'],
     );
   }
 
@@ -75,7 +81,7 @@ class User {
 
   @override
   String toString() {
-    return 'User(id: $id, firstName: $firstName, lastName: $lastName, email: $email, dateOfBirth: $dateOfBirth, weight: $weight, height: $height, imc: $imc)';
+    return 'User(id: $id, firstName: $firstName, lastName: $lastName, email: $email, dateOfBirth: $dateOfBirth, weight: $weight, height: $height, imc: $imc, status: $status)';
   }
 
   @override
@@ -90,7 +96,8 @@ class User {
         other.dateOfBirth == dateOfBirth &&
         other.weight == weight &&
         other.height == height &&
-        other.imc == imc;
+        other.imc == imc &&
+        other.status == status;
   }
 
   @override
@@ -102,6 +109,7 @@ class User {
         dateOfBirth.hashCode ^
         weight.hashCode ^
         height.hashCode ^
-        imc.hashCode;
+        imc.hashCode ^
+        status.hashCode;
   }
 }
