@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dietari/data/datasources/UserDataSource.dart';
-import 'package:dietari/data/domain/Test.dart';
 import 'package:dietari/data/domain/User.dart';
+import 'package:dietari/data/domain/UserTest.dart';
 import 'package:dietari/data/framework/Firebase/FirebaseConstants.dart';
 
 class FirebaseUserDataSouce extends UserDataSource {
@@ -36,7 +36,7 @@ class FirebaseUserDataSouce extends UserDataSource {
   }
 
   @override
-  Future<Test?> getUserTest(String userId, String testId) async {
+  Future<UserTest?> getUserTest(String userId, String testId) async {
     try {
       final response = await _database
           .collection(USERS_COLLECTION)
@@ -46,7 +46,7 @@ class FirebaseUserDataSouce extends UserDataSource {
           .get();
 
       if (response.exists && response.data() != null) {
-        return Test.fromMap(response.data()!);
+        return UserTest.fromMap(response.data()!);
       } else {
         return null;
       }
@@ -57,7 +57,7 @@ class FirebaseUserDataSouce extends UserDataSource {
   }
 
   @override
-  Future<bool> addUserTest(String userId, Test test) async {
+  Future<bool> addUserTest(String userId, UserTest test) async {
     try {
       if (test.id.isEmpty) {
         throw new Exception("Test id must not be empty");

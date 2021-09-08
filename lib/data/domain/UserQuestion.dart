@@ -1,21 +1,21 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
-import 'package:dietari/data/domain/Option.dart';
+import 'package:dietari/data/domain/UserOption.dart';
 
-class Question {
+class UserQuestion {
   String question;
-  List<Option> options;
+  List<UserOption> options;
 
-  Question({
+  UserQuestion({
     required this.question,
     required this.options,
   });
 
-  Question copyWith({
+  UserQuestion copyWith({
     String? question,
-    List<Option>? options,
+    List<UserOption>? options,
   }) {
-    return Question(
+    return UserQuestion(
       question: question ?? this.question,
       options: options ?? this.options,
     );
@@ -28,26 +28,27 @@ class Question {
     };
   }
 
-  factory Question.fromMap(Map<String, dynamic> map) {
-    return Question(
+  factory UserQuestion.fromMap(Map<String, dynamic> map) {
+    return UserQuestion(
       question: map['question'],
-      options: List<Option>.from(map['options']?.map((x) => Option.fromMap(x))),
+      options: List<UserOption>.from(
+          map['options']?.map((x) => UserOption.fromMap(x))),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Question.fromJson(String source) =>
-      Question.fromMap(json.decode(source));
+  factory UserQuestion.fromJson(String source) =>
+      UserQuestion.fromMap(json.decode(source));
 
   @override
-  String toString() => 'Question(question: $question, options: $options)';
+  String toString() => 'UserQuestion(question: $question, options: $options)';
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Question &&
+    return other is UserQuestion &&
         other.question == question &&
         listEquals(other.options, options);
   }
