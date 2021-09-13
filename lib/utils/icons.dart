@@ -9,7 +9,8 @@ final _icons = <AppIcons, IconData>{
   AppIcons.arrow_back: Icons.arrow_back_ios_outlined,
   AppIcons.check: Icons.check_circle,
   AppIcons.uncheck: Icons.radio_button_unchecked,
-  AppIcons.clock: Icons.query_builder
+  AppIcons.clock: Icons.query_builder,
+  AppIcons.error: Icons.error_outline,
 };
 
 Icon getIcon(AppIcons name, {Color? color}) {
@@ -29,5 +30,6 @@ enum AppIcons {
   uncheck,
   light,
   open,
-  clock
+  clock,
+  error
 }

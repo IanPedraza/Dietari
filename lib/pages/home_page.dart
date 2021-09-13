@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:dietari/components/HomeSectionComponent.dart';
 import 'package:dietari/components/TestItemCard.dart';
 import 'package:dietari/data/datasources/AuthDataSource.dart';
@@ -82,7 +81,7 @@ class _HomePageState extends State<HomePage> {
               onPressed: () {},
               textHomeSectionComponent: "Tests",
               content: Container(
-                height: 220,
+                height: 230,
                 child: PageView.builder(
                   scrollDirection: Axis.horizontal,
                   controller: _controller,
@@ -94,7 +93,7 @@ class _HomePageState extends State<HomePage> {
                   itemCount: _widgets.length,
                   itemBuilder: (context, index) {
                     return Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: <Widget>[
                         Container(
                           margin: EdgeInsets.only(left: 0, top: 10, right: 20),

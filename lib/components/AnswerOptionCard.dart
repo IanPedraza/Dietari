@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dietari/utils/colors.dart';
 import 'package:dietari/utils/icons.dart';
@@ -34,12 +33,12 @@ class AnswerOptionCard extends StatelessWidget {
               padding: const EdgeInsets.only(left: 20),
               child: Text(
                 textAnswer,
-                style: TextStyle(color: primaryColor, fontSize: 22),
+                style: TextStyle(color: primaryColor, fontSize: 15),
                 textAlign: TextAlign.left,
               ),
             ),
           ),
-          Spacer(),
+          //Spacer(),
           Container(
             padding: const EdgeInsets.only(right: 25),
             child: Transform.scale(
