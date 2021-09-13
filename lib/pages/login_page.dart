@@ -297,8 +297,7 @@ class _LoginPage extends State<LoginPage> {
     _signInWithGoogle().then((googleUser) => googleUser != null
         ? _userRegistered(googleUser.uid).then(
             (usered) => usered != null
-                ? _nextScreen(
-                    home_route, usered) /*_saveLogin(home_route, usered)*/
+                ? _nextScreen(home_route, usered)
                 : _nextScreen(
                     base_register_2_route, _saveGoogleUser(googleUser)),
           )
