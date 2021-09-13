@@ -1,6 +1,8 @@
 import 'package:dietari/components/AnswerOptionCard.dart';
 import 'package:dietari/components/AppBarComponent.dart';
 import 'package:dietari/components/MainButton.dart';
+import 'package:dietari/data/domain/Test.dart';
+import 'package:dietari/utils/arguments.dart';
 import 'package:dietari/utils/colors.dart';
 import 'package:dietari/utils/strings.dart';
 import 'package:flutter/material.dart';
@@ -13,11 +15,13 @@ class QuestionPage extends StatefulWidget {
 }
 
 class _QuestionPageState extends State<QuestionPage> {
+  late Test test;
   @override
   Widget build(BuildContext context) {
+    _getArguments();
     return Scaffold(
       appBar: AppBarComponent(
-        textAppBar: "3/10",
+        textAppBar: test.title,
         onPressed: () {
           Navigator.of(context).pop();
         },
@@ -28,64 +32,26 @@ class _QuestionPageState extends State<QuestionPage> {
             padding: EdgeInsets.only(left: 15, top: 0, right: 15, bottom: 30),
             alignment: Alignment.center,
             child: Text(
-              "¿Pregunta del Cuestionario?",
+              'ID: ${test.id}',
               style: TextStyle(
                 color: primaryColor,
                 fontWeight: FontWeight.bold,
-                fontSize: 30,
+                fontSize: 20,
               ),
               textAlign: TextAlign.center,
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.only(left: 15, top: 0, right: 15, bottom: 30),
-            child: AnswerOptionCard(
-              onPressed: () {},
-              textAnswer: "Respuesta 1",
-              choosen: false,
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.only(left: 15, top: 0, right: 15, bottom: 30),
-            child: AnswerOptionCard(
-              onPressed: () {},
-              textAnswer: "Respuesta 2",
-              choosen: false,
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.only(left: 15, top: 0, right: 15, bottom: 30),
-            child: AnswerOptionCard(
-              onPressed: () {},
-              textAnswer: "Respuesta 3",
-              choosen: false,
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.only(left: 15, top: 0, right: 15, bottom: 30),
-            child: AnswerOptionCard(
-              onPressed: () {},
-              textAnswer: "Respuesta 4",
-              choosen: false,
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.only(left: 15, top: 0, right: 15, bottom: 30),
-            child: AnswerOptionCard(
-              onPressed: () {},
-              textAnswer: "Respuesta 5",
-              choosen: true,
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.only(left: 15, top: 20, right: 15, bottom: 30),
-            child: MainButton(
-              onPressed: () {},
-              text: button_next,
             ),
           ),
         ],
       ),
     );
+  }
+
+  void _getArguments() {
+    final args = ModalRoute.of(context)?.settings.arguments as Map;
+    if (args.isEmpty) {
+      Navigator.pop(context);
+      return;
+    }
+    test = args[test_args];
   }
 }

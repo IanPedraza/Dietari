@@ -39,7 +39,7 @@ class TestItemCard extends StatelessWidget {
               ),
             ),
           ),
-          Spacer(),
+          //Spacer(),
           Container(
             padding: const EdgeInsets.only(left: 20, right: 25),
             child: check ? SvgPicture.asset(image_check, width: 40) : null,
