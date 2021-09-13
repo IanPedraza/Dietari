@@ -1,6 +1,6 @@
 import 'package:dietari/data/datasources/UserDataSource.dart';
-import 'package:dietari/data/domain/Test.dart';
 import 'package:dietari/data/domain/User.dart';
+import 'package:dietari/data/domain/UserTest.dart';
 
 class UserRepository {
   UserDataSource userDataSource;
@@ -15,11 +15,11 @@ class UserRepository {
     return userDataSource.addUser(user);
   }
 
-  Future<Test?> getUserTest(String userId, String testId) {
+  Future<UserTest?> getUserTest(String userId, String testId) {
     return userDataSource.getUserTest(userId, testId);
   }
 
-  Future<bool> addUserTest(String userId, Test test) {
+  Future<bool> addUserTest(String userId, UserTest test) {
     return userDataSource.addUserTest(userId, test);
   }
 }

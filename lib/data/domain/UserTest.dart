@@ -1,33 +1,35 @@
 import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
+import 'package:dietari/data/domain/UserQuestion.dart';
 
-import 'package:dietari/data/domain/Question.dart';
-
-class Test {
+class UserTest {
   String id;
   String title;
   String description;
-  List<Question> questions;
+  List<UserQuestion> questions;
+  bool isComplete;
 
-  Test({
+  UserTest({
     this.id = "",
     required this.title,
     this.description = "",
     required this.questions,
+    this.isComplete = false,
   });
 
-  Test copyWith({
+  UserTest copyWith({
     String? id,
     String? title,
     String? description,
-    List<Question>? questions,
+    List<UserQuestion>? questions,
+    bool? isComplete,
   }) {
-    return Test(
+    return UserTest(
       id: id ?? this.id,
       title: title ?? this.title,
       description: description ?? this.description,
       questions: questions ?? this.questions,
+      isComplete: isComplete ?? this.isComplete,
     );
   }
 
@@ -37,37 +39,41 @@ class Test {
       'title': title,
       'description': description,
       'questions': questions.map((x) => x.toMap()).toList(),
+      'isComplete': isComplete,
     };
   }
 
-  factory Test.fromMap(Map<String, dynamic> map) {
-    return Test(
+  factory UserTest.fromMap(Map<String, dynamic> map) {
+    return UserTest(
       id: map['id'],
       title: map['title'],
       description: map['description'],
-      questions: List<Question>.from(
-          map['questions']?.map((x) => Question.fromMap(x))),
+      questions: List<UserQuestion>.from(
+          map['questions']?.map((x) => UserQuestion.fromMap(x))),
+      isComplete: map['isComplete'],
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Test.fromJson(String source) => Test.fromMap(json.decode(source));
+  factory UserTest.fromJson(String source) =>
+      UserTest.fromMap(json.decode(source));
 
   @override
   String toString() {
-    return 'Test(id: $id, title: $title, description: $description, questions: $questions)';
+    return 'UserTest(id: $id, title: $title, description: $description, questions: $questions, isComplete: $isComplete)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Test &&
+    return other is UserTest &&
         other.id == id &&
         other.title == title &&
         other.description == description &&
-        listEquals(other.questions, questions);
+        listEquals(other.questions, questions) &&
+        other.isComplete == isComplete;
   }
 
   @override
@@ -75,6 +81,7 @@ class Test {
     return id.hashCode ^
         title.hashCode ^
         description.hashCode ^
-        questions.hashCode;
+        questions.hashCode ^
+        isComplete.hashCode;
   }
 }
