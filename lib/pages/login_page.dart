@@ -372,7 +372,7 @@ class _LoginPage extends State<LoginPage> {
             Row(
               children: [
                 Expanded(
-                  child: FlatButton(
+                  child: TextButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
@@ -387,7 +387,7 @@ class _LoginPage extends State<LoginPage> {
                   ),
                 ),
                 Expanded(
-                  child: FlatButton(
+                  child: TextButton(
                     onPressed: () {
                       Navigator.of(context).pop();
                       _sendEmailResetPassword(emailController);

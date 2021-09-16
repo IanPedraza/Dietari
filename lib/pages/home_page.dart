@@ -1,15 +1,19 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dietari/components/HomeSectionComponent.dart';
 import 'package:dietari/components/TestItemCard.dart';
 import 'package:dietari/data/datasources/AuthDataSource.dart';
+import 'package:dietari/data/domain/Test.dart';
 import 'package:dietari/data/domain/User.dart';
 import 'package:dietari/data/framework/FireBase/FirebaseAuthDataSource.dart';
+import 'package:dietari/data/framework/FireBase/FirebaseConstants.dart';
 import 'package:dietari/data/repositories/AuthRepository.dart';
 import 'package:dietari/data/usecases/SignOutUseCase.dart';
 import 'package:dietari/utils/arguments.dart';
 import 'package:dietari/utils/colors.dart';
 import 'package:dietari/utils/routes.dart';
 import 'package:dietari/utils/strings.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dietari/components/AppFloatingActionButton.dart';
@@ -35,27 +39,12 @@ class _HomePageState extends State<HomePage> {
   late User newUser;
   int currentIndex = 0;
   late PageController _controller;
-
-  List<Widget> _widgets = [
-    TestItemCard(
-      onPressed: () {},
-      textTestItem: button_mna,
-      check: true,
-    ),
-    TestItemCard(
-      onPressed: () {},
-      textTestItem: button_icm,
-      check: false,
-    ),
-    TestItemCard(
-      onPressed: () {},
-      textTestItem: button_test3,
-      check: true,
-    ),
-  ];
+  late Stream<QuerySnapshot> _testStream;
 
   @override
   void initState() {
+    _testStream =
+        FirebaseFirestore.instance.collection(TESTS_COLLECTION).snapshots();
     _controller = PageController(initialPage: 0);
     super.initState();
   }
@@ -79,57 +68,85 @@ class _HomePageState extends State<HomePage> {
           children: [
             HomeSectionComponent(
               onPressed: () {},
-              textHomeSectionComponent: "Tests",
-              content: Container(
-                height: 230,
-                child: PageView.builder(
-                  scrollDirection: Axis.horizontal,
-                  controller: _controller,
-                  onPageChanged: (int index) {
-                    setState(() {
-                      currentIndex = index;
-                    });
-                  },
-                  itemCount: _widgets.length,
-                  itemBuilder: (context, index) {
-                    return Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: <Widget>[
-                        Container(
-                          margin: EdgeInsets.only(left: 0, top: 10, right: 20),
-                          height: 60,
-                          width: MediaQuery.of(context).size.width / 1.2,
-                          child: _widgets[index],
+              textHomeSectionComponent: test_list,
+              content: StreamBuilder<QuerySnapshot>(
+                stream: _testStream,
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: SizedBox(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 5,
                         ),
-                        Container(
-                          margin: EdgeInsets.only(left: 0, top: 10, right: 20),
-                          height: 60,
-                          width: MediaQuery.of(context).size.width / 1.2,
-                          child: _widgets[index],
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(left: 0, top: 10, right: 20),
-                          height: 60,
-                          width: MediaQuery.of(context).size.width / 1.2,
-                          child: _widgets[index],
-                        ),
-                      ],
+                        width: 75,
+                        height: 75,
+                      ),
                     );
-                  },
-                ),
+                  }
+                  if (snapshot.hasError) {
+                    return Text(
+                      alert_title_error,
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                      textAlign: TextAlign.center,
+                    );
+                  }
+                  return Column(
+                    children: [
+                      Container(
+                        height: 100,
+                        child: PageView(
+                          scrollDirection: Axis.horizontal,
+                          controller: _controller,
+                          onPageChanged: (int index) {
+                            setState(() {
+                              currentIndex = index;
+                            });
+                          },
+                          children: snapshot.data!.docs
+                              .map((DocumentSnapshot document) {
+                            Test test = Test.fromMap(
+                                document.data()! as Map<String, dynamic>);
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  margin: EdgeInsets.only(top: 10),
+                                  height: 60,
+                                  width:
+                                      MediaQuery.of(context).size.width / 1.2,
+                                  child: TestItemCard(
+                                    onPressed: () {
+                                      _solveTest(question_route, test);
+                                    },
+                                    textTestItem: test.title,
+                                    check: false,
+                                  ),
+                                ),
+                              ],
+                            );
+                          }).toList(),
+                        ),
+                      ),
+                      SizedBox(height: 20),
+                      Container(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(
+                            snapshot.data!.docs.length,
+                            (index) => buildDot(index, context),
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
-            SizedBox(height: 20),
-            Container(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  _widgets.length,
-                  (index) => buildDot(index, context),
-                ),
-              ),
-            ),
-            RaisedButton(
+            ElevatedButton(
               child: Text('Sing Out'),
               onPressed: () {
                 _signOut().then(
@@ -138,19 +155,13 @@ class _HomePageState extends State<HomePage> {
                 );
               },
             ),
-            RaisedButton(
+            ElevatedButton(
               child: Text('Test'),
               onPressed: () {
                 Navigator.pushNamed(context, test_route);
               },
             ),
-            RaisedButton(
-              child: Text('Question'),
-              onPressed: () {
-                Navigator.pushNamed(context, question_route);
-              },
-            ),
-            RaisedButton(
+            ElevatedButton(
               child: Text('Finished Test'),
               onPressed: () {
                 Navigator.pushNamed(context, finished_test_route);
@@ -178,6 +189,11 @@ class _HomePageState extends State<HomePage> {
       return;
     }
     newUser = args[user_args];
+  }
+
+  void _solveTest(String route, Test test) {
+    final args = {test_args: test};
+    Navigator.pushNamed(context, route, arguments: args);
   }
 
   Container buildDot(int index, BuildContext context) {
