@@ -70,9 +70,11 @@ class _LoginPage extends State<LoginPage> {
     dateOfBirth: "",
     weight: 0.0,
     height: 0.0,
+    imc: 0.0,
+    status: "",
   );
 
-  bool activar = true;
+  bool active = true;
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +107,7 @@ class _LoginPage extends State<LoginPage> {
                 onTap: _showPassword,
                 text: textfield_password,
                 isPassword: true,
-                isPasswordTextStatus: activar,
+                isPasswordTextStatus: active,
                 textEditingControl: inputControllerPassword,
               ),
             ),
@@ -230,7 +232,7 @@ class _LoginPage extends State<LoginPage> {
 
   void _showPassword() {
     setState(() {
-      activar = !activar;
+      active = !active;
     });
   }
 
@@ -325,12 +327,10 @@ class _LoginPage extends State<LoginPage> {
         content,
         textAlign: TextAlign.center,
         style: TextStyle(
-          color: Colors.black,
-          fontSize: 16,
+          color: Colors.white,
+          fontSize: 15,
         ),
       ),
-      backgroundColor: colorTextMainButton,
-      behavior: SnackBarBehavior.floating,
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
@@ -370,32 +370,40 @@ class _LoginPage extends State<LoginPage> {
             onTap: _showPassword,
           ),
           actions: <Widget>[
-            FlatButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                button_cancel,
-                style: TextStyle(
-                  color: primaryColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
+            Row(
+              children: [
+                Expanded(
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      button_cancel,
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            FlatButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                _sendEmailResetPassword(emailController);
-              },
-              child: Text(
-                button_reset,
-                style: TextStyle(
-                  color: primaryColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 15,
+                Expanded(
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      _sendEmailResetPassword(emailController);
+                    },
+                    child: Text(
+                      button_reset,
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
           ],
         );
