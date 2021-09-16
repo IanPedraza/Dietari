@@ -16,6 +16,7 @@ class QuestionPage extends StatefulWidget {
 
 class _QuestionPageState extends State<QuestionPage> {
   late Test test;
+  
   int currentIndex = 0;
   PageController _controller = PageController(initialPage: 0);
   bool choosen = false;
