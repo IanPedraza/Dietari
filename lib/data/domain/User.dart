@@ -63,15 +63,15 @@ class User {
 
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
-      id: map['id'],
-      firstName: map['firstName'],
-      lastName: map['lastName'],
-      email: map['email'],
-      dateOfBirth: map['dateOfBirth'],
-      weight: map['weight'],
-      height: map['height'],
-      imc: map['imc'],
-      status: map['status'],
+      id: map['id'] ?? "",
+      firstName: map['firstName'] ?? "",
+      lastName: map['lastName'] ?? "",
+      email: map['email'] ?? "",
+      dateOfBirth: map['dateOfBirth'] ?? "",
+      weight: map['weight'] ?? 0.0,
+      height: map['height'] ?? 0.0,
+      imc: map['imc'] ?? 0.0,
+      status: map['status'] ?? "",
     );
   }
 
