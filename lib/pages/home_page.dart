@@ -97,7 +97,7 @@ class _HomePageState extends State<HomePage> {
                   return Column(
                     children: [
                       Container(
-                        height: 100,
+                        height: 80,
                         child: PageView(
                           scrollDirection: Axis.horizontal,
                           controller: _controller,
@@ -114,7 +114,6 @@ class _HomePageState extends State<HomePage> {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Container(
-                                  margin: EdgeInsets.only(top: 10),
                                   height: 60,
                                   width:
                                       MediaQuery.of(context).size.width / 1.2,
@@ -131,7 +130,6 @@ class _HomePageState extends State<HomePage> {
                           }).toList(),
                         ),
                       ),
-                      SizedBox(height: 20),
                       Container(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
