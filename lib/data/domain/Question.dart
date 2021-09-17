@@ -1,5 +1,7 @@
 import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
+
 import 'package:dietari/data/domain/Option.dart';
 
 class Question {
