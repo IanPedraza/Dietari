@@ -10,6 +10,10 @@ class TestsRepository {
     return testsDataSource.getTest(testId);
   }
 
+  Future<List<Test>> getTests() {
+    return testsDataSource.getTests();
+  }
+
   Future<bool> addTest(Test test) {
     return testsDataSource.addTest(test);
   }
