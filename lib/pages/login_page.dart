@@ -72,6 +72,7 @@ class _LoginPage extends State<LoginPage> {
     height: 0.0,
     imc: 0.0,
     status: "",
+    tips: [],
   );
 
   bool active = true;
