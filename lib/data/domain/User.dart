@@ -6,9 +6,9 @@ class User {
   String lastName;
   String email;
   String dateOfBirth;
-  double weight;
-  double height;
-  double imc;
+  num weight;
+  num height;
+  num imc;
   String status;
 
   User({
