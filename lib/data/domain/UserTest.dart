@@ -45,12 +45,14 @@ class UserTest {
 
   factory UserTest.fromMap(Map<String, dynamic> map) {
     return UserTest(
-      id: map['id'],
-      title: map['title'],
-      description: map['description'],
-      questions: List<UserQuestion>.from(
-          map['questions']?.map((x) => UserQuestion.fromMap(x))),
-      isComplete: map['isComplete'],
+      id: map['id'] ?? "",
+      title: map['title'] ?? "",
+      description: map['description'] ?? "",
+      questions: map['questions']
+          ? List<UserQuestion>.from(
+              map['questions']?.map((x) => UserQuestion.fromMap(x)))
+          : [],
+      isComplete: map['isComplete'] ?? false,
     );
   }
 

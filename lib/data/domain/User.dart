@@ -1,15 +1,19 @@
 import 'dart:convert';
 
+import 'package:dietari/data/domain/Tip.dart';
+import 'package:flutter/foundation.dart';
+
 class User {
   String id;
   String firstName;
   String lastName;
   String email;
   String dateOfBirth;
-  double weight;
-  double height;
-  double imc;
+  num weight;
+  num height;
+  num imc;
   String status;
+  List<Tip> tips;
 
   User({
     this.id = "",
@@ -21,6 +25,7 @@ class User {
     this.height = 0.0,
     this.imc = 0.0,
     this.status = "",
+    required this.tips,
   });
 
   User copyWith({
@@ -33,6 +38,7 @@ class User {
     double? height,
     double? imc,
     String? status,
+    List<Tip>? tips,
   }) {
     return User(
       id: id ?? this.id,
@@ -44,6 +50,7 @@ class User {
       height: height ?? this.height,
       imc: imc ?? this.imc,
       status: status ?? this.status,
+      tips: tips ?? this.tips,
     );
   }
 
@@ -58,20 +65,24 @@ class User {
       'height': height,
       'imc': imc,
       'status': status,
+      'tips': tips.map((x) => x.toMap()).toList(),
     };
   }
 
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
-      id: map['id'],
-      firstName: map['firstName'],
-      lastName: map['lastName'],
-      email: map['email'],
-      dateOfBirth: map['dateOfBirth'],
-      weight: map['weight'],
-      height: map['height'],
-      imc: map['imc'],
-      status: map['status'],
+      id: map['id'] ?? "",
+      firstName: map['firstName'] ?? "",
+      lastName: map['lastName'] ?? "",
+      email: map['email'] ?? "",
+      dateOfBirth: map['dateOfBirth'] ?? "",
+      weight: map['weight'] ?? 0.0,
+      height: map['height'] ?? 0.0,
+      imc: map['imc'] ?? 0.0,
+      status: map['status'] ?? "",
+      tips: map['tips'] != null
+          ? List<Tip>.from(map['tips']?.map((x) => Tip.fromMap(x)))
+          : [],
     );
   }
 
@@ -81,7 +92,7 @@ class User {
 
   @override
   String toString() {
-    return 'User(id: $id, firstName: $firstName, lastName: $lastName, email: $email, dateOfBirth: $dateOfBirth, weight: $weight, height: $height, imc: $imc, status: $status)';
+    return 'User(id: $id, firstName: $firstName, lastName: $lastName, email: $email, dateOfBirth: $dateOfBirth, weight: $weight, height: $height, imc: $imc, status: $status, tips: $tips)';
   }
 
   @override
@@ -97,7 +108,8 @@ class User {
         other.weight == weight &&
         other.height == height &&
         other.imc == imc &&
-        other.status == status;
+        other.status == status &&
+        listEquals(other.tips, tips);
   }
 
   @override
@@ -110,6 +122,7 @@ class User {
         weight.hashCode ^
         height.hashCode ^
         imc.hashCode ^
-        status.hashCode;
+        status.hashCode ^
+        tips.hashCode;
   }
 }

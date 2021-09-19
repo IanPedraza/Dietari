@@ -43,11 +43,11 @@ class ExternalUser {
 
   factory ExternalUser.fromMap(Map<String, dynamic> map) {
     return ExternalUser(
-      uid: map['uid'],
-      displayName: map['displayName'],
-      email: map['email'],
-      phoneNumber: map['phoneNumber'],
-      photoURL: map['photoURL'],
+      uid: map['uid'] ?? "",
+      displayName: map['displayName'] ?? "",
+      email: map['email'] ?? "",
+      phoneNumber: map['phoneNumber'] ?? "",
+      photoURL: map['photoURL'] ?? "",
     );
   }
 

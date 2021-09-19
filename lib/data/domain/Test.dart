@@ -42,11 +42,13 @@ class Test {
 
   factory Test.fromMap(Map<String, dynamic> map) {
     return Test(
-      id: map['id'],
-      title: map['title'],
-      description: map['description'],
-      questions: List<Question>.from(
-          map['questions']?.map((x) => Question.fromMap(x))),
+      id: map['id'] ?? "",
+      title: map['title'] ?? "",
+      description: map['description'] ?? "",
+      questions: map['questions'] != null
+          ? List<Question>.from(
+              map['questions']?.map((x) => Question.fromMap(x)))
+          : [],
     );
   }
 

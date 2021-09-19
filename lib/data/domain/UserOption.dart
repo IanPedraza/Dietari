@@ -33,9 +33,9 @@ class UserOption {
 
   factory UserOption.fromMap(Map<String, dynamic> map) {
     return UserOption(
-      name: map['name'],
-      value: map['value'],
-      isSelected: map['isSelected'],
+      name: map['name'] ?? "",
+      value: map['value'] ?? 0,
+      isSelected: map['isSelected'] ?? false,
     );
   }
 

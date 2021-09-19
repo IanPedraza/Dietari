@@ -28,8 +28,8 @@ class Option {
 
   factory Option.fromMap(Map<String, dynamic> map) {
     return Option(
-      name: map['name'],
-      value: map['value'],
+      name: map['name'] ?? "",
+      value: map['value'] ?? 0,
     );
   }
 

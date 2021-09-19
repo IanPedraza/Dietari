@@ -1,5 +1,7 @@
 import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
+
 import 'package:dietari/data/domain/Option.dart';
 
 class Question {
@@ -30,8 +32,10 @@ class Question {
 
   factory Question.fromMap(Map<String, dynamic> map) {
     return Question(
-      question: map['question'],
-      options: List<Option>.from(map['options']?.map((x) => Option.fromMap(x))),
+      question: map['question'] ?? "",
+      options: map['options'] != null
+          ? List<Option>.from(map['options']?.map((x) => Option.fromMap(x)))
+          : [],
     );
   }
 
