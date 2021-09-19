@@ -30,9 +30,11 @@ class UserQuestion {
 
   factory UserQuestion.fromMap(Map<String, dynamic> map) {
     return UserQuestion(
-      question: map['question'],
-      options: List<UserOption>.from(
-          map['options']?.map((x) => UserOption.fromMap(x))),
+      question: map['question'] ?? "",
+      options: map['options'] != null
+          ? List<UserOption>.from(
+              map['options']?.map((x) => UserOption.fromMap(x)))
+          : [],
     );
   }
 

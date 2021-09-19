@@ -42,4 +42,22 @@ class FirebaseTestsDataSource extends TestsDataSource {
       return null;
     }
   }
+
+  @override
+  Future<List<Test>> getTests() async {
+    try {
+      final snapshots = await _database.collection(TESTS_COLLECTION).get();
+      List<Test> tests = [];
+
+      snapshots.docs.forEach((document) {
+        final test = Test.fromMap(document.data());
+        tests.add(test);
+      });
+
+      return tests;
+    } catch (error) {
+      print("$TAG:getTests:Error: $error");
+      return [];
+    }
+  }
 }
