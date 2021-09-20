@@ -1,4 +1,5 @@
 import 'package:dietari/data/datasources/UserDataSource.dart';
+import 'package:dietari/data/domain/Tip.dart';
 import 'package:dietari/data/domain/User.dart';
 import 'package:dietari/data/domain/UserTest.dart';
 
@@ -21,5 +22,9 @@ class UserRepository {
 
   Future<bool> addUserTest(String userId, UserTest test) {
     return userDataSource.addUserTest(userId, test);
+  }
+
+  Future<List<Tip>> getUserTips(String userId) {
+    return userDataSource.getUserTips(userId);
   }
 }

@@ -204,7 +204,7 @@ class _BaseRegister1Page extends State<BaseRegister1Page> {
   }
 
   Future<String?> _getUserId() async {
-    String? id = await _getUserIdUseCase.invoke();
+    String? id = _getUserIdUseCase.invoke();
     return id;
   }
 

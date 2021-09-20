@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dietari/components/HomeSectionComponent.dart';
 import 'package:dietari/components/TestItemCard.dart';
 import 'package:dietari/data/datasources/AuthDataSource.dart';
@@ -9,7 +8,6 @@ import 'package:dietari/data/domain/Test.dart';
 import 'package:dietari/data/domain/User.dart';
 import 'package:dietari/data/domain/UserTest.dart';
 import 'package:dietari/data/framework/FireBase/FirebaseAuthDataSource.dart';
-import 'package:dietari/data/framework/FireBase/FirebaseConstants.dart';
 import 'package:dietari/data/framework/FireBase/FirebaseTestsDataSource.dart';
 import 'package:dietari/data/framework/FireBase/FirebaseUserDataSouce.dart';
 import 'package:dietari/data/repositories/AuthRepository.dart';
@@ -22,7 +20,6 @@ import 'package:dietari/utils/arguments.dart';
 import 'package:dietari/utils/colors.dart';
 import 'package:dietari/utils/routes.dart';
 import 'package:dietari/utils/strings.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dietari/components/AppFloatingActionButton.dart';
@@ -84,6 +81,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     _getArguments();
+
     return WillPopScope(
       onWillPop: () => exit(0),
       child: Scaffold(
