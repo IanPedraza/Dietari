@@ -1,3 +1,4 @@
-const USERS_COLLECTION = "users";
-const USERS_TESTS_COLLECTION = "usersTest";
-const TESTS_COLLECTION = "tests";
+const COLLECTION_USERS = "users";
+const COLLECTION_USERS_TESTS = "usersTest";
+const COLLECTION_TESTS = "tests";
+const COLLECTION_TIPS = "tips";

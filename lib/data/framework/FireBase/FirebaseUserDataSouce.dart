@@ -1,8 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dietari/data/datasources/TipsDataSource.dart';
 import 'package:dietari/data/datasources/UserDataSource.dart';
+import 'package:dietari/data/domain/Tip.dart';
 import 'package:dietari/data/domain/User.dart';
 import 'package:dietari/data/domain/UserTest.dart';
-import 'package:dietari/data/framework/Firebase/FirebaseConstants.dart';
+import 'package:dietari/data/framework/FireBase/FirebaseConstants.dart';
+import 'package:dietari/data/framework/FireBase/FirebaseTipsDataSource.dart';
+import 'package:dietari/data/repositories/TipsRepository.dart';
+import 'package:dietari/data/usecases/GetTipsUseCase.dart';
 
 class FirebaseUserDataSouce extends UserDataSource {
   static const TAG = "FirebaseUserDataSouce";
@@ -11,7 +16,7 @@ class FirebaseUserDataSouce extends UserDataSource {
 
   @override
   Future<User?> getUser(String id) async {
-    final response = await _database.collection(USERS_COLLECTION).doc(id).get();
+    final response = await _database.collection(COLLECTION_USERS).doc(id).get();
 
     if (response.exists && response.data() != null) {
       return User.fromMap(response.data()!);
@@ -24,7 +29,7 @@ class FirebaseUserDataSouce extends UserDataSource {
   Future<bool> addUser(User user) async {
     try {
       await _database
-          .collection(USERS_COLLECTION)
+          .collection(COLLECTION_USERS)
           .doc(user.id)
           .set(user.toMap());
 
@@ -39,9 +44,9 @@ class FirebaseUserDataSouce extends UserDataSource {
   Future<UserTest?> getUserTest(String userId, String testId) async {
     try {
       final response = await _database
-          .collection(USERS_COLLECTION)
+          .collection(COLLECTION_USERS)
           .doc(userId)
-          .collection(USERS_TESTS_COLLECTION)
+          .collection(COLLECTION_USERS_TESTS)
           .doc(testId)
           .get();
 
@@ -64,9 +69,9 @@ class FirebaseUserDataSouce extends UserDataSource {
       }
 
       await _database
-          .collection(USERS_COLLECTION)
+          .collection(COLLECTION_USERS)
           .doc(userId)
-          .collection(USERS_TESTS_COLLECTION)
+          .collection(COLLECTION_USERS_TESTS)
           .doc(test.id)
           .set(test.toMap());
 
@@ -74,6 +79,47 @@ class FirebaseUserDataSouce extends UserDataSource {
     } catch (error) {
       print("$TAG:addUserTest:Error: $error");
       return false;
+    }
+  }
+
+  @override
+  Future<List<Tip>> getUserTips(String userId) async {
+    try {
+      if (userId.isEmpty) {
+        throw new Exception("user id must not be empty");
+      }
+
+      final snapshot =
+          await _database.collection(COLLECTION_USERS).doc(userId).get();
+
+      if (!snapshot.exists) {
+        return [];
+      }
+
+      final user = User.fromMap(snapshot.data()!);
+
+      TipsDataSource tipsDataSource = FirebaseTipsDataSource();
+
+      TipsRepository tipsRepository =
+          TipsRepository(tipsDataSource: tipsDataSource);
+
+      GetTipsUseCase getTipsUseCase =
+          GetTipsUseCase(tipsRepository: tipsRepository);
+
+      List<Tip> tips = [];
+
+      user.tips.forEach((tipId) async {
+        Tip? tip = await getTipsUseCase.invoke(tipId);
+
+        if (tip != null) {
+          tips.add(tip);
+        }
+      });
+
+      return tips;
+    } catch (error) {
+      print("$TAG:addUserTest:Error: $error");
+      return [];
     }
   }
 }

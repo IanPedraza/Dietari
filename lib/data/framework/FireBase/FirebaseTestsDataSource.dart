@@ -12,7 +12,7 @@ class FirebaseTestsDataSource extends TestsDataSource {
   @override
   Future<bool> addTest(Test test) async {
     try {
-      final _reference = _database.collection(TESTS_COLLECTION);
+      final _reference = _database.collection(COLLECTION_TESTS);
       final _testId = _reference.doc().id;
 
       test.id = _testId;
@@ -30,7 +30,7 @@ class FirebaseTestsDataSource extends TestsDataSource {
   Future<Test?> getTest(String testId) async {
     try {
       final response =
-          await _database.collection(TESTS_COLLECTION).doc(testId).get();
+          await _database.collection(COLLECTION_TESTS).doc(testId).get();
 
       if (response.exists && response.data() != null) {
         return Test.fromMap(response.data()!);
@@ -46,7 +46,7 @@ class FirebaseTestsDataSource extends TestsDataSource {
   @override
   Future<List<Test>> getTests() async {
     try {
-      final snapshots = await _database.collection(TESTS_COLLECTION).get();
+      final snapshots = await _database.collection(COLLECTION_TESTS).get();
       List<Test> tests = [];
 
       snapshots.docs.forEach((document) {
