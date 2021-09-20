@@ -48,7 +48,7 @@ class UserTest {
       id: map['id'] ?? "",
       title: map['title'] ?? "",
       description: map['description'] ?? "",
-      questions: map['questions']
+      questions: map['questions'] != null
           ? List<UserQuestion>.from(
               map['questions']?.map((x) => UserQuestion.fromMap(x)))
           : [],
