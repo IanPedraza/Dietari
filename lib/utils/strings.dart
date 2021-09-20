@@ -44,6 +44,7 @@ const text_finished_test =
     "Regresa al test en unos minutos para ver tus resultados.";
 
 //Cuadro de Alerta
+const alert_title = "Alerta";
 const alert_title_error = "Ha Ocurrido un Error";
 const alert_title_send_email = "Enlace enviado para restablecer contraseña";
 const alert_title_error_not_registered = "Usuario no registrado";
@@ -64,3 +65,6 @@ const alert_content_error_registration =
 const alert_content_email_used =
     "Correo electrónico utilizado por otro usuario";
 const alert_content_incorrect_password = "Contraseña incorrecta";
+const alert_content_answer_question = "Responda la pregunta antes de continuar";
+const alert_content_not_aggregated_responses =
+    "No fue posible registrar sus respuestas, intentelo de nuevo";
