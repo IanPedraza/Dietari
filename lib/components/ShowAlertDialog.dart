@@ -21,15 +21,14 @@ class ShowAlertDialog extends StatelessWidget {
       ),
       title: Text(
         title,
-        // textAlign: TextAlign.center,
         style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
       ),
       content: Text(
         content,
-        style: TextStyle(fontWeight: FontWeight.bold),
+        style: TextStyle(fontWeight: FontWeight.normal),
       ),
       actions: <Widget>[
-        new FlatButton(
+        new TextButton(
           onPressed: () {
             Navigator.of(context).pop();
           },

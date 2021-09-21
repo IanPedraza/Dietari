@@ -1,19 +1,25 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dietari/components/HomeSectionComponent.dart';
 import 'package:dietari/components/TestItemCard.dart';
 import 'package:dietari/data/datasources/AuthDataSource.dart';
+import 'package:dietari/data/datasources/TestsDataSource.dart';
+import 'package:dietari/data/datasources/UserDataSource.dart';
 import 'package:dietari/data/domain/Test.dart';
 import 'package:dietari/data/domain/User.dart';
+import 'package:dietari/data/domain/UserTest.dart';
 import 'package:dietari/data/framework/FireBase/FirebaseAuthDataSource.dart';
-import 'package:dietari/data/framework/FireBase/FirebaseConstants.dart';
+import 'package:dietari/data/framework/FireBase/FirebaseTestsDataSource.dart';
+import 'package:dietari/data/framework/FireBase/FirebaseUserDataSouce.dart';
 import 'package:dietari/data/repositories/AuthRepository.dart';
+import 'package:dietari/data/repositories/TestsRepository.dart';
+import 'package:dietari/data/repositories/UserRepository.dart';
+import 'package:dietari/data/usecases/GetTestsUseCase.dart';
+import 'package:dietari/data/usecases/GetUserTestUseCase.dart';
 import 'package:dietari/data/usecases/SignOutUseCase.dart';
 import 'package:dietari/utils/arguments.dart';
 import 'package:dietari/utils/colors.dart';
 import 'package:dietari/utils/routes.dart';
 import 'package:dietari/utils/strings.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dietari/components/AppFloatingActionButton.dart';
@@ -36,15 +42,32 @@ class _HomePageState extends State<HomePage> {
   late SignOutUseCase _signOutUseCase =
       SignOutUseCase(authRepository: _authRepository);
 
+  late TestsDataSource _testsDataSource = FirebaseTestsDataSource();
+
+  late TestsRepository _testsRepository =
+      TestsRepository(testsDataSource: _testsDataSource);
+
+  late GetTestsUseCase _getTestsUseCase =
+      GetTestsUseCase(testsRepository: _testsRepository);
+
+  late UserDataSource _userDataSource = FirebaseUserDataSouce();
+
+  late UserRepository _userRepository =
+      UserRepository(userDataSource: _userDataSource);
+
+  late GetUserTestUseCase _getUserTestUseCase =
+      GetUserTestUseCase(userRepository: _userRepository);
+
   late User newUser;
   int currentIndex = 0;
   late PageController _controller;
-  late Stream<QuerySnapshot> _testStream;
+  late Stream<List<Test>> _testStream;
 
   @override
   void initState() {
-    _testStream =
-        FirebaseFirestore.instance.collection(TESTS_COLLECTION).snapshots();
+    /*_testStream =
+        FirebaseFirestore.instance.collection(TESTS_COLLECTION).snapshots();*/
+    _testStream = _getTests().asStream();
     _controller = PageController(initialPage: 0);
     super.initState();
   }
@@ -58,6 +81,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     _getArguments();
+
     return WillPopScope(
       onWillPop: () => exit(0),
       child: Scaffold(
@@ -69,9 +93,9 @@ class _HomePageState extends State<HomePage> {
             HomeSectionComponent(
               onPressed: () {},
               textHomeSectionComponent: test_list,
-              content: StreamBuilder<QuerySnapshot>(
+              content: StreamBuilder<List<Test>>(
                 stream: _testStream,
-                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                builder: (context, AsyncSnapshot<List<Test>?> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(
                       child: SizedBox(
@@ -94,11 +118,12 @@ class _HomePageState extends State<HomePage> {
                       textAlign: TextAlign.center,
                     );
                   }
+                  List<Test>? tests = snapshot.data;
                   return Column(
                     children: [
                       Container(
-                        height: 100,
-                        child: PageView(
+                        height: 80,
+                        child: PageView.builder(
                           scrollDirection: Axis.horizontal,
                           controller: _controller,
                           onPageChanged: (int index) {
@@ -106,37 +131,41 @@ class _HomePageState extends State<HomePage> {
                               currentIndex = index;
                             });
                           },
-                          children: snapshot.data!.docs
-                              .map((DocumentSnapshot document) {
-                            Test test = Test.fromMap(
-                                document.data()! as Map<String, dynamic>);
+                          itemCount: tests!.length,
+                          itemBuilder: (context, int index) {
+                            UserTest? _userTest;
+                            _getUserTest(newUser.id, tests[index].id).then(
+                              (userTest) => userTest != null
+                                  ? _userTest = userTest
+                                  : _userTest = null,
+                            );
                             return Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Container(
-                                  margin: EdgeInsets.only(top: 10),
                                   height: 60,
                                   width:
                                       MediaQuery.of(context).size.width / 1.2,
                                   child: TestItemCard(
                                     onPressed: () {
-                                      _solveTest(question_route, test);
+                                      _solveTest(question_route, tests[index]);
                                     },
-                                    textTestItem: test.title,
-                                    check: false,
+                                    textTestItem: tests[index].title,
+                                    check: _userTest != null
+                                        ? _userTest!.isComplete
+                                        : false,
                                   ),
                                 ),
                               ],
                             );
-                          }).toList(),
+                          },
                         ),
                       ),
-                      SizedBox(height: 20),
                       Container(
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: List.generate(
-                            snapshot.data!.docs.length,
+                            tests.length,
                             (index) => buildDot(index, context),
                           ),
                         ),
@@ -189,6 +218,16 @@ class _HomePageState extends State<HomePage> {
       return;
     }
     newUser = args[user_args];
+  }
+
+  Future<List<Test>> _getTests() async {
+    List<Test> tests = await _getTestsUseCase.invoke();
+    return tests;
+  }
+
+  Future<UserTest?> _getUserTest(String userId, String testId) async {
+    UserTest? userTest = await _getUserTestUseCase.invoke(userId, testId);
+    return userTest;
   }
 
   void _solveTest(String route, Test test) {

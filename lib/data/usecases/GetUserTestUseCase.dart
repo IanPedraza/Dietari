@@ -6,7 +6,7 @@ class GetUserTestUseCase {
 
   GetUserTestUseCase({required this.userRepository});
 
-  Future<bool> invoke(String userId, UserTest test) {
-    return userRepository.addUserTest(userId, test);
+  Future<UserTest?> invoke(String userId, String testId) {
+    return userRepository.getUserTest(userId, testId);
   }
 }
