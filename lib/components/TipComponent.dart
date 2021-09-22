@@ -13,37 +13,33 @@ class TipComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton(
-        onPressed: onPressed,
-        backgroundColor: colorTextMainButton,
-        elevation: 8,
-        isExtended: true,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10)
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.only(left: 20,right: 15),
-              child: Transform.scale(
-                scale: 1.6,
-                child: getIcon(AppIcons.light,color: colorLight),
-                alignment: Alignment.center,
-              ),
+      onPressed: onPressed,
+      backgroundColor: colorTextMainButton,
+      elevation: 8,
+      isExtended: true,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.only(left: 20, right: 15),
+            child: Transform.scale(
+              scale: 1.6,
+              child: getIcon(AppIcons.light, color: colorLight),
+              alignment: Alignment.center,
             ),
-            Expanded(
-              child: Text(
-                textTip,
-                style: TextStyle(
+          ),
+          Expanded(
+            child: Text(
+              textTip,
+              style: TextStyle(
                   color: colorTextBlack,
-                  fontWeight: FontWeight.w900,
-                  fontSize: 18
-                ),
-                textAlign: TextAlign.left,
-              ),
-            )
-          ],
-        ),
+                  //fontWeight: FontWeight.w900,
+                  fontSize: 18),
+              textAlign: TextAlign.left,
+            ),
+          )
+        ],
+      ),
     );
   }
-
 }

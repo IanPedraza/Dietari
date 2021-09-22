@@ -3,6 +3,7 @@ const registration_form = "Formulario de Registro";
 const login_form = "Iniciar Sesión";
 const espace = " ";
 const test_list = "Tests";
+const tips_list = "Tips";
 
 //Cuadros de Texto
 const textfield_email = "Correo Electrónico";

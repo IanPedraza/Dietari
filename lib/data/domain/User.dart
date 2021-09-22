@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:dietari/data/domain/Tip.dart';
 import 'package:flutter/foundation.dart';
 
 class User {
@@ -13,7 +11,7 @@ class User {
   num height;
   num imc;
   String status;
-  List<Tip> tips;
+  List<String> tips;
 
   User({
     this.id = "",
@@ -38,7 +36,7 @@ class User {
     double? height,
     double? imc,
     String? status,
-    List<Tip>? tips,
+    List<String>? tips,
   }) {
     return User(
       id: id ?? this.id,
@@ -65,7 +63,7 @@ class User {
       'height': height,
       'imc': imc,
       'status': status,
-      'tips': tips.map((x) => x.toMap()).toList(),
+      'tips': tips,
     };
   }
 
@@ -80,9 +78,7 @@ class User {
       height: map['height'] ?? 0.0,
       imc: map['imc'] ?? 0.0,
       status: map['status'] ?? "",
-      tips: map['tips'] != null
-          ? List<Tip>.from(map['tips']?.map((x) => Tip.fromMap(x)))
-          : [],
+      tips: map['tips'] != null ? List<String>.from(map['tips']) : [],
     );
   }
 

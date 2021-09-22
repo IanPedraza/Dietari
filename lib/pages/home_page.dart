@@ -1,20 +1,30 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dietari/components/HomeSectionComponent.dart';
 import 'package:dietari/components/TestItemCard.dart';
+import 'package:dietari/components/TipComponent.dart';
 import 'package:dietari/data/datasources/AuthDataSource.dart';
 import 'package:dietari/data/datasources/TestsDataSource.dart';
+import 'package:dietari/data/datasources/TipsDataSource.dart';
 import 'package:dietari/data/datasources/UserDataSource.dart';
 import 'package:dietari/data/domain/Test.dart';
+import 'package:dietari/data/domain/Tip.dart';
 import 'package:dietari/data/domain/User.dart';
 import 'package:dietari/data/domain/UserTest.dart';
 import 'package:dietari/data/framework/FireBase/FirebaseAuthDataSource.dart';
+import 'package:dietari/data/framework/FireBase/FirebaseConstants.dart';
 import 'package:dietari/data/framework/FireBase/FirebaseTestsDataSource.dart';
+import 'package:dietari/data/framework/FireBase/FirebaseTipsDataSource.dart';
 import 'package:dietari/data/framework/FireBase/FirebaseUserDataSouce.dart';
 import 'package:dietari/data/repositories/AuthRepository.dart';
 import 'package:dietari/data/repositories/TestsRepository.dart';
+import 'package:dietari/data/repositories/TipsRepository.dart';
 import 'package:dietari/data/repositories/UserRepository.dart';
 import 'package:dietari/data/usecases/GetTestsUseCase.dart';
+import 'package:dietari/data/usecases/GetTipsUseCase.dart';
+import 'package:dietari/data/usecases/GetUserIdUseCase.dart';
 import 'package:dietari/data/usecases/GetUserTestUseCase.dart';
+import 'package:dietari/data/usecases/GetUserTipsUseCase.dart';
 import 'package:dietari/data/usecases/SignOutUseCase.dart';
 import 'package:dietari/utils/arguments.dart';
 import 'package:dietari/utils/colors.dart';
@@ -22,8 +32,6 @@ import 'package:dietari/utils/routes.dart';
 import 'package:dietari/utils/strings.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:dietari/components/AppFloatingActionButton.dart';
-import 'package:dietari/utils/icons.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key, required this.title}) : super(key: key);
@@ -58,30 +66,47 @@ class _HomePageState extends State<HomePage> {
   late GetUserTestUseCase _getUserTestUseCase =
       GetUserTestUseCase(userRepository: _userRepository);
 
+  late GetUserIdUseCase _getUserIdUseCase =
+      GetUserIdUseCase(authRepository: _authRepository);
+
+  late TipsDataSource _tipsDataSource = FirebaseTipsDataSource();
+
+  late TipsRepository _tipsRepository =
+      TipsRepository(tipsDataSource: _tipsDataSource);
+
+  late GetTipsUseCase _getTipsUseCase =
+      GetTipsUseCase(tipsRepository: _tipsRepository);
+
+  late GetUserTipsUseCase _getUserTipsUseCase =
+      GetUserTipsUseCase(userRepository: _userRepository);
+
   late User newUser;
-  int currentIndex = 0;
-  late PageController _controller;
+  int currentIndexTests = 0;
+  int currentIndexTips = 0;
+  ScrollController _controllerTest = ScrollController(initialScrollOffset: 0);
+  ScrollController _controllerTips = ScrollController(initialScrollOffset: 0);
   late Stream<List<Test>> _testStream;
+  late Stream<QuerySnapshot> _tipStream;
+  List<Tip> _tips = [];
 
   @override
   void initState() {
-    /*_testStream =
-        FirebaseFirestore.instance.collection(TESTS_COLLECTION).snapshots();*/
     _testStream = _getTests().asStream();
-    _controller = PageController(initialPage: 0);
+    _tipStream =
+        FirebaseFirestore.instance.collection(COLLECTION_TIPS).snapshots();
     super.initState();
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controllerTest.dispose();
+    _controllerTips.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     _getArguments();
-
     return WillPopScope(
       onWillPop: () => exit(0),
       child: Scaffold(
@@ -92,10 +117,91 @@ class _HomePageState extends State<HomePage> {
           children: [
             HomeSectionComponent(
               onPressed: () {},
+              textHomeSectionComponent: tips_list,
+              content: new StreamBuilder<QuerySnapshot>(
+                stream: _tipStream,
+                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: SizedBox(
+                        child: CircularProgressIndicator(
+                          strokeWidth: 5,
+                        ),
+                        width: 75,
+                        height: 75,
+                      ),
+                    );
+                  }
+                  if (snapshot.hasError) {
+                    return Text(
+                      alert_title_error,
+                      style: TextStyle(
+                        color: primaryColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                      textAlign: TextAlign.center,
+                    );
+                  }
+                  _tips = [];
+                  snapshot.data!.docs.map((DocumentSnapshot document) {
+                    Tip _tip =
+                        Tip.fromMap(document.data() as Map<String, dynamic>);
+                    if (newUser.tips.contains(_tip.id)) {
+                      _tips.add(_tip);
+                    }
+                  }).toList();
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        height: 220,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.grey.shade100),
+                        ),
+                        padding: EdgeInsets.only(left: 5, right: 5),
+                        child: GridView.builder(
+                          scrollDirection: Axis.horizontal,
+                          controller: _controllerTips,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            mainAxisSpacing: 10,
+                            childAspectRatio: 2 / 8,
+                          ),
+                          itemCount: _tips.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  height: 60,
+                                  width:
+                                      MediaQuery.of(context).size.width / 1.1,
+                                  child: TipComponent(
+                                    onPressed: () {},
+                                    textTip: _tips[index].title,
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ),
+                      SizedBox(height: 2),
+                    ],
+                  );
+                },
+              ),
+            ),
+            HomeSectionComponent(
+              onPressed: () {},
               textHomeSectionComponent: test_list,
-              content: StreamBuilder<List<Test>>(
+              content: new StreamBuilder<List<Test>>(
                 stream: _testStream,
-                builder: (context, AsyncSnapshot<List<Test>?> snapshot) {
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<Test>?> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(
                       child: SizedBox(
@@ -122,52 +228,41 @@ class _HomePageState extends State<HomePage> {
                   return Column(
                     children: [
                       Container(
-                        height: 80,
-                        child: PageView.builder(
+                        height: 220,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.grey.shade100),
+                        ),
+                        padding: EdgeInsets.only(left: 5, right: 5),
+                        child: GridView.builder(
                           scrollDirection: Axis.horizontal,
-                          controller: _controller,
-                          onPageChanged: (int index) {
-                            setState(() {
-                              currentIndex = index;
-                            });
-                          },
+                          controller: _controllerTest,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 3,
+                            mainAxisSpacing: 10,
+                            childAspectRatio: 2 / 8,
+                          ),
                           itemCount: tests!.length,
-                          itemBuilder: (context, int index) {
-                            UserTest? _userTest;
-                            _getUserTest(newUser.id, tests[index].id).then(
-                              (userTest) => userTest != null
-                                  ? _userTest = userTest
-                                  : _userTest = null,
-                            );
+                          itemBuilder: (BuildContext context, int index) {
                             return Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Container(
                                   height: 60,
                                   width:
-                                      MediaQuery.of(context).size.width / 1.2,
+                                      MediaQuery.of(context).size.width / 1.1,
                                   child: TestItemCard(
                                     onPressed: () {
                                       _solveTest(question_route, tests[index]);
                                     },
                                     textTestItem: tests[index].title,
-                                    check: _userTest != null
-                                        ? _userTest!.isComplete
-                                        : false,
+                                    check: _existsUserTest(tests[index].id),
                                   ),
                                 ),
                               ],
                             );
                           },
-                        ),
-                      ),
-                      Container(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: List.generate(
-                            tests.length,
-                            (index) => buildDot(index, context),
-                          ),
                         ),
                       ),
                     ],
@@ -198,10 +293,6 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-        floatingActionButton: AppFloatingActionButton(
-          onPressed: () {},
-          child: getIcon(AppIcons.add),
-        ),
       ),
     );
   }
@@ -230,12 +321,25 @@ class _HomePageState extends State<HomePage> {
     return userTest;
   }
 
+  bool _existsUserTest(String testId) {
+    bool exists = false;
+    _getUserTest(newUser.id, testId)
+        .then((userTest) => userTest != null ? exists = true : exists = false);
+    return exists;
+  }
+
   void _solveTest(String route, Test test) {
     final args = {test_args: test};
     Navigator.pushNamed(context, route, arguments: args);
   }
 
-  Container buildDot(int index, BuildContext context) {
+  Future<List<Tip>> _getTips() async {
+    List<Tip> tips =
+        await _getUserTipsUseCase.invoke(_getUserIdUseCase.invoke()!);
+    return tips;
+  }
+
+  Container buildDot(int currentIndex, int index, BuildContext context) {
     return Container(
       height: 10,
       width: 10,
