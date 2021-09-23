@@ -108,9 +108,16 @@ class FirebaseUserDataSouce extends UserDataSource {
 
       List<Tip> tips = [];
 
-      user.tips.forEach((tipId) async {
-        Tip? tip = await getTipsUseCase.invoke(tipId);
+      List<Future<Tip?>> futures = [];
 
+      user.tips.forEach((tipId) {
+        Future<Tip?> future = getTipsUseCase.invoke(tipId);
+        futures.add(future);
+      });
+
+      List<Tip?> results = await Future.wait(futures);
+
+      results.forEach((tip) {
         if (tip != null) {
           tips.add(tip);
         }
@@ -118,7 +125,7 @@ class FirebaseUserDataSouce extends UserDataSource {
 
       return tips;
     } catch (error) {
-      print("$TAG:addUserTest:Error: $error");
+      print("$TAG:getUserTips:Error: $error");
       return [];
     }
   }
