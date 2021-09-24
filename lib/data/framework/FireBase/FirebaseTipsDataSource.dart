@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dietari/data/datasources/TipsDataSource.dart';
 import 'package:dietari/data/domain/Tip.dart';
-import 'package:dietari/data/framework/FireBase/FirebaseConstants.dart';
+import 'package:dietari/data/framework/firebase/FirebaseConstants.dart';
 
 class FirebaseTipsDataSource extends TipsDataSource {
   static const TAG = "FirebaseTipsDataSource";

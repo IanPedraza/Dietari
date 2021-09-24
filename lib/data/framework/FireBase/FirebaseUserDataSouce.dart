@@ -5,8 +5,8 @@ import 'package:dietari/data/domain/HistoryItem.dart';
 import 'package:dietari/data/domain/Tip.dart';
 import 'package:dietari/data/domain/User.dart';
 import 'package:dietari/data/domain/UserTest.dart';
-import 'package:dietari/data/framework/FireBase/FirebaseConstants.dart';
-import 'package:dietari/data/framework/FireBase/FirebaseTipsDataSource.dart';
+import 'package:dietari/data/framework/firebase/FirebaseConstants.dart';
+import 'package:dietari/data/framework/firebase/FirebaseTipsDataSource.dart';
 import 'package:dietari/data/repositories/TipsRepository.dart';
 import 'package:dietari/data/usecases/GetTipsUseCase.dart';
 
@@ -157,6 +157,22 @@ class FirebaseUserDataSouce extends UserDataSource {
     } catch (error) {
       print("$TAG:getHistory:Error: $error");
       return [];
+    }
+  }
+
+  @override
+  Future<bool> updateUser(String userId, Map<String, dynamic> changes) async {
+    try {
+      if (userId.isEmpty) {
+        throw new Exception("user id must not be empty");
+      }
+
+      await _database.collection(COLLECTION_USERS).doc(userId).update(changes);
+
+      return true;
+    } catch (error) {
+      print("$TAG:updateUser:Error: $error");
+      return false;
     }
   }
 }

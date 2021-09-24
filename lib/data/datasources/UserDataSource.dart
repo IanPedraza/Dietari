@@ -10,4 +10,5 @@ abstract class UserDataSource {
   Future<bool> addUserTest(String userId, UserTest test);
   Future<List<Tip>> getUserTips(String userId);
   Future<List<HistoryItem>> getHistory(String userId);
+  Future<bool> updateUser(String userId, Map<String, dynamic> changes);
 }
