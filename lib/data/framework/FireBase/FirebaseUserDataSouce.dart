@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dietari/data/datasources/TipsDataSource.dart';
 import 'package:dietari/data/datasources/UserDataSource.dart';
+import 'package:dietari/data/domain/HistoryItem.dart';
 import 'package:dietari/data/domain/Tip.dart';
 import 'package:dietari/data/domain/User.dart';
 import 'package:dietari/data/domain/UserTest.dart';
@@ -126,6 +127,35 @@ class FirebaseUserDataSouce extends UserDataSource {
       return tips;
     } catch (error) {
       print("$TAG:getUserTips:Error: $error");
+      return [];
+    }
+  }
+
+  @override
+  Future<List<HistoryItem>> getHistory(String userId) async {
+    try {
+      if (userId.isEmpty) {
+        throw new Exception("user id must not be empty");
+      }
+
+      final snapshot = await _database
+          .collection(COLLECTION_USERS)
+          .doc(userId)
+          .collection(COLLECTION_HISTORY)
+          .get();
+
+      List<HistoryItem> history = [];
+
+      snapshot.docs.forEach((document) {
+        if (document.exists) {
+          HistoryItem historyItem = HistoryItem.fromMap(document.data());
+          history.add(historyItem);
+        }
+      });
+
+      return history;
+    } catch (error) {
+      print("$TAG:getHistory:Error: $error");
       return [];
     }
   }
