@@ -1,8 +1,4 @@
 import 'dart:convert';
-<<<<<<< HEAD
-=======
-
->>>>>>> cea9bf869a15e0b42c4b6717bc690864919c4556
 import 'package:flutter/foundation.dart';
 
 class User {

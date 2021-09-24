@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dietari/components/HomeSectionComponent.dart';
 import 'package:dietari/components/TestItemCard.dart';
 import 'package:dietari/components/TipComponent.dart';
@@ -13,6 +12,7 @@ import 'package:dietari/data/domain/User.dart';
 import 'package:dietari/data/domain/UserTest.dart';
 import 'package:dietari/data/framework/firebase/FirebaseAuthDataSource.dart';
 import 'package:dietari/data/framework/firebase/FirebaseTestsDataSource.dart';
+import 'package:dietari/data/framework/firebase/FirebaseTipsDataSource.dart';
 import 'package:dietari/data/framework/firebase/FirebaseUserDataSouce.dart';
 import 'package:dietari/data/repositories/AuthRepository.dart';
 import 'package:dietari/data/repositories/TestsRepository.dart';
