@@ -3,6 +3,7 @@ const registration_form = "Formulario de Registro";
 const login_form = "Iniciar Sesión";
 const espace = " ";
 const test_list = "Tests";
+const tips_list = "Tips";
 
 //Cuadros de Texto
 const textfield_email = "Correo Electrónico";
@@ -68,3 +69,4 @@ const alert_content_incorrect_password = "Contraseña incorrecta";
 const alert_content_answer_question = "Responda la pregunta antes de continuar";
 const alert_content_not_aggregated_responses =
     "No fue posible registrar sus respuestas, intentelo de nuevo";
+const alert_content_is_empty = "Lista vacia";
