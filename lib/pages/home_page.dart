@@ -80,20 +80,20 @@ class _HomePageState extends State<HomePage> {
   late GetUserTipsUseCase _getUserTipsUseCase =
       GetUserTipsUseCase(userRepository: _userRepository);
 
+  late String? _userId;
   late User newUser;
-  int currentIndexTests = 0;
-  int currentIndexTips = 0;
+  List<UserTest> _userTests = [];
+  late List<Test> _tests;
   ScrollController _controllerTest = ScrollController(initialScrollOffset: 0);
   ScrollController _controllerTips = ScrollController(initialScrollOffset: 0);
   late Stream<List<Test>> _testStream;
-  late Stream<QuerySnapshot> _tipStream;
-  List<Tip> _tips = [];
+  late Stream<List<Tip>> _tipStream;
 
   @override
   void initState() {
+    _userId = _getUserIdUseCase.invoke();
     _testStream = _getTests().asStream();
-    _tipStream =
-        FirebaseFirestore.instance.collection(COLLECTION_TIPS).snapshots();
+    _tipStream = _getTips().asStream();
     super.initState();
   }
 
@@ -118,80 +118,62 @@ class _HomePageState extends State<HomePage> {
             HomeSectionComponent(
               onPressed: () {},
               textHomeSectionComponent: tips_list,
-              content: new StreamBuilder<QuerySnapshot>(
+              content: new StreamBuilder<List<Tip>>(
                 stream: _tipStream,
-                builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: SizedBox(
-                        child: CircularProgressIndicator(
-                          strokeWidth: 5,
-                        ),
-                        width: 75,
-                        height: 75,
-                      ),
-                    );
-                  }
+                builder: (context, AsyncSnapshot<List<Tip>> snapshot) {
                   if (snapshot.hasError) {
-                    return Text(
-                      alert_title_error,
-                      style: TextStyle(
-                        color: primaryColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                      ),
-                      textAlign: TextAlign.center,
+                    return hasError(alert_title_error);
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return waitingConnection();
+                  }
+                  if (snapshot.data!.isEmpty) {
+                    return hasError(alert_content_is_empty);
+                  } else {
+                    List<Tip>? _tips = snapshot.data;
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          height: 220,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: Colors.grey.shade100),
+                          ),
+                          padding: EdgeInsets.only(left: 5, right: 5),
+                          child: GridView.builder(
+                            scrollDirection: Axis.horizontal,
+                            controller: _controllerTips,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              mainAxisSpacing: 10,
+                              childAspectRatio: 2 / 8,
+                            ),
+                            itemCount: _tips!.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Column(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Container(
+                                    height: 60,
+                                    width:
+                                        MediaQuery.of(context).size.width / 1.1,
+                                    child: TipComponent(
+                                      onPressed: () {},
+                                      textTip: _tips[index].title,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        ),
+                        SizedBox(height: 2),
+                      ],
                     );
                   }
-                  _tips = [];
-                  snapshot.data!.docs.map((DocumentSnapshot document) {
-                    Tip _tip =
-                        Tip.fromMap(document.data() as Map<String, dynamic>);
-                    if (newUser.tips.contains(_tip.id)) {
-                      _tips.add(_tip);
-                    }
-                  }).toList();
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        height: 220,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Colors.grey.shade100),
-                        ),
-                        padding: EdgeInsets.only(left: 5, right: 5),
-                        child: GridView.builder(
-                          scrollDirection: Axis.horizontal,
-                          controller: _controllerTips,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            mainAxisSpacing: 10,
-                            childAspectRatio: 2 / 8,
-                          ),
-                          itemCount: _tips.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Container(
-                                  height: 60,
-                                  width:
-                                      MediaQuery.of(context).size.width / 1.1,
-                                  child: TipComponent(
-                                    onPressed: () {},
-                                    textTip: _tips[index].title,
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                      ),
-                      SizedBox(height: 2),
-                    ],
-                  );
                 },
               ),
             ),
@@ -202,71 +184,63 @@ class _HomePageState extends State<HomePage> {
                 stream: _testStream,
                 builder: (BuildContext context,
                     AsyncSnapshot<List<Test>?> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: SizedBox(
-                        child: CircularProgressIndicator(
-                          strokeWidth: 5,
-                        ),
-                        width: 75,
-                        height: 75,
-                      ),
-                    );
-                  }
                   if (snapshot.hasError) {
-                    return Text(
-                      alert_title_error,
-                      style: TextStyle(
-                        color: primaryColor,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
-                      ),
-                      textAlign: TextAlign.center,
+                    return hasError(alert_title_error);
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return waitingConnection();
+                  }
+                  if (snapshot.data!.isEmpty) {
+                    return hasError(alert_content_is_empty);
+                  } else {
+                    //List<Test>? tests = snapshot.data;
+                    _tests = snapshot.data!;
+                    _getUserTests();
+                    return Column(
+                      children: [
+                        Container(
+                          height: 220,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(color: Colors.grey.shade100),
+                          ),
+                          padding: EdgeInsets.only(left: 5, right: 5),
+                          child: GridView.builder(
+                            scrollDirection: Axis.horizontal,
+                            controller: _controllerTest,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 3,
+                              mainAxisSpacing: 10,
+                              childAspectRatio: 2 / 8,
+                            ),
+                            itemCount: _tests.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    height: 60,
+                                    width:
+                                        MediaQuery.of(context).size.width / 1.1,
+                                    child: TestItemCard(
+                                      onPressed: () {
+                                        _answerTest(
+                                            question_route, _tests[index]);
+                                      },
+                                      textTestItem: _tests[index].title,
+                                      check: _testResolved(_tests[index].id),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        ),
+                        SizedBox(height: 2),
+                      ],
                     );
                   }
-                  List<Test>? tests = snapshot.data;
-                  return Column(
-                    children: [
-                      Container(
-                        height: 220,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: Colors.grey.shade100),
-                        ),
-                        padding: EdgeInsets.only(left: 5, right: 5),
-                        child: GridView.builder(
-                          scrollDirection: Axis.horizontal,
-                          controller: _controllerTest,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 3,
-                            mainAxisSpacing: 10,
-                            childAspectRatio: 2 / 8,
-                          ),
-                          itemCount: tests!.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  height: 60,
-                                  width:
-                                      MediaQuery.of(context).size.width / 1.1,
-                                  child: TestItemCard(
-                                    onPressed: () {
-                                      _solveTest(question_route, tests[index]);
-                                    },
-                                    textTestItem: tests[index].title,
-                                    check: _existsUserTest(tests[index].id),
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  );
                 },
               ),
             ),
@@ -316,38 +290,64 @@ class _HomePageState extends State<HomePage> {
     return tests;
   }
 
-  Future<UserTest?> _getUserTest(String userId, String testId) async {
-    UserTest? userTest = await _getUserTestUseCase.invoke(userId, testId);
-    return userTest;
-  }
-
-  bool _existsUserTest(String testId) {
-    bool exists = false;
-    _getUserTest(newUser.id, testId)
-        .then((userTest) => userTest != null ? exists = true : exists = false);
-    return exists;
-  }
-
-  void _solveTest(String route, Test test) {
+  void _answerTest(String route, Test test) {
     final args = {test_args: test};
     Navigator.pushNamed(context, route, arguments: args);
   }
 
   Future<List<Tip>> _getTips() async {
-    List<Tip> tips =
-        await _getUserTipsUseCase.invoke(_getUserIdUseCase.invoke()!);
+    List<Tip> tips = await _getUserTipsUseCase.invoke(_userId!);
     return tips;
   }
 
-  Container buildDot(int currentIndex, int index, BuildContext context) {
-    return Container(
-      height: 10,
-      width: 10,
-      margin: EdgeInsets.only(right: 5, bottom: 30),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: primaryColor, width: 1),
-        color: currentIndex == index ? primaryColor : Colors.transparent,
+  void _getUserTests() async {
+    List<Future<UserTest?>> futures = [];
+    _tests.forEach((test) {
+      Future<UserTest?> data = _getUserTestUseCase.invoke(_userId!, test.id);
+      futures.add(data);
+    });
+    List<UserTest?> results = await Future.wait(futures);
+    results.forEach((userTest) {
+      if (userTest != null) {
+        setState(() {
+          _userTests.add(userTest);
+        });
+      }
+    });
+  }
+
+  bool _testResolved(String testId) {
+    bool resolved = false;
+    _userTests.forEach((userTest) {
+      if (userTest.id == testId) {
+        resolved = true;
+      }
+    });
+    return resolved;
+  }
+
+  Center waitingConnection() {
+    return Center(
+      child: SizedBox(
+        child: CircularProgressIndicator(
+          strokeWidth: 5,
+        ),
+        width: 75,
+        height: 75,
+      ),
+    );
+  }
+
+  Center hasError(String text) {
+    return Center(
+      child: Text(
+        text,
+        style: TextStyle(
+          color: primaryColor,
+          fontWeight: FontWeight.bold,
+          fontSize: 12,
+        ),
+        textAlign: TextAlign.center,
       ),
     );
   }

@@ -69,3 +69,4 @@ const alert_content_incorrect_password = "Contraseña incorrecta";
 const alert_content_answer_question = "Responda la pregunta antes de continuar";
 const alert_content_not_aggregated_responses =
     "No fue posible registrar sus respuestas, intentelo de nuevo";
+const alert_content_is_empty = "Lista vacia";
