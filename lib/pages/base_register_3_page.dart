@@ -4,7 +4,7 @@ import 'package:dietari/components/MainTextField.dart';
 import 'package:dietari/components/ShowAlertDialog.dart';
 import 'package:dietari/data/datasources/UserDataSource.dart';
 import 'package:dietari/data/domain/User.dart';
-import 'package:dietari/data/framework/FireBase/FirebaseUserDataSouce.dart';
+import 'package:dietari/data/framework/firebase/FirebaseUserDataSouce.dart';
 import 'package:dietari/data/repositories/UserRepository.dart';
 import 'package:dietari/data/usecases/AddUserUseCase.dart';
 import 'package:dietari/utils/arguments.dart';

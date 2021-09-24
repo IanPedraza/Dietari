@@ -32,4 +32,8 @@ class UserRepository {
   Future<List<HistoryItem>> getHistory(String userId) {
     return userDataSource.getHistory(userId);
   }
+
+  Future<bool> updateUser(String userId, Map<String, dynamic> changes) {
+    return userDataSource.updateUser(userId, changes);
+  }
 }
