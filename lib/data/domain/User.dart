@@ -1,4 +1,8 @@
 import 'dart:convert';
+<<<<<<< HEAD
+=======
+
+>>>>>>> cea9bf869a15e0b42c4b6717bc690864919c4556
 import 'package:flutter/foundation.dart';
 
 class User {
@@ -12,6 +16,11 @@ class User {
   num imc;
   String status;
   List<String> tips;
+
+  static const FIELD_FIRST_NAME = "firstName";
+  static const FIELD_LAST_NAME = "lastName";
+  static const FIELD_WEIGHT = "weight";
+  static const FIELD_HEIGHT = "height";
 
   User({
     this.id = "",
