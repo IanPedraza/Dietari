@@ -127,8 +127,6 @@ class FirebaseUserDataSouce extends UserDataSource {
       return tips;
     } catch (error) {
       print("$TAG:getUserTips:Error: $error");
-<<<<<<< HEAD
-=======
       return [];
     }
   }
@@ -158,7 +156,6 @@ class FirebaseUserDataSouce extends UserDataSource {
       return history;
     } catch (error) {
       print("$TAG:getHistory:Error: $error");
->>>>>>> 881c0a939c1ab4e76d5e8ae057f62b9ff1e7878b
       return [];
     }
   }
