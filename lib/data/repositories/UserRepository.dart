@@ -1,4 +1,5 @@
 import 'package:dietari/data/datasources/UserDataSource.dart';
+import 'package:dietari/data/domain/HistoryItem.dart';
 import 'package:dietari/data/domain/Tip.dart';
 import 'package:dietari/data/domain/User.dart';
 import 'package:dietari/data/domain/UserTest.dart';
@@ -26,5 +27,13 @@ class UserRepository {
 
   Future<List<Tip>> getUserTips(String userId) {
     return userDataSource.getUserTips(userId);
+  }
+
+  Future<List<HistoryItem>> getHistory(String userId) {
+    return userDataSource.getHistory(userId);
+  }
+
+  Future<bool> updateUser(String userId, Map<String, dynamic> changes) {
+    return userDataSource.updateUser(userId, changes);
   }
 }

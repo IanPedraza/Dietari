@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dietari/data/datasources/TipsDataSource.dart';
 import 'package:dietari/data/datasources/UserDataSource.dart';
+import 'package:dietari/data/domain/HistoryItem.dart';
 import 'package:dietari/data/domain/Tip.dart';
 import 'package:dietari/data/domain/User.dart';
 import 'package:dietari/data/domain/UserTest.dart';
-import 'package:dietari/data/framework/FireBase/FirebaseConstants.dart';
-import 'package:dietari/data/framework/FireBase/FirebaseTipsDataSource.dart';
+import 'package:dietari/data/framework/firebase/FirebaseConstants.dart';
+import 'package:dietari/data/framework/firebase/FirebaseTipsDataSource.dart';
 import 'package:dietari/data/repositories/TipsRepository.dart';
 import 'package:dietari/data/usecases/GetTipsUseCase.dart';
 
@@ -126,7 +127,55 @@ class FirebaseUserDataSouce extends UserDataSource {
       return tips;
     } catch (error) {
       print("$TAG:getUserTips:Error: $error");
+<<<<<<< HEAD
+=======
       return [];
+    }
+  }
+
+  @override
+  Future<List<HistoryItem>> getHistory(String userId) async {
+    try {
+      if (userId.isEmpty) {
+        throw new Exception("user id must not be empty");
+      }
+
+      final snapshot = await _database
+          .collection(COLLECTION_USERS)
+          .doc(userId)
+          .collection(COLLECTION_HISTORY)
+          .get();
+
+      List<HistoryItem> history = [];
+
+      snapshot.docs.forEach((document) {
+        if (document.exists) {
+          HistoryItem historyItem = HistoryItem.fromMap(document.data());
+          history.add(historyItem);
+        }
+      });
+
+      return history;
+    } catch (error) {
+      print("$TAG:getHistory:Error: $error");
+>>>>>>> 881c0a939c1ab4e76d5e8ae057f62b9ff1e7878b
+      return [];
+    }
+  }
+
+  @override
+  Future<bool> updateUser(String userId, Map<String, dynamic> changes) async {
+    try {
+      if (userId.isEmpty) {
+        throw new Exception("user id must not be empty");
+      }
+
+      await _database.collection(COLLECTION_USERS).doc(userId).update(changes);
+
+      return true;
+    } catch (error) {
+      print("$TAG:updateUser:Error: $error");
+      return false;
     }
   }
 }
