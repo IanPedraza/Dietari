@@ -4,6 +4,7 @@ const login_form = "Iniciar Sesión";
 const espace = " ";
 const test_list = "Tests";
 const tips_list = "Tips";
+const tip_title = "Tip";
 
 //Cuadros de Texto
 const textfield_email = "Correo Electrónico";
