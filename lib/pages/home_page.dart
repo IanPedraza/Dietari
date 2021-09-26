@@ -11,11 +11,10 @@ import 'package:dietari/data/domain/Test.dart';
 import 'package:dietari/data/domain/Tip.dart';
 import 'package:dietari/data/domain/User.dart';
 import 'package:dietari/data/domain/UserTest.dart';
-import 'package:dietari/data/framework/FireBase/FirebaseAuthDataSource.dart';
-import 'package:dietari/data/framework/FireBase/FirebaseConstants.dart';
-import 'package:dietari/data/framework/FireBase/FirebaseTestsDataSource.dart';
-import 'package:dietari/data/framework/FireBase/FirebaseTipsDataSource.dart';
-import 'package:dietari/data/framework/FireBase/FirebaseUserDataSouce.dart';
+import 'package:dietari/data/framework/firebase/FirebaseAuthDataSource.dart';
+import 'package:dietari/data/framework/firebase/FirebaseTestsDataSource.dart';
+import 'package:dietari/data/framework/firebase/FirebaseTipsDataSource.dart';
+import 'package:dietari/data/framework/firebase/FirebaseUserDataSouce.dart';
 import 'package:dietari/data/repositories/AuthRepository.dart';
 import 'package:dietari/data/repositories/TestsRepository.dart';
 import 'package:dietari/data/repositories/TipsRepository.dart';
@@ -83,7 +82,8 @@ class _HomePageState extends State<HomePage> {
   late String? _userId;
   late User newUser;
   List<UserTest> _userTests = [];
-  List<Test> _tests = [];
+  
+  late List<Test> _tests;
   ScrollController _controllerTest = ScrollController(initialScrollOffset: 0);
   ScrollController _controllerTips = ScrollController(initialScrollOffset: 0);
   late Stream<List<Test>> _testStream;
@@ -195,6 +195,7 @@ class _HomePageState extends State<HomePage> {
                   if (snapshot.data!.isEmpty) {
                     return hasError(alert_content_is_empty);
                   } else {
+
                     _tests = snapshot.data!;
                     _getUserTests();
                     return Column(
