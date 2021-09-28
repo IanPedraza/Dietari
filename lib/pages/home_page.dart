@@ -103,7 +103,9 @@ class _HomePageState extends State<HomePage> {
         body: ListView(
           children: [
             HomeSectionComponent(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, tips_list_route);
+              },
               textHomeSectionComponent: tips_list,
               content: new StreamBuilder<List<Tip>>(
                 stream: _tipStream,
@@ -149,10 +151,7 @@ class _HomePageState extends State<HomePage> {
                                     width:
                                         MediaQuery.of(context).size.width / 1.1,
                                     child: TipComponent(
-                                      onPressed: () {
-                                        _takeTip(tip_route, _tips[index]);
-                                      },
-                                      textTip: _tips[index].title,
+                                      tip: _tips[index],
                                     ),
                                   ),
                                 ],
@@ -272,11 +271,6 @@ class _HomePageState extends State<HomePage> {
 
   void _answerTest(String route, Test test) {
     final args = {test_args: test};
-    Navigator.pushNamed(context, route, arguments: args);
-  }
-
-  void _takeTip(String route, Tip tip) {
-    final args = {tip_args: tip};
     Navigator.pushNamed(context, route, arguments: args);
   }
 

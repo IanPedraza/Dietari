@@ -2,11 +2,8 @@ import 'package:dietari/components/MainButton.dart';
 import 'package:dietari/components/MainTextField.dart';
 import 'package:dietari/components/ShowAlertDialog.dart';
 import 'package:dietari/data/datasources/AuthDataSource.dart';
-import 'package:dietari/data/datasources/UserDataSource.dart';
 import 'package:dietari/data/domain/User.dart';
 import 'package:dietari/data/framework/firebase/FirebaseAuthDataSource.dart';
-import 'package:dietari/data/framework/firebase/FirebaseUserDataSouce.dart';
-import 'package:dietari/data/repositories/UserRepository.dart';
 import 'package:dietari/data/usecases/GetUserIdUseCase.dart';
 import 'package:dietari/data/repositories/AuthRepository.dart';
 import 'package:dietari/data/usecases/SignUpWithEmailUseCase.dart';
@@ -30,16 +27,11 @@ class BaseRegister1Page extends StatefulWidget {
 class _BaseRegister1Page extends State<BaseRegister1Page> {
   late AuthDataSource _authDataSource = FirebaseAuthDataSource();
 
-  late UserDataSource _userDataSource = FirebaseUserDataSouce();
-
   late AuthRepository _authRepository =
       AuthRepository(authDataSource: _authDataSource);
 
   late GetUserIdUseCase _getUserIdUseCase =
       GetUserIdUseCase(authRepository: _authRepository);
-
-  late UserRepository _userRepository =
-      UserRepository(userDataSource: _userDataSource);
 
   late SignUpWithEmailUseCase _signUpWithEmailUseCase =
       SignUpWithEmailUseCase(authRepository: _authRepository);
