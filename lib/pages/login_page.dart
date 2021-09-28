@@ -15,7 +15,6 @@ import 'package:dietari/data/usecases/GetUserUseCase.dart';
 import 'package:dietari/data/usecases/SendPasswordResetEmailUseCase.dart';
 import 'package:dietari/data/usecases/SignInWithGoogleUseCase.dart';
 import 'package:dietari/data/usecases/SignInWithEmailUseCase.dart';
-import 'package:dietari/data/usecases/SignOutUseCase.dart';
 import 'package:dietari/utils/arguments.dart';
 import 'package:dietari/utils/colors.dart';
 import 'package:dietari/utils/resources.dart';
@@ -41,9 +40,6 @@ class _LoginPage extends State<LoginPage> {
 
   late SignInWithEmailUseCase _signInWithEmailUseCase =
       SignInWithEmailUseCase(authRepository: _authRepository);
-
-  late SignOutUseCase _signOutUseCase =
-      SignOutUseCase(authRepository: _authRepository);
 
   late SendPasswordResetEmailUseCase _sendPasswordResetEmailUseCase =
       SendPasswordResetEmailUseCase(authRepository: _authRepository);
@@ -424,11 +420,6 @@ class _LoginPage extends State<LoginPage> {
   Future<String?> _signInWithEmail(String email, String password) async {
     String? user = await _signInWithEmailUseCase.invoke(email, password);
     return user;
-  }
-
-  Future<bool> _signOut() async {
-    bool exit = await _signOutUseCase.invoke();
-    return exit;
   }
 
   Future<bool> _sendPasswordResetEmail(String email) async {
