@@ -129,6 +129,7 @@ class _QuestionPageState extends State<QuestionPage> {
                     Expanded(
                       child: ListView.builder(
                         itemCount: _userTest.questions[index].options.length,
+                        shrinkWrap: true,
                         itemBuilder: (BuildContext context, int indx) {
                           return Container(
                             padding: EdgeInsets.only(

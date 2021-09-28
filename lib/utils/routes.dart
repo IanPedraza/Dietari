@@ -4,6 +4,7 @@ import 'package:dietari/pages/base_register_3_page.dart';
 import 'package:dietari/pages/finished_test_page.dart';
 import 'package:dietari/pages/question_page.dart';
 import 'package:dietari/pages/test_page.dart';
+import 'package:dietari/pages/tip_page.dart';
 import 'package:flutter/material.dart';
 import 'package:dietari/utils/strings.dart';
 import 'package:dietari/pages/home_page.dart';
@@ -19,6 +20,7 @@ Map<String, WidgetBuilder> getApplicationRoutes() {
     question_route: (BuildContext context) => QuestionPage(),
     test_route: (BuildContext context) => TestPage(),
     finished_test_route: (BuildContext context) => FinishedTestPage(),
+    tip_route: (BuildContext context) => TipPage(),
   };
 }
 
@@ -30,3 +32,4 @@ const base_register_3_route = 'base_register_3';
 const question_route = 'question';
 const test_route = 'test';
 const finished_test_route = 'finished_test';
+const tip_route = 'tip';

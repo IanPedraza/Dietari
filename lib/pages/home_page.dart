@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dietari/components/HomeSectionComponent.dart';
 import 'package:dietari/components/TestItemCard.dart';
 import 'package:dietari/components/TipComponent.dart';
@@ -81,6 +82,7 @@ class _HomePageState extends State<HomePage> {
   late String? _userId;
   late User newUser;
   List<UserTest> _userTests = [];
+  
   late List<Test> _tests;
   ScrollController _controllerTest = ScrollController(initialScrollOffset: 0);
   ScrollController _controllerTips = ScrollController(initialScrollOffset: 0);
@@ -118,7 +120,8 @@ class _HomePageState extends State<HomePage> {
               textHomeSectionComponent: tips_list,
               content: new StreamBuilder<List<Tip>>(
                 stream: _tipStream,
-                builder: (context, AsyncSnapshot<List<Tip>> snapshot) {
+                builder:
+                    (BuildContext context, AsyncSnapshot<List<Tip>> snapshot) {
                   if (snapshot.hasError) {
                     return hasError(alert_title_error);
                   }
@@ -159,7 +162,9 @@ class _HomePageState extends State<HomePage> {
                                     width:
                                         MediaQuery.of(context).size.width / 1.1,
                                     child: TipComponent(
-                                      onPressed: () {},
+                                      onPressed: () {
+                                        _takeTip(tip_route, _tips[index]);
+                                      },
                                       textTip: _tips[index].title,
                                     ),
                                   ),
@@ -180,8 +185,7 @@ class _HomePageState extends State<HomePage> {
               textHomeSectionComponent: test_list,
               content: new StreamBuilder<List<Test>>(
                 stream: _testStream,
-                builder: (BuildContext context,
-                    AsyncSnapshot<List<Test>?> snapshot) {
+                builder: (context, AsyncSnapshot<List<Test>?> snapshot) {
                   if (snapshot.hasError) {
                     return hasError(alert_title_error);
                   }
@@ -191,7 +195,7 @@ class _HomePageState extends State<HomePage> {
                   if (snapshot.data!.isEmpty) {
                     return hasError(alert_content_is_empty);
                   } else {
-                    //List<Test>? tests = snapshot.data;
+
                     _tests = snapshot.data!;
                     _getUserTests();
                     return Column(
@@ -290,6 +294,11 @@ class _HomePageState extends State<HomePage> {
 
   void _answerTest(String route, Test test) {
     final args = {test_args: test};
+    Navigator.pushNamed(context, route, arguments: args);
+  }
+
+  void _takeTip(String route, Tip tip) {
+    final args = {tip_args: tip};
     Navigator.pushNamed(context, route, arguments: args);
   }
 
