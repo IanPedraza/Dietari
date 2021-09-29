@@ -1,11 +1,9 @@
 import 'dart:io';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dietari/components/HomeSectionComponent.dart';
 import 'package:dietari/components/TestItemCard.dart';
 import 'package:dietari/components/TipComponent.dart';
 import 'package:dietari/data/datasources/AuthDataSource.dart';
 import 'package:dietari/data/datasources/TestsDataSource.dart';
-import 'package:dietari/data/datasources/TipsDataSource.dart';
 import 'package:dietari/data/datasources/UserDataSource.dart';
 import 'package:dietari/data/domain/Test.dart';
 import 'package:dietari/data/domain/Tip.dart';
@@ -13,14 +11,11 @@ import 'package:dietari/data/domain/User.dart';
 import 'package:dietari/data/domain/UserTest.dart';
 import 'package:dietari/data/framework/firebase/FirebaseAuthDataSource.dart';
 import 'package:dietari/data/framework/firebase/FirebaseTestsDataSource.dart';
-import 'package:dietari/data/framework/firebase/FirebaseTipsDataSource.dart';
 import 'package:dietari/data/framework/firebase/FirebaseUserDataSouce.dart';
 import 'package:dietari/data/repositories/AuthRepository.dart';
 import 'package:dietari/data/repositories/TestsRepository.dart';
-import 'package:dietari/data/repositories/TipsRepository.dart';
 import 'package:dietari/data/repositories/UserRepository.dart';
 import 'package:dietari/data/usecases/GetTestsUseCase.dart';
-import 'package:dietari/data/usecases/GetTipsUseCase.dart';
 import 'package:dietari/data/usecases/GetUserIdUseCase.dart';
 import 'package:dietari/data/usecases/GetUserTestUseCase.dart';
 import 'package:dietari/data/usecases/GetUserTipsUseCase.dart';
@@ -68,21 +63,13 @@ class _HomePageState extends State<HomePage> {
   late GetUserIdUseCase _getUserIdUseCase =
       GetUserIdUseCase(authRepository: _authRepository);
 
-  late TipsDataSource _tipsDataSource = FirebaseTipsDataSource();
-
-  late TipsRepository _tipsRepository =
-      TipsRepository(tipsDataSource: _tipsDataSource);
-
-  late GetTipsUseCase _getTipsUseCase =
-      GetTipsUseCase(tipsRepository: _tipsRepository);
-
   late GetUserTipsUseCase _getUserTipsUseCase =
       GetUserTipsUseCase(userRepository: _userRepository);
 
   late String? _userId;
   late User newUser;
   List<UserTest> _userTests = [];
-  
+
   late List<Test> _tests;
   ScrollController _controllerTest = ScrollController(initialScrollOffset: 0);
   ScrollController _controllerTips = ScrollController(initialScrollOffset: 0);
@@ -116,7 +103,9 @@ class _HomePageState extends State<HomePage> {
         body: ListView(
           children: [
             HomeSectionComponent(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, tips_list_route);
+              },
               textHomeSectionComponent: tips_list,
               content: new StreamBuilder<List<Tip>>(
                 stream: _tipStream,
@@ -162,10 +151,7 @@ class _HomePageState extends State<HomePage> {
                                     width:
                                         MediaQuery.of(context).size.width / 1.1,
                                     child: TipComponent(
-                                      onPressed: () {
-                                        _takeTip(tip_route, _tips[index]);
-                                      },
-                                      textTip: _tips[index].title,
+                                      tip: _tips[index],
                                     ),
                                   ),
                                 ],
@@ -181,7 +167,7 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             HomeSectionComponent(
-              onPressed: () {},
+              onPressed: _showAllTests,
               textHomeSectionComponent: test_list,
               content: new StreamBuilder<List<Test>>(
                 stream: _testStream,
@@ -195,7 +181,6 @@ class _HomePageState extends State<HomePage> {
                   if (snapshot.data!.isEmpty) {
                     return hasError(alert_content_is_empty);
                   } else {
-
                     _tests = snapshot.data!;
                     _getUserTests();
                     return Column(
@@ -255,18 +240,6 @@ class _HomePageState extends State<HomePage> {
                 );
               },
             ),
-            ElevatedButton(
-              child: Text('Test'),
-              onPressed: () {
-                Navigator.pushNamed(context, test_route);
-              },
-            ),
-            ElevatedButton(
-              child: Text('Finished Test'),
-              onPressed: () {
-                Navigator.pushNamed(context, finished_test_route);
-              },
-            ),
           ],
         ),
       ),
@@ -292,13 +265,12 @@ class _HomePageState extends State<HomePage> {
     return tests;
   }
 
-  void _answerTest(String route, Test test) {
-    final args = {test_args: test};
-    Navigator.pushNamed(context, route, arguments: args);
+  void _showAllTests() {
+    Navigator.pushNamed(context, test_route);
   }
 
-  void _takeTip(String route, Tip tip) {
-    final args = {tip_args: tip};
+  void _answerTest(String route, Test test) {
+    final args = {test_args: test};
     Navigator.pushNamed(context, route, arguments: args);
   }
 
