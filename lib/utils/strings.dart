@@ -51,6 +51,7 @@ const text_no_response = "Sin Responder";
 const text_description = "Descripción";
 const text_result = "Resultados";
 const text_without_result = "Sin Resultados";
+const text_welcome = "Bienvenido ";
 
 //Cuadro de Alerta
 const alert_title = "Alerta";
