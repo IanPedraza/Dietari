@@ -36,35 +36,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late AuthDataSource _authDataSource = FirebaseAuthDataSource();
-
-  late AuthRepository _authRepository =
-      AuthRepository(authDataSource: _authDataSource);
-
-  late SignOutUseCase _signOutUseCase =
-      SignOutUseCase(authRepository: _authRepository);
-
-  late TestsDataSource _testsDataSource = FirebaseTestsDataSource();
-
-  late TestsRepository _testsRepository =
-      TestsRepository(testsDataSource: _testsDataSource);
-
-  late GetTestsUseCase _getTestsUseCase =
-      GetTestsUseCase(testsRepository: _testsRepository);
-
-  late UserDataSource _userDataSource = FirebaseUserDataSouce();
-
-  late UserRepository _userRepository =
-      UserRepository(userDataSource: _userDataSource);
-
-  late GetUserTestUseCase _getUserTestUseCase =
-      GetUserTestUseCase(userRepository: _userRepository);
-
-  late GetUserIdUseCase _getUserIdUseCase =
-      GetUserIdUseCase(authRepository: _authRepository);
-
-  late GetUserTipsUseCase _getUserTipsUseCase =
-      GetUserTipsUseCase(userRepository: _userRepository);
+  late AuthDataSource _authDataSource;
+  late AuthRepository _authRepository;
+  late SignOutUseCase _signOutUseCase;
+  late TestsDataSource _testsDataSource;
+  late TestsRepository _testsRepository;
+  late GetTestsUseCase _getTestsUseCase;
+  late UserDataSource _userDataSource;
+  late UserRepository _userRepository;
+  late GetUserTestUseCase _getUserTestUseCase;
+  late GetUserIdUseCase _getUserIdUseCase;
+  late GetUserTipsUseCase _getUserTipsUseCase;
 
   late String? _userId;
   late User newUser;
@@ -78,9 +60,23 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    _authDataSource = FirebaseAuthDataSource();
+    _authRepository = AuthRepository(authDataSource: _authDataSource);
+    _signOutUseCase = SignOutUseCase(authRepository: _authRepository);
+
+    _testsDataSource = FirebaseTestsDataSource();
+    _testsRepository = TestsRepository(testsDataSource: _testsDataSource);
+    _getTestsUseCase = GetTestsUseCase(testsRepository: _testsRepository);
+
+    _userDataSource = FirebaseUserDataSouce();
+    _userRepository = UserRepository(userDataSource: _userDataSource);
+    _getUserTestUseCase = GetUserTestUseCase(userRepository: _userRepository);
+    _getUserIdUseCase = GetUserIdUseCase(authRepository: _authRepository);
+    _getUserTipsUseCase = GetUserTipsUseCase(userRepository: _userRepository);
+
     _userId = _getUserIdUseCase.invoke();
-    _testStream = _getTests().asStream();
-    _tipStream = _getTips().asStream();
+    _testStream = _getTestsUseCase.invoke().asStream();
+    _tipStream = _getUserTipsUseCase.invoke(_userId!).asStream();
     super.initState();
   }
 
@@ -167,7 +163,9 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             HomeSectionComponent(
-              onPressed: _showAllTests,
+              onPressed: () {
+                Navigator.pushNamed(context, test_route);
+              },
               textHomeSectionComponent: test_list,
               content: new StreamBuilder<List<Test>>(
                 stream: _testStream,
@@ -212,8 +210,7 @@ class _HomePageState extends State<HomePage> {
                                         MediaQuery.of(context).size.width / 1.1,
                                     child: TestItemCard(
                                       onPressed: () {
-                                        _answerTest(
-                                            question_route, _tests[index]);
+                                        _showTest(_tests[index]);
                                       },
                                       textTestItem: _tests[index].title,
                                       check: _testResolved(_tests[index].id),
@@ -260,23 +257,9 @@ class _HomePageState extends State<HomePage> {
     newUser = args[user_args];
   }
 
-  Future<List<Test>> _getTests() async {
-    List<Test> tests = await _getTestsUseCase.invoke();
-    return tests;
-  }
-
-  void _showAllTests() {
-    Navigator.pushNamed(context, test_route);
-  }
-
-  void _answerTest(String route, Test test) {
+  void _showTest(Test test) {
     final args = {test_args: test};
-    Navigator.pushNamed(context, route, arguments: args);
-  }
-
-  Future<List<Tip>> _getTips() async {
-    List<Tip> tips = await _getUserTipsUseCase.invoke(_userId!);
-    return tips;
+    Navigator.pushNamed(context, test_detail_route, arguments: args);
   }
 
   void _getUserTests() async {

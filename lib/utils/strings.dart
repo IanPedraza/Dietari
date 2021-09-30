@@ -32,6 +32,8 @@ const button_cancel = "Cancelar";
 const button_mna = "MNA";
 const button_icm = "ICM";
 const button_test3 = "TEST 3";
+const button_start = "Iniciar";
+const button_retry = "Reintentar";
 
 //Etiquetas
 const text_forget_password = "¿Olvidaste tu Contraseña?";
@@ -44,6 +46,11 @@ const text_privacy_policies = "política de privacidad";
 const text_congratulations = "¡Felicidades! Has terminado el test.";
 const text_finished_test =
     "Regresa al test en unos minutos para ver tus resultados.";
+const text_complete = "Completado";
+const text_no_response = "Sin Responder";
+const text_description = "Descripción";
+const text_result = "Resultados";
+const text_without_result = "Sin Resultados";
 
 //Cuadro de Alerta
 const alert_title = "Alerta";

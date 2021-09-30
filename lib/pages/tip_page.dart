@@ -18,8 +18,15 @@ class _TipPageState extends State<TipPage> {
   late Tip tip;
 
   @override
+  void initState() {
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      _getArguments();
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    _getArguments();
     return Scaffold(
       appBar: AppBarComponent(
         textAppBar: tip_title,
@@ -94,6 +101,8 @@ class _TipPageState extends State<TipPage> {
       Navigator.pop(context);
       return;
     }
-    tip = args[tip_args];
+    setState(() {
+      tip = args[tip_args];
+    });
   }
 }

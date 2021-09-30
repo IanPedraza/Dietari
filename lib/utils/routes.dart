@@ -3,6 +3,7 @@ import 'package:dietari/pages/base_register_2_page.dart';
 import 'package:dietari/pages/base_register_3_page.dart';
 import 'package:dietari/pages/finished_test_page.dart';
 import 'package:dietari/pages/question_page.dart';
+import 'package:dietari/pages/test_detail_page.dart';
 import 'package:dietari/pages/test_page.dart';
 import 'package:dietari/pages/tip_page.dart';
 import 'package:dietari/pages/tips_list_page.dart';
@@ -23,6 +24,7 @@ Map<String, WidgetBuilder> getApplicationRoutes() {
     tips_list_route: (BuildContext context) => TipsListPage(),
     finished_test_route: (BuildContext context) => FinishedTestPage(),
     tip_route: (BuildContext context) => TipPage(),
+    test_detail_route: (BuildContext context) => TestDetailPage(),
   };
 }
 
@@ -36,3 +38,4 @@ const test_route = 'test';
 const finished_test_route = 'finished_test';
 const tip_route = 'tip';
 const tips_list_route = 'tips_list';
+const test_detail_route = 'test_detail';

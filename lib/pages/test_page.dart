@@ -29,29 +29,15 @@ class TestPage extends StatefulWidget {
 }
 
 class _TestPageState extends State<TestPage> {
-  late AuthDataSource _authDataSource = FirebaseAuthDataSource();
-
-  late AuthRepository _authRepository =
-      AuthRepository(authDataSource: _authDataSource);
-
-  late GetUserIdUseCase _getUserIdUseCase =
-      GetUserIdUseCase(authRepository: _authRepository);
-
-  late TestsDataSource _testsDataSource = FirebaseTestsDataSource();
-
-  late TestsRepository _testsRepository =
-      TestsRepository(testsDataSource: _testsDataSource);
-
-  late GetTestsUseCase _getTestsUseCase =
-      GetTestsUseCase(testsRepository: _testsRepository);
-
-  late UserDataSource _userDataSource = FirebaseUserDataSouce();
-
-  late UserRepository _userRepository =
-      UserRepository(userDataSource: _userDataSource);
-
-  late GetUserTestUseCase _getUserTestUseCase =
-      GetUserTestUseCase(userRepository: _userRepository);
+  late AuthDataSource _authDataSource;
+  late AuthRepository _authRepository;
+  late TestsDataSource _testsDataSource;
+  late TestsRepository _testsRepository;
+  late GetTestsUseCase _getTestsUseCase;
+  late UserDataSource _userDataSource;
+  late UserRepository _userRepository;
+  late GetUserTestUseCase _getUserTestUseCase;
+  late GetUserIdUseCase _getUserIdUseCase;
 
   late String? _userId;
   List<Test> _listTests = [];
@@ -60,9 +46,21 @@ class _TestPageState extends State<TestPage> {
 
   @override
   void initState() {
-    super.initState();
+    _authDataSource = FirebaseAuthDataSource();
+    _authRepository = AuthRepository(authDataSource: _authDataSource);
+
+    _testsDataSource = FirebaseTestsDataSource();
+    _testsRepository = TestsRepository(testsDataSource: _testsDataSource);
+    _getTestsUseCase = GetTestsUseCase(testsRepository: _testsRepository);
+
+    _userDataSource = FirebaseUserDataSouce();
+    _userRepository = UserRepository(userDataSource: _userDataSource);
+    _getUserTestUseCase = GetUserTestUseCase(userRepository: _userRepository);
+    _getUserIdUseCase = GetUserIdUseCase(authRepository: _authRepository);
+
     _userId = _getUserIdUseCase.invoke();
-    _listTestStream = _getTests().asStream();
+    _listTestStream = _getTestsUseCase.invoke().asStream();
+    super.initState();
   }
 
   @override
@@ -117,24 +115,19 @@ class _TestPageState extends State<TestPage> {
     );
   }
 
-  Future<List<Test>> _getTests() async {
-    List<Test> tests = await _getTestsUseCase.invoke();
-    return tests;
-  }
-
   void _answerTest(String route, Test test) {
     final args = {test_args: test};
     Navigator.pushNamed(context, route, arguments: args);
   }
 
   void _getUserTests() async {
-    List<Future<UserTest?>> futures = [];
-    _listTests.forEach((test) {
-      Future<UserTest?> data = _getUserTestUseCase.invoke(_userId!, test.id);
-      futures.add(data);
-    });
-    List<UserTest?> results = await Future.wait(futures);
     if (mounted) {
+      List<Future<UserTest?>> futures = [];
+      _listTests.forEach((test) {
+        Future<UserTest?> data = _getUserTestUseCase.invoke(_userId!, test.id);
+        futures.add(data);
+      });
+      List<UserTest?> results = await Future.wait(futures);
       results.forEach((userTest) {
         if (userTest != null) {
           setState(() {

@@ -4,19 +4,24 @@ import 'package:dietari/utils/colors.dart';
 import 'package:dietari/components/BackButton.dart';
 
 class AppBarComponent extends AppBar {
-  AppBarComponent({required String textAppBar, required Function() onPressed})
+  AppBarComponent(
+      {required String textAppBar,
+      required Function() onPressed,
+      Color? appBarcolor,
+      Color? textColor})
       : super(
           elevation: 0,
           toolbarHeight: 80,
           title: Text(
             textAppBar,
             style: TextStyle(
-              color: primaryColor,
+              color: textColor != null ? textColor : primaryColor,
               fontWeight: FontWeight.w900,
               fontSize: 30,
             ),
           ),
-          backgroundColor: colorTextMainButton,
+          backgroundColor:
+              appBarcolor != null ? appBarcolor : colorTextMainButton,
           leading: Container(
             padding: const EdgeInsets.only(left: 10, top: 5, bottom: 5),
             child: BackButtonDietari(
