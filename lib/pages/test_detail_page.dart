@@ -61,6 +61,7 @@ class _TestDetailPageState extends State<TestDetailPage> {
         textAppBar: test.title,
         appBarcolor: backgroundColorTestItem,
         textColor: colorTextMainButton,
+        height: 200,
         onPressed: () {
           Navigator.pop(context);
         },
@@ -68,6 +69,7 @@ class _TestDetailPageState extends State<TestDetailPage> {
       body: ListView(
         children: [
           Container(
+            height: 30,
             margin: const EdgeInsets.only(
                 left: 10, top: 10, right: 200, bottom: 10),
             alignment: Alignment.center,
@@ -103,13 +105,13 @@ class _TestDetailPageState extends State<TestDetailPage> {
               style: TextStyle(
                 color: colorTextBlack,
                 fontWeight: FontWeight.w400,
-                fontSize: 17,
+                fontSize: 16,
               ),
             ),
           ),
-          SizedBox(height: 30),
           Padding(
-            padding: const EdgeInsets.all(10),
+            padding:
+                const EdgeInsets.only(left: 10, top: 40, right: 10, bottom: 10),
             child: Text(
               text_result,
               style: TextStyle(
@@ -122,18 +124,18 @@ class _TestDetailPageState extends State<TestDetailPage> {
           Padding(
             padding: const EdgeInsets.all(10),
             child: Text(
-              text_without_result,
+              userTest.isComplete ? userTest.result : text_without_result,
               textAlign: TextAlign.left,
               style: TextStyle(
                 color: colorTextBlack,
                 fontWeight: FontWeight.w400,
-                fontSize: 17,
+                fontSize: 16,
               ),
             ),
           ),
-          SizedBox(height: 30),
           Padding(
-            padding: const EdgeInsets.all(10),
+            padding:
+                const EdgeInsets.only(left: 10, top: 60, right: 10, bottom: 10),
             child: MainButton(
               text: userTest.isComplete ? button_retry : button_start,
               onPressed: _answerTest,

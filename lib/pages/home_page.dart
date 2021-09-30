@@ -210,7 +210,7 @@ class _HomePageState extends State<HomePage> {
                                         MediaQuery.of(context).size.width / 1.1,
                                     child: TestItemCard(
                                       onPressed: () {
-                                        _showTest(_tests[index]);
+                                        _showDetailTest(_tests[index]);
                                       },
                                       textTestItem: _tests[index].title,
                                       check: _testResolved(_tests[index].id),
@@ -257,7 +257,7 @@ class _HomePageState extends State<HomePage> {
     newUser = args[user_args];
   }
 
-  void _showTest(Test test) {
+  void _showDetailTest(Test test) {
     final args = {test_args: test};
     Navigator.pushNamed(context, test_detail_route, arguments: args);
   }

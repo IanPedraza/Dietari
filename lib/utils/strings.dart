@@ -33,7 +33,7 @@ const button_mna = "MNA";
 const button_icm = "ICM";
 const button_test3 = "TEST 3";
 const button_start = "Iniciar";
-const button_retry = "Reintentar";
+const button_retry = "Volver a Responder";
 
 //Etiquetas
 const text_forget_password = "¿Olvidaste tu Contraseña?";

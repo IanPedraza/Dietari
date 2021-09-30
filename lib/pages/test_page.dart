@@ -101,7 +101,7 @@ class _TestPageState extends State<TestPage> {
                       EdgeInsets.only(left: 15, top: 10, right: 15, bottom: 10),
                   child: TestItemCard(
                     onPressed: () {
-                      _answerTest(question_route, _listTests[index]);
+                      _showDetailTest(_listTests[index]);
                     },
                     textTestItem: _listTests[index].title,
                     check: _testResolved(_listTests[index].id),
@@ -115,9 +115,9 @@ class _TestPageState extends State<TestPage> {
     );
   }
 
-  void _answerTest(String route, Test test) {
+  void _showDetailTest(Test test) {
     final args = {test_args: test};
-    Navigator.pushNamed(context, route, arguments: args);
+    Navigator.pushNamed(context, test_detail_route, arguments: args);
   }
 
   void _getUserTests() async {

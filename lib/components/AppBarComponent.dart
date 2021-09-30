@@ -8,24 +8,31 @@ class AppBarComponent extends AppBar {
       {required String textAppBar,
       required Function() onPressed,
       Color? appBarcolor,
-      Color? textColor})
+      Color? textColor,
+      double? height})
       : super(
           elevation: 0,
-          toolbarHeight: 80,
-          title: Text(
-            textAppBar,
-            style: TextStyle(
-              color: textColor != null ? textColor : primaryColor,
-              fontWeight: FontWeight.w900,
-              fontSize: 30,
+          toolbarHeight: height != null ? height : 80,
+          title: Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+              textAppBar,
+              style: TextStyle(
+                color: textColor != null ? textColor : primaryColor,
+                fontWeight: FontWeight.w900,
+                fontSize: 30,
+              ),
             ),
           ),
           backgroundColor:
               appBarcolor != null ? appBarcolor : colorTextMainButton,
-          leading: Container(
-            padding: const EdgeInsets.only(left: 10, top: 5, bottom: 5),
-            child: BackButtonDietari(
-              onPressed: onPressed,
+          leading: Align(
+            alignment: Alignment.topLeft,
+            child: Container(
+              padding: const EdgeInsets.only(left: 10, top: 5, bottom: 5),
+              child: BackButtonDietari(
+                onPressed: onPressed,
+              ),
             ),
           ),
         );
