@@ -19,11 +19,13 @@ import 'package:dietari/data/usecases/GetTestsUseCase.dart';
 import 'package:dietari/data/usecases/GetUserIdUseCase.dart';
 import 'package:dietari/data/usecases/GetUserTestUseCase.dart';
 import 'package:dietari/data/usecases/GetUserTipsUseCase.dart';
+import 'package:dietari/data/usecases/GetUserUseCase.dart';
 import 'package:dietari/data/usecases/SignOutUseCase.dart';
 import 'package:dietari/utils/arguments.dart';
 import 'package:dietari/utils/colors.dart';
 import 'package:dietari/utils/routes.dart';
 import 'package:dietari/utils/strings.dart';
+import 'package:dietari/utils/icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -66,6 +68,13 @@ class _HomePageState extends State<HomePage> {
   late GetUserTipsUseCase _getUserTipsUseCase =
       GetUserTipsUseCase(userRepository: _userRepository);
 
+
+  late GetUserUseCase _getUserUseCase =
+      GetUserUseCase(userRepository: _userRepository);
+
+  late String _userName = "";
+  late String _userStatus = "";
+
   late String? _userId;
   late User newUser;
   List<UserTest> _userTests = [];
@@ -81,6 +90,7 @@ class _HomePageState extends State<HomePage> {
     _userId = _getUserIdUseCase.invoke();
     _testStream = _getTests().asStream();
     _tipStream = _getTips().asStream();
+    _getUserInfo();
     super.initState();
   }
 
@@ -102,6 +112,65 @@ class _HomePageState extends State<HomePage> {
         ),
         body: ListView(
           children: [
+
+
+            //Home user data
+            Container(
+              padding: const EdgeInsets.only(top: 20,left: 20,right: 15,bottom: 0),
+              child: Row(
+                children: [
+                  RichText(
+                    textAlign: TextAlign.left ,
+                    text: TextSpan(
+                      children: <TextSpan> [
+                        TextSpan(
+                          text: text_welcome,
+                          style: TextStyle(
+                            color: colorBlack,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 27
+                          ),
+                        ),
+                        TextSpan(
+                          //text: "Nombre",
+                          text: _userName,
+                          style: TextStyle(
+                            color: primaryColor,
+                            fontWeight: FontWeight.w900,
+                            fontSize: 27
+                          ),
+                        ),
+                        TextSpan(text:"\n"),
+                        TextSpan(
+                          text: _userStatus,
+                          style: TextStyle(
+                          color: colorStatus,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 20 )
+                        )
+                      ]
+                    ),
+                  ),
+                  Spacer(),
+                  FloatingActionButton(
+                    mini: true,
+                    child: Container(
+                    child: Transform.scale(
+                      scale: 1.3,
+                      child: getIcon(AppIcons.settings,color: colorBlack),
+                      alignment: Alignment.center,
+                    ),
+                  ),
+                  onPressed:(){},
+                  backgroundColor: colorTextMainButton,
+                  elevation: 0,
+                  ),
+                ],
+              ),
+            ),
+
+
+
             HomeSectionComponent(
               onPressed: () {
                 Navigator.pushNamed(context, tips_list_route);
@@ -260,6 +329,7 @@ class _HomePageState extends State<HomePage> {
     newUser = args[user_args];
   }
 
+
   Future<List<Test>> _getTests() async {
     List<Test> tests = await _getTestsUseCase.invoke();
     return tests;
@@ -274,9 +344,24 @@ class _HomePageState extends State<HomePage> {
     Navigator.pushNamed(context, route, arguments: args);
   }
 
+
+
   Future<List<Tip>> _getTips() async {
     List<Tip> tips = await _getUserTipsUseCase.invoke(_userId!);
     return tips;
+  }
+  
+  /*Future <String> _getUserInfo() async {
+    User info = (await _getUserUseCase.invoke(_userId!))!;
+    return _userName = info.firstName.toString();
+  } */
+
+  void _getUserInfo() async {
+    User info = (await _getUserUseCase.invoke(_userId!))!;
+    setState(() {
+      _userName = info.firstName.toString();
+      _userStatus = info.status.toString();
+    });
   }
 
   void _getUserTests() async {
