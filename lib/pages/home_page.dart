@@ -38,36 +38,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late AuthDataSource _authDataSource = FirebaseAuthDataSource();
-
-  late AuthRepository _authRepository =
-      AuthRepository(authDataSource: _authDataSource);
-
-  late SignOutUseCase _signOutUseCase =
-      SignOutUseCase(authRepository: _authRepository);
-
-  late TestsDataSource _testsDataSource = FirebaseTestsDataSource();
-
-  late TestsRepository _testsRepository =
-      TestsRepository(testsDataSource: _testsDataSource);
-
-  late GetTestsUseCase _getTestsUseCase =
-      GetTestsUseCase(testsRepository: _testsRepository);
-
-  late UserDataSource _userDataSource = FirebaseUserDataSouce();
-
-  late UserRepository _userRepository =
-      UserRepository(userDataSource: _userDataSource);
-
-  late GetUserTestUseCase _getUserTestUseCase =
-      GetUserTestUseCase(userRepository: _userRepository);
-
-  late GetUserIdUseCase _getUserIdUseCase =
-      GetUserIdUseCase(authRepository: _authRepository);
-
-  late GetUserTipsUseCase _getUserTipsUseCase =
-      GetUserTipsUseCase(userRepository: _userRepository);
-
+  late AuthDataSource _authDataSource;
+  late AuthRepository _authRepository;
+  late SignOutUseCase _signOutUseCase;
+  late TestsDataSource _testsDataSource;
+  late TestsRepository _testsRepository;
+  late GetTestsUseCase _getTestsUseCase;
+  late UserDataSource _userDataSource;
+  late UserRepository _userRepository;
+  late GetUserTestUseCase _getUserTestUseCase;
+  late GetUserIdUseCase _getUserIdUseCase;
+  late GetUserTipsUseCase _getUserTipsUseCase;
 
   late GetUserUseCase _getUserUseCase =
       GetUserUseCase(userRepository: _userRepository);
@@ -87,6 +68,20 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    _authDataSource = FirebaseAuthDataSource();
+    _authRepository = AuthRepository(authDataSource: _authDataSource);
+    _signOutUseCase = SignOutUseCase(authRepository: _authRepository);
+
+    _testsDataSource = FirebaseTestsDataSource();
+    _testsRepository = TestsRepository(testsDataSource: _testsDataSource);
+    _getTestsUseCase = GetTestsUseCase(testsRepository: _testsRepository);
+
+    _userDataSource = FirebaseUserDataSouce();
+    _userRepository = UserRepository(userDataSource: _userDataSource);
+    _getUserTestUseCase = GetUserTestUseCase(userRepository: _userRepository);
+    _getUserIdUseCase = GetUserIdUseCase(authRepository: _authRepository);
+    _getUserTipsUseCase = GetUserTipsUseCase(userRepository: _userRepository);
+
     _userId = _getUserIdUseCase.invoke();
     _testStream = _getTests().asStream();
     _tipStream = _getTips().asStream();
@@ -112,64 +107,56 @@ class _HomePageState extends State<HomePage> {
         ),
         body: ListView(
           children: [
-
-
             //Home user data
             Container(
-              padding: const EdgeInsets.only(top: 20,left: 20,right: 15,bottom: 0),
+              padding: const EdgeInsets.only(
+                  top: 20, left: 20, right: 15, bottom: 0),
               child: Row(
                 children: [
                   RichText(
-                    textAlign: TextAlign.left ,
-                    text: TextSpan(
-                      children: <TextSpan> [
-                        TextSpan(
-                          text: text_welcome,
-                          style: TextStyle(
+                    textAlign: TextAlign.left,
+                    text: TextSpan(children: <TextSpan>[
+                      TextSpan(
+                        text: text_welcome,
+                        style: TextStyle(
                             color: colorBlack,
                             fontWeight: FontWeight.w900,
-                            fontSize: 27
-                          ),
-                        ),
-                        TextSpan(
-                          //text: "Nombre",
-                          text: _userName,
-                          style: TextStyle(
+                            fontSize: 27),
+                      ),
+                      TextSpan(
+                        //text: "Nombre",
+                        text: _userName,
+                        style: TextStyle(
                             color: primaryColor,
                             fontWeight: FontWeight.w900,
-                            fontSize: 27
-                          ),
-                        ),
-                        TextSpan(text:"\n"),
-                        TextSpan(
+                            fontSize: 27),
+                      ),
+                      TextSpan(text: "\n"),
+                      TextSpan(
                           text: _userStatus,
                           style: TextStyle(
-                          color: colorStatus,
-                          fontWeight: FontWeight.w900,
-                          fontSize: 20 )
-                        )
-                      ]
-                    ),
+                              color: colorStatus,
+                              fontWeight: FontWeight.w900,
+                              fontSize: 20))
+                    ]),
                   ),
                   Spacer(),
                   FloatingActionButton(
                     mini: true,
                     child: Container(
-                    child: Transform.scale(
-                      scale: 1.3,
-                      child: getIcon(AppIcons.settings,color: colorBlack),
-                      alignment: Alignment.center,
+                      child: Transform.scale(
+                        scale: 1.3,
+                        child: getIcon(AppIcons.settings, color: colorBlack),
+                        alignment: Alignment.center,
+                      ),
                     ),
-                  ),
-                  onPressed:(){},
-                  backgroundColor: colorTextMainButton,
-                  elevation: 0,
+                    onPressed: () {},
+                    backgroundColor: colorTextMainButton,
+                    elevation: 0,
                   ),
                 ],
               ),
             ),
-
-
 
             HomeSectionComponent(
               onPressed: () {
@@ -236,7 +223,9 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             HomeSectionComponent(
-              onPressed: _showAllTests,
+              onPressed: () {
+                Navigator.pushNamed(context, test_route);
+              },
               textHomeSectionComponent: test_list,
               content: new StreamBuilder<List<Test>>(
                 stream: _testStream,
@@ -281,8 +270,7 @@ class _HomePageState extends State<HomePage> {
                                         MediaQuery.of(context).size.width / 1.1,
                                     child: TestItemCard(
                                       onPressed: () {
-                                        _answerTest(
-                                            question_route, _tests[index]);
+                                        _showDetailTest(_tests[index]);
                                       },
                                       textTestItem: _tests[index].title,
                                       check: _testResolved(_tests[index].id),
@@ -320,6 +308,11 @@ class _HomePageState extends State<HomePage> {
     return exit;
   }
 
+  void _showDetailTest(Test test) {
+    final args = {test_args: test};
+    Navigator.pushNamed(context, test_detail_route, arguments: args);
+  }
+
   void _getArguments() {
     final args = ModalRoute.of(context)?.settings.arguments as Map;
     if (args.isEmpty) {
@@ -328,7 +321,6 @@ class _HomePageState extends State<HomePage> {
     }
     newUser = args[user_args];
   }
-
 
   Future<List<Test>> _getTests() async {
     List<Test> tests = await _getTestsUseCase.invoke();
@@ -344,13 +336,11 @@ class _HomePageState extends State<HomePage> {
     Navigator.pushNamed(context, route, arguments: args);
   }
 
-
-
   Future<List<Tip>> _getTips() async {
     List<Tip> tips = await _getUserTipsUseCase.invoke(_userId!);
     return tips;
   }
-  
+
   /*Future <String> _getUserInfo() async {
     User info = (await _getUserUseCase.invoke(_userId!))!;
     return _userName = info.firstName.toString();
