@@ -8,6 +8,7 @@ class UserTest {
   String description;
   List<UserQuestion> questions;
   bool isComplete;
+  String result;
 
   UserTest({
     this.id = "",
@@ -15,6 +16,7 @@ class UserTest {
     this.description = "",
     required this.questions,
     this.isComplete = false,
+    this.result = "",
   });
 
   UserTest copyWith({
@@ -23,6 +25,7 @@ class UserTest {
     String? description,
     List<UserQuestion>? questions,
     bool? isComplete,
+    String? result,
   }) {
     return UserTest(
       id: id ?? this.id,
@@ -30,6 +33,7 @@ class UserTest {
       description: description ?? this.description,
       questions: questions ?? this.questions,
       isComplete: isComplete ?? this.isComplete,
+      result: result ?? this.result,
     );
   }
 
@@ -40,6 +44,7 @@ class UserTest {
       'description': description,
       'questions': questions.map((x) => x.toMap()).toList(),
       'isComplete': isComplete,
+      'result': result,
     };
   }
 
@@ -53,6 +58,7 @@ class UserTest {
               map['questions']?.map((x) => UserQuestion.fromMap(x)))
           : [],
       isComplete: map['isComplete'] ?? false,
+      result: map['result'] ?? "",
     );
   }
 
@@ -63,7 +69,7 @@ class UserTest {
 
   @override
   String toString() {
-    return 'UserTest(id: $id, title: $title, description: $description, questions: $questions, isComplete: $isComplete)';
+    return 'UserTest(id: $id, title: $title, description: $description, questions: $questions, isComplete: $isComplete, result: $result)';
   }
 
   @override
@@ -75,7 +81,8 @@ class UserTest {
         other.title == title &&
         other.description == description &&
         listEquals(other.questions, questions) &&
-        other.isComplete == isComplete;
+        other.isComplete == isComplete &&
+        other.result == result;
   }
 
   @override
@@ -84,6 +91,7 @@ class UserTest {
         title.hashCode ^
         description.hashCode ^
         questions.hashCode ^
-        isComplete.hashCode;
+        isComplete.hashCode ^
+        result.hashCode;
   }
 }
