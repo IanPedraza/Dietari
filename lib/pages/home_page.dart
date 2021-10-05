@@ -102,12 +102,8 @@ class _HomePageState extends State<HomePage> {
     return WillPopScope(
       onWillPop: () => exit(0),
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
         body: ListView(
           children: [
-            //Home user data
             Container(
               padding: const EdgeInsets.only(
                   top: 20, left: 20, right: 15, bottom: 0),
@@ -150,14 +146,15 @@ class _HomePageState extends State<HomePage> {
                         alignment: Alignment.center,
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, settings_route);
+                    },
                     backgroundColor: colorTextMainButton,
                     elevation: 0,
                   ),
                 ],
               ),
             ),
-
             HomeSectionComponent(
               onPressed: () {
                 Navigator.pushNamed(context, tips_list_route);
@@ -287,15 +284,6 @@ class _HomePageState extends State<HomePage> {
                   }
                 },
               ),
-            ),
-            ElevatedButton(
-              child: Text('Sing Out'),
-              onPressed: () {
-                _signOut().then(
-                  (value) =>
-                      value ? Navigator.pushNamed(context, login_route) : () {},
-                );
-              },
             ),
           ],
         ),
