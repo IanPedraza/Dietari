@@ -43,6 +43,7 @@ dependencies:
   shared_preferences_web: ^2.0.2
   url_launcher: ^6.0.10
   flutter_phoenix: ^1.0.0
+  injector: ^2.0.0
 
 dev_dependencies:
   flutter_test:

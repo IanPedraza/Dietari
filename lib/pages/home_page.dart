@@ -20,7 +20,6 @@ import 'package:dietari/data/usecases/GetUserIdUseCase.dart';
 import 'package:dietari/data/usecases/GetUserTestUseCase.dart';
 import 'package:dietari/data/usecases/GetUserTipsUseCase.dart';
 import 'package:dietari/data/usecases/GetUserUseCase.dart';
-import 'package:dietari/data/usecases/SignOutUseCase.dart';
 import 'package:dietari/utils/arguments.dart';
 import 'package:dietari/utils/colors.dart';
 import 'package:dietari/utils/routes.dart';
@@ -40,7 +39,6 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   late AuthDataSource _authDataSource;
   late AuthRepository _authRepository;
-  late SignOutUseCase _signOutUseCase;
   late TestsDataSource _testsDataSource;
   late TestsRepository _testsRepository;
   late GetTestsUseCase _getTestsUseCase;
@@ -70,7 +68,6 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     _authDataSource = FirebaseAuthDataSource();
     _authRepository = AuthRepository(authDataSource: _authDataSource);
-    _signOutUseCase = SignOutUseCase(authRepository: _authRepository);
 
     _testsDataSource = FirebaseTestsDataSource();
     _testsRepository = TestsRepository(testsDataSource: _testsDataSource);
@@ -291,11 +288,6 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Future<bool> _signOut() async {
-    bool exit = await _signOutUseCase.invoke();
-    return exit;
-  }
-
   void _showDetailTest(Test test) {
     final args = {test_args: test};
     Navigator.pushNamed(context, test_detail_route, arguments: args);
@@ -315,24 +307,10 @@ class _HomePageState extends State<HomePage> {
     return tests;
   }
 
-  void _showAllTests() {
-    Navigator.pushNamed(context, test_route);
-  }
-
-  void _answerTest(String route, Test test) {
-    final args = {test_args: test};
-    Navigator.pushNamed(context, route, arguments: args);
-  }
-
   Future<List<Tip>> _getTips() async {
     List<Tip> tips = await _getUserTipsUseCase.invoke(_userId!);
     return tips;
   }
-
-  /*Future <String> _getUserInfo() async {
-    User info = (await _getUserUseCase.invoke(_userId!))!;
-    return _userName = info.firstName.toString();
-  } */
 
   void _getUserInfo() async {
     User info = (await _getUserUseCase.invoke(_userId!))!;

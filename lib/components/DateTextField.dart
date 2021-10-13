@@ -7,7 +7,11 @@ class DateTextField extends StatelessWidget {
   final String hintText;
   final TextEditingController textEditingControl;
 
-  const DateTextField({Key? key, required this.labelText, required this.textEditingControl, required this.hintText})
+  const DateTextField(
+      {Key? key,
+      required this.labelText,
+      required this.textEditingControl,
+      required this.hintText})
       : super(key: key);
 
   @override
@@ -19,21 +23,12 @@ class DateTextField extends StatelessWidget {
       autocorrect: true,
       textAlign: TextAlign.left,
       style: TextStyle(
-          color: primaryColor,
-          fontSize: 18,
-          fontWeight: FontWeight.bold
-      ),
+          color: primaryColor, fontSize: 18, fontWeight: FontWeight.bold),
       decoration: InputDecoration(
         labelText: labelText,
-        labelStyle: TextStyle(
-            color: primaryColor,
-            fontWeight: FontWeight.bold
-        ),
+        labelStyle: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
         hintText: hintText,
-        hintStyle: TextStyle(
-            color: primaryColor,
-            fontWeight: FontWeight.bold
-        ),
+        hintStyle: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
           borderSide: BorderSide(color: primaryColor),
@@ -43,39 +38,38 @@ class DateTextField extends StatelessWidget {
           borderSide: BorderSide(color: primaryColor),
         ),
       ),
-      onTap:  () async{
+      onTap: () async {
         DateTime _dateTime = DateTime.now();
         String dateText = "";
         showDatePicker(
           context: context,
-          initialDate: _dateTime == null ? DateTime.now() : _dateTime,
+          initialDate: _dateTime,
           firstDate: DateTime(1900),
           lastDate: DateTime(2022),
         ).then((date) {
-          if(date!=null){
+          if (date != null) {
             _dateTime = date;
             dateText = "";
             String month = "";
-            if(_dateTime.month.toString().length==1){
+            if (_dateTime.month.toString().length == 1) {
               month = "0" + _dateTime.month.toString();
-            }else{
+            } else {
               month = _dateTime.month.toString();
             }
             String day = "";
-            if(_dateTime.day.toString().length==1){
+            if (_dateTime.day.toString().length == 1) {
               day = "0" + _dateTime.day.toString();
-            }else{
+            } else {
               day = _dateTime.day.toString();
             }
-            dateText = dateText + day + "/" + month + "/" + _dateTime.year.toString();
+            dateText =
+                dateText + day + "/" + month + "/" + _dateTime.year.toString();
             textEditingControl.text = dateText;
-          }else{
+          } else {
             dateText = "";
           }
         });
       },
     );
-
-
   }
-  }
+}

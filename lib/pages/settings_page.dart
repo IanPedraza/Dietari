@@ -1,7 +1,4 @@
 import 'package:dietari/components/AppBarComponent.dart';
-import 'package:dietari/data/datasources/AuthDataSource.dart';
-import 'package:dietari/data/framework/firebase/FirebaseAuthDataSource.dart';
-import 'package:dietari/data/repositories/AuthRepository.dart';
 import 'package:dietari/data/usecases/SignOutUseCase.dart';
 import 'package:dietari/utils/colors.dart';
 import 'package:dietari/utils/icons.dart';
@@ -10,6 +7,7 @@ import 'package:dietari/utils/strings.dart';
 import 'package:dietari/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:injector/injector.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -20,13 +18,7 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  late AuthDataSource _authDataSource = FirebaseAuthDataSource();
-
-  late AuthRepository _authRepository =
-      AuthRepository(authDataSource: _authDataSource);
-
-  late SignOutUseCase _signOutUseCase =
-      SignOutUseCase(authRepository: _authRepository);
+  final _signOutUseCase = Injector.appInstance.get<SignOutUseCase>();
 
   final _arrowIcon =
       getIcon(AppIcons.arrow_right, color: primaryColor, size: 30);

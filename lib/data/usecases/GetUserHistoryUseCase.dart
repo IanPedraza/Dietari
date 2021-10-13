@@ -1,10 +1,10 @@
 import 'package:dietari/data/domain/HistoryItem.dart';
 import 'package:dietari/data/repositories/UserRepository.dart';
 
-class GetUserHistory {
+class GetUserHistoryUseCase {
   UserRepository userRepository;
 
-  GetUserHistory({required this.userRepository});
+  GetUserHistoryUseCase({required this.userRepository});
 
   Future<List<HistoryItem>> invoke(String userId) {
     return userRepository.getHistory(userId);
