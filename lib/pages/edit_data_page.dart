@@ -1,19 +1,14 @@
 import 'package:dietari/components/AppBarComponent.dart';
 import 'package:dietari/components/MainButton.dart';
 import 'package:dietari/components/MainTextField.dart';
-import 'package:dietari/data/datasources/AuthDataSource.dart';
-import 'package:dietari/data/datasources/UserDataSource.dart';
 import 'package:dietari/data/domain/User.dart';
-import 'package:dietari/data/framework/firebase/FirebaseAuthDataSource.dart';
-import 'package:dietari/data/framework/firebase/FirebaseUserDataSouce.dart';
-import 'package:dietari/data/repositories/AuthRepository.dart';
-import 'package:dietari/data/repositories/UserRepository.dart';
 import 'package:dietari/data/usecases/GetUserIdUseCase.dart';
 import 'package:dietari/data/usecases/GetUserUseCase.dart';
 import 'package:dietari/data/usecases/UpdateUserUseCase.dart';
 import 'package:dietari/utils/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:injector/injector.dart';
 
 class EditDataPage extends StatefulWidget {
   const EditDataPage({Key? key}) : super(key: key);
@@ -23,24 +18,9 @@ class EditDataPage extends StatefulWidget {
 }
 
 class _EditDataPageState extends State<EditDataPage> {
-  late UserDataSource _userDataSource = FirebaseUserDataSouce();
-
-  late UserRepository _userRepository =
-      UserRepository(userDataSource: _userDataSource);
-
-  late GetUserUseCase _getUserUseCase =
-      GetUserUseCase(userRepository: _userRepository);
-
-  late AuthDataSource _authDataSource = FirebaseAuthDataSource();
-
-  late AuthRepository _authRepository =
-      AuthRepository(authDataSource: _authDataSource);
-
-  late GetUserIdUseCase _getUserIdUseCase =
-      GetUserIdUseCase(authRepository: _authRepository);
-
-  late UpdateUserUseCase _updateUserUseCase =
-      UpdateUserUseCase(userRepository: _userRepository);
+  final _getUserUseCase = Injector.appInstance.get<GetUserUseCase>();
+  final _getUserIdUseCase = Injector.appInstance.get<GetUserIdUseCase>();
+  final _updateUserUseCase = Injector.appInstance.get<UpdateUserUseCase>();
 
   final _nameController = TextEditingController();
   final _lastNameController = TextEditingController();
