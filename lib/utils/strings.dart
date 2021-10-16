@@ -1,16 +1,25 @@
 const app_name = "Dietari";
+
+const terms_and_conditions_url = "https://www.google.com.mx/";
+const privacy_policy_url = "https://www.google.com.mx/";
+
 const registration_form = "Formulario de Registro";
 const login_form = "Iniciar Sesión";
 const espace = " ";
+const save = "Guardar";
 const test_list = "Tests";
 const tips_list = "Tips";
+const settings = "Configuración";
+const edit_data = 'Editar Datos';
 const tip_title = "Tip";
+const signOut = "Cerrar Sesión";
 
 //Cuadros de Texto
 const textfield_email = "Correo Electrónico";
 const textfield_password = "Contraseña";
 const textfield_repeat_password = "Repetir Contraseña";
 const textfield_name = "Nombre(s)";
+const textfield_lastname = "Apellidos";
 const textfield_last_name = "Apellido Paterno";
 const textfield_mlast_name = "Apellido Materno";
 const textfield_birth_date = "Ingrese Fecha de Nacimiento";
@@ -32,6 +41,8 @@ const button_cancel = "Cancelar";
 const button_mna = "MNA";
 const button_icm = "ICM";
 const button_test3 = "TEST 3";
+const button_start = "Iniciar";
+const button_retry = "Volver a Responder";
 
 //Etiquetas
 const text_forget_password = "¿Olvidaste tu Contraseña?";
@@ -44,6 +55,12 @@ const text_privacy_policies = "política de privacidad";
 const text_congratulations = "¡Felicidades! Has terminado el test.";
 const text_finished_test =
     "Regresa al test en unos minutos para ver tus resultados.";
+const text_complete = "Completado";
+const text_no_response = "Sin Responder";
+const text_description = "Descripción";
+const text_result = "Resultados";
+const text_without_result = "Sin Resultados";
+const text_welcome = "Bienvenido ";
 
 //Cuadro de Alerta
 const alert_title = "Alerta";
