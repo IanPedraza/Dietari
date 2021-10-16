@@ -38,11 +38,6 @@ class _QuestionPageState extends State<QuestionPage> {
   void initState() {
     super.initState();
     _userId = _getUserIdUseCase.invoke();
-
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
-      _getArguments();
-      _createUserTest();
-    });
   }
 
   @override
@@ -53,6 +48,8 @@ class _QuestionPageState extends State<QuestionPage> {
 
   @override
   Widget build(BuildContext context) {
+    _getArguments();
+    _createUserTest();
     return Scaffold(
       appBar: AppBarComponent(
         textAppBar: test.title,

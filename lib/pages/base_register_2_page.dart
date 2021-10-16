@@ -25,6 +25,7 @@ class _BaseRegister2Page extends State<BaseRegister2Page> {
   late User newUser;
   bool active = true;
 
+  @override
   void initState() {
     super.initState();
 
