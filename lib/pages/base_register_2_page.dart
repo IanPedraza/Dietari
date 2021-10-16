@@ -1,3 +1,4 @@
+import 'package:dietari/components/AppBarComponent.dart';
 import 'package:dietari/components/MainButton.dart';
 import 'package:dietari/components/MainTextField.dart';
 import 'package:dietari/components/ShowAlertDialog.dart';
@@ -17,21 +18,32 @@ class BaseRegister2Page extends StatefulWidget {
 }
 
 class _BaseRegister2Page extends State<BaseRegister2Page> {
-  TextEditingController inputControllerLastName = new TextEditingController();
-  TextEditingController inputControllerMsLastName = new TextEditingController();
-  TextEditingController inputControllerName = new TextEditingController();
+  TextEditingController _lastNameController = new TextEditingController();
+  TextEditingController _lastNameMController = new TextEditingController();
+  TextEditingController _nameController = new TextEditingController();
 
   late User newUser;
-
   bool active = true;
+
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      _getArguments();
+      _autocomplete();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    _getArguments();
-    _autocomplete();
     return Scaffold(
-      appBar: AppBar(
-        title: Text(registration_form),
+      resizeToAvoidBottomInset: false,
+      appBar: AppBarComponent(
+        textAppBar: registration_form,
+        textsize: 25,
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
       ),
       body: ListView(
         children: [
@@ -43,7 +55,7 @@ class _BaseRegister2Page extends State<BaseRegister2Page> {
               text: textfield_last_name,
               isPassword: false,
               isPasswordTextStatus: false,
-              textEditingControl: inputControllerLastName,
+              textEditingControl: _lastNameController,
             ),
           ),
           Container(
@@ -54,7 +66,7 @@ class _BaseRegister2Page extends State<BaseRegister2Page> {
               text: textfield_mlast_name,
               isPassword: false,
               isPasswordTextStatus: false,
-              textEditingControl: inputControllerMsLastName,
+              textEditingControl: _lastNameMController,
             ),
           ),
           Container(
@@ -65,7 +77,7 @@ class _BaseRegister2Page extends State<BaseRegister2Page> {
               text: textfield_name,
               isPassword: false,
               isPasswordTextStatus: false,
-              textEditingControl: inputControllerName,
+              textEditingControl: _nameController,
             ),
           ),
           Container(
@@ -85,18 +97,18 @@ class _BaseRegister2Page extends State<BaseRegister2Page> {
 
   void _autocomplete() {
     if (newUser.firstName.isNotEmpty) {
-      inputControllerName.text = newUser.firstName.toString();
+      _nameController.text = newUser.firstName.toString();
     }
     if (newUser.lastName.isNotEmpty) {
       String text = newUser.lastName.toString();
       List<String> lastName = text.split(' ');
       if (lastName.length == 1) {
-        inputControllerLastName.text = lastName.single;
+        _lastNameController.text = lastName.single;
       } else {
         if (lastName.length >= 2) {
-          inputControllerLastName.text =
+          _lastNameController.text =
               lastName.sublist(0, lastName.length - 1).join(' ');
-          inputControllerMsLastName.text = lastName.last;
+          _lastNameMController.text = lastName.last;
         }
       }
     }
@@ -129,16 +141,16 @@ class _BaseRegister2Page extends State<BaseRegister2Page> {
   }
 
   void _continueRegister() {
-    if (inputControllerLastName.text.isNotEmpty &&
-        inputControllerMsLastName.text.isNotEmpty &&
-        inputControllerName.text.isNotEmpty) {
+    if (_lastNameController.text.isNotEmpty &&
+        _lastNameMController.text.isNotEmpty &&
+        _nameController.text.isNotEmpty) {
       _nextScreen(
         base_register_3_route,
         _saveChange(
-            inputControllerName.text.toString(),
-            inputControllerLastName.text.toString() +
+            _nameController.text.toString(),
+            _lastNameController.text.toString() +
                 espace +
-                inputControllerMsLastName.text.toString()),
+                _lastNameMController.text.toString()),
       );
     } else {
       _showAlertDialog(context, alert_title_error, alert_content_imcomplete);

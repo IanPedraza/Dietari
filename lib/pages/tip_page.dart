@@ -19,10 +19,11 @@ class _TipPageState extends State<TipPage> {
 
   @override
   void initState() {
+    super.initState();
+    
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       _getArguments();
     });
-    super.initState();
   }
 
   @override

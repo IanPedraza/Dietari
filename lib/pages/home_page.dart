@@ -2,19 +2,10 @@ import 'dart:io';
 import 'package:dietari/components/HomeSectionComponent.dart';
 import 'package:dietari/components/TestItemCard.dart';
 import 'package:dietari/components/TipComponent.dart';
-import 'package:dietari/data/datasources/AuthDataSource.dart';
-import 'package:dietari/data/datasources/TestsDataSource.dart';
-import 'package:dietari/data/datasources/UserDataSource.dart';
 import 'package:dietari/data/domain/Test.dart';
 import 'package:dietari/data/domain/Tip.dart';
 import 'package:dietari/data/domain/User.dart';
 import 'package:dietari/data/domain/UserTest.dart';
-import 'package:dietari/data/framework/firebase/FirebaseAuthDataSource.dart';
-import 'package:dietari/data/framework/firebase/FirebaseTestsDataSource.dart';
-import 'package:dietari/data/framework/firebase/FirebaseUserDataSouce.dart';
-import 'package:dietari/data/repositories/AuthRepository.dart';
-import 'package:dietari/data/repositories/TestsRepository.dart';
-import 'package:dietari/data/repositories/UserRepository.dart';
 import 'package:dietari/data/usecases/GetTestsUseCase.dart';
 import 'package:dietari/data/usecases/GetUserIdUseCase.dart';
 import 'package:dietari/data/usecases/GetUserTestUseCase.dart';
@@ -27,6 +18,7 @@ import 'package:dietari/utils/strings.dart';
 import 'package:dietari/utils/icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:injector/injector.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key, required this.title}) : super(key: key);
@@ -37,24 +29,17 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late AuthDataSource _authDataSource;
-  late AuthRepository _authRepository;
-  late TestsDataSource _testsDataSource;
-  late TestsRepository _testsRepository;
-  late GetTestsUseCase _getTestsUseCase;
-  late UserDataSource _userDataSource;
-  late UserRepository _userRepository;
-  late GetUserTestUseCase _getUserTestUseCase;
-  late GetUserIdUseCase _getUserIdUseCase;
-  late GetUserTipsUseCase _getUserTipsUseCase;
+  final _getTestsUseCase = Injector.appInstance.get<GetTestsUseCase>();
+  final _getUserTestUseCase = Injector.appInstance.get<GetUserTestUseCase>();
+  final _getUserIdUseCase = Injector.appInstance.get<GetUserIdUseCase>();
+  final _getUserUseCase = Injector.appInstance.get<GetUserUseCase>();
+  final _getUserTipsUseCase = Injector.appInstance.get<GetUserTipsUseCase>();
 
-  late GetUserUseCase _getUserUseCase =
-      GetUserUseCase(userRepository: _userRepository);
 
   late String _userName = "";
   late String _userStatus = "";
 
-  late String? _userId;
+  String? _userId;
   late User newUser;
   List<UserTest> _userTests = [];
 
@@ -66,19 +51,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    _authDataSource = FirebaseAuthDataSource();
-    _authRepository = AuthRepository(authDataSource: _authDataSource);
-
-    _testsDataSource = FirebaseTestsDataSource();
-    _testsRepository = TestsRepository(testsDataSource: _testsDataSource);
-    _getTestsUseCase = GetTestsUseCase(testsRepository: _testsRepository);
-
-    _userDataSource = FirebaseUserDataSouce();
-    _userRepository = UserRepository(userDataSource: _userDataSource);
-    _getUserTestUseCase = GetUserTestUseCase(userRepository: _userRepository);
-    _getUserIdUseCase = GetUserIdUseCase(authRepository: _authRepository);
-    _getUserTipsUseCase = GetUserTipsUseCase(userRepository: _userRepository);
-
     _userId = _getUserIdUseCase.invoke();
     _testStream = _getTests().asStream();
     _tipStream = _getTips().asStream();
@@ -117,20 +89,22 @@ class _HomePageState extends State<HomePage> {
                             fontSize: 27),
                       ),
                       TextSpan(
-                        //text: "Nombre",
                         text: _userName,
                         style: TextStyle(
-                            color: primaryColor,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 27),
+                          color: primaryColor,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 27,
+                        ),
                       ),
                       TextSpan(text: "\n"),
                       TextSpan(
-                          text: _userStatus,
-                          style: TextStyle(
-                              color: colorStatus,
-                              fontWeight: FontWeight.w900,
-                              fontSize: 20))
+                        text: _userStatus,
+                        style: TextStyle(
+                          color: colorStatus,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 20,
+                        ),
+                      ),
                     ]),
                   ),
                   Spacer(),
