@@ -1,16 +1,15 @@
+import 'package:dietari/components/AppBarComponent.dart';
 import 'package:dietari/components/DateTextField.dart';
 import 'package:dietari/components/MainButton.dart';
 import 'package:dietari/components/MainTextField.dart';
 import 'package:dietari/components/ShowAlertDialog.dart';
-import 'package:dietari/data/datasources/UserDataSource.dart';
 import 'package:dietari/data/domain/User.dart';
-import 'package:dietari/data/framework/firebase/FirebaseUserDataSouce.dart';
-import 'package:dietari/data/repositories/UserRepository.dart';
 import 'package:dietari/data/usecases/AddUserUseCase.dart';
 import 'package:dietari/utils/arguments.dart';
 import 'package:dietari/utils/routes.dart';
 import 'package:dietari/utils/strings.dart';
 import 'package:flutter/material.dart';
+import 'package:injector/injector.dart';
 
 class BaseRegister3Page extends StatefulWidget {
   const BaseRegister3Page({
@@ -21,30 +20,35 @@ class BaseRegister3Page extends StatefulWidget {
 }
 
 class _BaseRegister3Page extends State<BaseRegister3Page> {
-  late UserDataSource _userDataSource = FirebaseUserDataSouce();
+  final _addUserUseCase = Injector.appInstance.get<AddUserUseCase>();
 
-  late UserRepository _userRepository =
-      UserRepository(userDataSource: _userDataSource);
-
-  late AddUserUseCase _addUserUseCase =
-      AddUserUseCase(userRepository: _userRepository);
-
-  TextEditingController inputControllerBirthDate = new TextEditingController();
-  TextEditingController inputControllerWeight = new TextEditingController();
-  TextEditingController inputControllerHeight = new TextEditingController();
+  TextEditingController _birthDateController = new TextEditingController();
+  TextEditingController _weightController = new TextEditingController();
+  TextEditingController _heightController = new TextEditingController();
 
   late User newUser;
-
-  bool active = true;
   double height = 0, weight = 0;
 
   @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      _getArguments();
+      _autocomplete();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    _getArguments();
-    _autocomplete();
     return Scaffold(
-      appBar: AppBar(
-        title: Text(registration_form),
+      resizeToAvoidBottomInset: false,
+      appBar: AppBarComponent(
+        textAppBar: registration_form,
+        textsize: 25,
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
       ),
       body: ListView(
         children: [
@@ -54,39 +58,38 @@ class _BaseRegister3Page extends State<BaseRegister3Page> {
             child: DateTextField(
               labelText: textfield_birth_date,
               hintText: textfield_hint_birth_date,
-              textEditingControl: inputControllerBirthDate,
+              textEditingControl: _birthDateController,
             ),
           ),
           Container(
             padding:
                 const EdgeInsets.only(left: 30, top: 10, right: 30, bottom: 10),
             child: MainTextField(
-              onTap: _showPassword,
+              onTap: (){},
               text: textfield_weight,
               isPassword: false,
               isPasswordTextStatus: false,
-              textEditingControl: inputControllerWeight,
+              textEditingControl: _weightController,
             ),
           ),
           Container(
             padding:
                 const EdgeInsets.only(left: 30, top: 10, right: 30, bottom: 10),
             child: MainTextField(
-              onTap: _showPassword,
+              onTap: (){},
               text: textfield_height,
               isPassword: false,
               isPasswordTextStatus: false,
-              textEditingControl: inputControllerHeight,
+              textEditingControl: _heightController,
             ),
           ),
           Container(
             padding:
                 const EdgeInsets.only(left: 30, top: 10, right: 30, bottom: 10),
             child: MainButton(
-                onPressed: () {
-                  _finishRegister();
-                },
-                text: button_finish),
+              onPressed: _finishRegister,
+              text: button_finish,
+            ),
           ),
         ],
       ),
@@ -95,20 +98,14 @@ class _BaseRegister3Page extends State<BaseRegister3Page> {
 
   void _autocomplete() {
     if (newUser.dateOfBirth.isNotEmpty) {
-      inputControllerBirthDate.text = newUser.dateOfBirth.toString();
+      _birthDateController.text = newUser.dateOfBirth.toString();
     }
     if (newUser.weight != 0) {
-      inputControllerWeight.text = newUser.weight.toString();
+      _weightController.text = newUser.weight.toString();
     }
     if (newUser.height != 0) {
-      inputControllerHeight.text = newUser.height.toString();
+      _heightController.text = newUser.height.toString();
     }
-  }
-
-  void _showPassword() {
-    setState(() {
-      active = !active;
-    });
   }
 
   void _getArguments() {
@@ -133,20 +130,22 @@ class _BaseRegister3Page extends State<BaseRegister3Page> {
   }
 
   void _finishRegister() {
-    if (inputControllerBirthDate.text.isNotEmpty &&
-        inputControllerHeight.text.isNotEmpty &&
-        inputControllerWeight.text.isNotEmpty) {
-      height = double.parse(inputControllerHeight.text);
-      weight = double.parse(inputControllerWeight.text);
-      _saveChange(inputControllerBirthDate.text.toString(), weight, height);
+    if (_birthDateController.text.isNotEmpty &&
+        _heightController.text.isNotEmpty &&
+        _weightController.text.isNotEmpty) {
+      height = double.parse(_heightController.text);
+      weight = double.parse(_weightController.text);
+      _saveChange(_birthDateController.text.toString(), weight, height);
       _addUser(newUser).then(
-        (value) => value
-            ? _nextScreen(home_route, newUser)
-            : [
-                _showAlertDialog(context, alert_title_error,
+        (value) => {
+          if(value){
+            _nextScreen(home_route, newUser)
+          }else{
+            _showAlertDialog(context, alert_title_error,
                     alert_content_error_registration),
                 Navigator.pushNamed(context, login_route),
-              ],
+          }
+        } 
       );
     } else {
       _showAlertDialog(context, alert_title_error, alert_content_imcomplete);

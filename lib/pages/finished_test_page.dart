@@ -1,11 +1,5 @@
 import 'package:dietari/components/MainButton.dart';
-import 'package:dietari/data/datasources/AuthDataSource.dart';
-import 'package:dietari/data/datasources/UserDataSource.dart';
 import 'package:dietari/data/domain/User.dart';
-import 'package:dietari/data/framework/firebase/FirebaseAuthDataSource.dart';
-import 'package:dietari/data/framework/firebase/FirebaseUserDataSouce.dart';
-import 'package:dietari/data/repositories/AuthRepository.dart';
-import 'package:dietari/data/repositories/UserRepository.dart';
 import 'package:dietari/data/usecases/GetUserIdUseCase.dart';
 import 'package:dietari/data/usecases/GetUserUseCase.dart';
 import 'package:dietari/utils/arguments.dart';
@@ -14,6 +8,7 @@ import 'package:dietari/utils/icons.dart';
 import 'package:dietari/utils/routes.dart';
 import 'package:dietari/utils/strings.dart';
 import 'package:flutter/material.dart';
+import 'package:injector/injector.dart';
 
 class FinishedTestPage extends StatefulWidget {
   FinishedTestPage({Key? key}) : super(key: key);
@@ -23,21 +18,8 @@ class FinishedTestPage extends StatefulWidget {
 }
 
 class _FinishedTestPageState extends State<FinishedTestPage> {
-  late AuthDataSource _authDataSource = FirebaseAuthDataSource();
-
-  late UserDataSource _userDataSource = FirebaseUserDataSouce();
-
-  late UserRepository _userRepository =
-      UserRepository(userDataSource: _userDataSource);
-
-  late GetUserUseCase _getUserUseCase =
-      GetUserUseCase(userRepository: _userRepository);
-
-  late AuthRepository _authRepository =
-      AuthRepository(authDataSource: _authDataSource);
-
-  late GetUserIdUseCase _getUserIdUseCase =
-      GetUserIdUseCase(authRepository: _authRepository);
+  final _getUserUseCase = Injector.appInstance.get<GetUserUseCase>();
+  final _getUserIdUseCase = Injector.appInstance.get<GetUserIdUseCase>();
 
   @override
   Widget build(BuildContext context) {

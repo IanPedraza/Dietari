@@ -2,16 +2,10 @@ import 'package:dietari/components/AnswerOptionCard.dart';
 import 'package:dietari/components/AppBarComponent.dart';
 import 'package:dietari/components/MainButton.dart';
 import 'package:dietari/components/ShowAlertDialog.dart';
-import 'package:dietari/data/datasources/AuthDataSource.dart';
-import 'package:dietari/data/datasources/UserDataSource.dart';
 import 'package:dietari/data/domain/Test.dart';
 import 'package:dietari/data/domain/UserOption.dart';
 import 'package:dietari/data/domain/UserQuestion.dart';
 import 'package:dietari/data/domain/UserTest.dart';
-import 'package:dietari/data/framework/firebase/FirebaseAuthDataSource.dart';
-import 'package:dietari/data/framework/firebase/FirebaseUserDataSouce.dart';
-import 'package:dietari/data/repositories/AuthRepository.dart';
-import 'package:dietari/data/repositories/UserRepository.dart';
 import 'package:dietari/data/usecases/AddUserTestUseCase.dart';
 import 'package:dietari/data/usecases/GetUserIdUseCase.dart';
 import 'package:dietari/utils/arguments.dart';
@@ -19,6 +13,7 @@ import 'package:dietari/utils/colors.dart';
 import 'package:dietari/utils/routes.dart';
 import 'package:dietari/utils/strings.dart';
 import 'package:flutter/material.dart';
+import 'package:injector/injector.dart';
 
 class QuestionPage extends StatefulWidget {
   QuestionPage({Key? key}) : super(key: key);
@@ -28,22 +23,10 @@ class QuestionPage extends StatefulWidget {
 }
 
 class _QuestionPageState extends State<QuestionPage> {
-  late UserDataSource _userDataSource = FirebaseUserDataSouce();
+  final _getUserIdUseCase = Injector.appInstance.get<GetUserIdUseCase>();
+  final _addUserTestUseCase = Injector.appInstance.get<AddUserTestUseCase>();
 
-  late UserRepository _userRepository =
-      UserRepository(userDataSource: _userDataSource);
-
-  late AddUserTestUseCase _addUserTestUseCase =
-      AddUserTestUseCase(userRepository: _userRepository);
-
-  late AuthDataSource _authDataSource = FirebaseAuthDataSource();
-
-  late AuthRepository _authRepository =
-      AuthRepository(authDataSource: _authDataSource);
-
-  late GetUserIdUseCase _getUserIdUseCase =
-      GetUserIdUseCase(authRepository: _authRepository);
-
+  String? _userId;
   late Test test;
   late UserTest _userTest;
   int currentIndex = 0;
@@ -54,6 +37,7 @@ class _QuestionPageState extends State<QuestionPage> {
   @override
   void initState() {
     super.initState();
+    _userId = _getUserIdUseCase.invoke();
   }
 
   @override
@@ -207,9 +191,7 @@ class _QuestionPageState extends State<QuestionPage> {
       if (currentIndex == _userTest.questions.length - 1) {
         _saveAnswers();
         _userTest.isComplete = true;
-        String? id = _getUserIdUseCase.invoke();
-        if (id != null) {
-          _addUserTest(id, _userTest).then(
+        _addUserTest(_userId!, _userTest).then(
             (isDone) => {
               if (isDone)
                 {Navigator.pushNamed(context, finished_test_route)}
@@ -221,7 +203,6 @@ class _QuestionPageState extends State<QuestionPage> {
                 }
             },
           );
-        }
       }
       choose = List.generate(10, (i) => false);
       _controller.nextPage(
