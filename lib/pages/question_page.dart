@@ -31,8 +31,8 @@ class _QuestionPageState extends State<QuestionPage> {
   late UserTest _userTest;
   int currentIndex = 0;
   PageController _controller = PageController(initialPage: 0);
-  List<bool> choose = List.generate(10, (index) => false);
-  List<int> _options = List.generate(10, (index) => -1);
+  List<bool> choose = List.generate(20, (index) => false);
+  List<int> _options = List.generate(20, (index) => -1);
 
   @override
   void initState() {
@@ -59,21 +59,22 @@ class _QuestionPageState extends State<QuestionPage> {
       ),
       body: ListView(
         children: [
+          // Container(
+          //   padding: EdgeInsets.only(left: 15, top: 0, right: 15, bottom: 30),
+          //   alignment: Alignment.center,
+          //   child: Text(
+          //     '',
+          //     // _userTest.description,
+          //     style: TextStyle(
+          //       color: primaryColor,
+          //       fontWeight: FontWeight.bold,
+          //       fontSize: 12,
+          //     ),
+          //     textAlign: TextAlign.center,
+          //   ),
+          // ),
           Container(
-            padding: EdgeInsets.only(left: 15, top: 0, right: 15, bottom: 30),
-            alignment: Alignment.center,
-            child: Text(
-              _userTest.description,
-              style: TextStyle(
-                color: primaryColor,
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.only(top: 10),
+            padding: EdgeInsets.only(top: 50),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
@@ -192,17 +193,17 @@ class _QuestionPageState extends State<QuestionPage> {
         _saveAnswers();
         _userTest.isComplete = true;
         _addUserTest(_userId!, _userTest).then(
-            (isDone) => {
-              if (isDone)
-                {Navigator.pushNamed(context, finished_test_route)}
-              else
-                {
-                  _showAlertDialog(context, alert_title_error,
-                      alert_content_not_aggregated_responses),
-                  Navigator.of(context).pop()
-                }
-            },
-          );
+          (isDone) => {
+            if (isDone)
+              {Navigator.pushNamed(context, finished_test_route)}
+            else
+              {
+                _showAlertDialog(context, alert_title_error,
+                    alert_content_not_aggregated_responses),
+                Navigator.of(context).pop()
+              }
+          },
+        );
       }
       choose = List.generate(10, (i) => false);
       _controller.nextPage(

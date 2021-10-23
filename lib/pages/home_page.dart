@@ -2,10 +2,13 @@ import 'dart:io';
 import 'package:dietari/components/HomeSectionComponent.dart';
 import 'package:dietari/components/TestItemCard.dart';
 import 'package:dietari/components/TipComponent.dart';
+import 'package:dietari/data/domain/Option.dart';
+import 'package:dietari/data/domain/Question.dart';
 import 'package:dietari/data/domain/Test.dart';
 import 'package:dietari/data/domain/Tip.dart';
 import 'package:dietari/data/domain/User.dart';
 import 'package:dietari/data/domain/UserTest.dart';
+import 'package:dietari/data/usecases/AddTestUseCase.dart';
 import 'package:dietari/data/usecases/GetTestsUseCase.dart';
 import 'package:dietari/data/usecases/GetUserIdUseCase.dart';
 import 'package:dietari/data/usecases/GetUserTestUseCase.dart';
@@ -34,7 +37,6 @@ class _HomePageState extends State<HomePage> {
   final _getUserIdUseCase = Injector.appInstance.get<GetUserIdUseCase>();
   final _getUserUseCase = Injector.appInstance.get<GetUserUseCase>();
   final _getUserTipsUseCase = Injector.appInstance.get<GetUserTipsUseCase>();
-
 
   late String _userName = "";
   late String _userStatus = "";
