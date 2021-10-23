@@ -12,6 +12,7 @@ final _icons = <AppIcons, IconData>{
   AppIcons.clock: Icons.query_builder,
   AppIcons.error: Icons.error_outline,
   AppIcons.settings: Icons.settings_outlined,
+  AppIcons.arrow_down: Icons.keyboard_arrow_down,
 };
 
 Icon getIcon(AppIcons name, {Color? color}) {
@@ -33,5 +34,6 @@ enum AppIcons {
   open,
   clock,
   error,
-  settings
+  settings,
+  arrow_down
 }

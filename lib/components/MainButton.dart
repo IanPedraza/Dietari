@@ -6,6 +6,7 @@ class MainButton extends StatelessWidget {
   final Function() onPressed;
   final Widget? child;
   final String text;
+  final sizeReference = 700.0;
 
   const MainButton(
       {Key? key, required this.onPressed, this.child, required this.text})
@@ -13,6 +14,10 @@ class MainButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    double getResponsiveText(double size) =>
+      size * sizeReference / MediaQuery.of(context).size.longestSide; 
+
     return FloatingActionButton(
         onPressed: onPressed,
         foregroundColor: colorTextMainButton,
@@ -21,7 +26,7 @@ class MainButton extends StatelessWidget {
         child: Text(
           text,
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 18),
+          style: TextStyle(fontSize: getResponsiveText(18), fontWeight: FontWeight.w800),
         ),
         isExtended: true,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)));

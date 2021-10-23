@@ -6,12 +6,17 @@ import 'package:dietari/utils/icons.dart';
 class LinkComponent extends StatelessWidget {
   final Function() onPressed;
   final String textLink;
+  final sizeReference = 700.0;
 
   const LinkComponent({Key? key, required this.onPressed, required this.textLink})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+    double getResponsiveText(double size) =>
+      size * sizeReference / MediaQuery.of(context).size.longestSide; 
+
     return FloatingActionButton(
       onPressed: onPressed,
       backgroundColor: backgroundColorLinkComponent,
@@ -29,7 +34,7 @@ class LinkComponent extends StatelessWidget {
                 textLink,
                 style: TextStyle(
                     color: colorBlack,
-                    fontSize: 18,
+                    fontSize: getResponsiveText(18),
                     fontWeight: FontWeight.w900,
                 ),
                 textAlign: TextAlign.left,

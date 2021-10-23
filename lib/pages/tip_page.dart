@@ -6,6 +6,9 @@ import 'package:dietari/utils/arguments.dart';
 import 'package:dietari/utils/colors.dart';
 import 'package:dietari/utils/strings.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+
 
 class TipPage extends StatefulWidget {
   TipPage({Key? key}) : super(key: key);
@@ -73,7 +76,9 @@ class _TipPageState extends State<TipPage> {
                     padding: EdgeInsets.only(
                         left: 10, top: 10, right: 10, bottom: 10),
                     child: LinkComponent(
-                      onPressed: () {},
+                      onPressed: () {
+                        _openLink(tip.links[index].url);
+                      },
                       textLink: tip.links[index].url,
                     ),
                   );
@@ -105,4 +110,11 @@ class _TipPageState extends State<TipPage> {
       tip = args[tip_args];
     });
   }
+
+  void _openLink(link) async {
+    if (await canLaunch(link)) await launch(link);
+  }
+
+
+
 }

@@ -1,10 +1,13 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dietari/components/HomeSectionComponent.dart';
+import 'package:dietari/components/MainButton.dart';
 import 'package:dietari/components/TestItemCard.dart';
 import 'package:dietari/components/TipComponent.dart';
 import 'package:dietari/data/datasources/AuthDataSource.dart';
 import 'package:dietari/data/datasources/TestsDataSource.dart';
 import 'package:dietari/data/datasources/UserDataSource.dart';
+import 'package:dietari/data/domain/HistoryItem.dart';
 import 'package:dietari/data/domain/Test.dart';
 import 'package:dietari/data/domain/Tip.dart';
 import 'package:dietari/data/domain/User.dart';
@@ -16,6 +19,7 @@ import 'package:dietari/data/repositories/AuthRepository.dart';
 import 'package:dietari/data/repositories/TestsRepository.dart';
 import 'package:dietari/data/repositories/UserRepository.dart';
 import 'package:dietari/data/usecases/GetTestsUseCase.dart';
+import 'package:dietari/data/usecases/GetUserHistory.dart';
 import 'package:dietari/data/usecases/GetUserIdUseCase.dart';
 import 'package:dietari/data/usecases/GetUserTestUseCase.dart';
 import 'package:dietari/data/usecases/GetUserTipsUseCase.dart';
@@ -28,6 +32,7 @@ import 'package:dietari/utils/strings.dart';
 import 'package:dietari/utils/icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key, required this.title}) : super(key: key);
@@ -52,9 +57,14 @@ class _HomePageState extends State<HomePage> {
 
   late GetUserUseCase _getUserUseCase =
       GetUserUseCase(userRepository: _userRepository);
+  
+  late GetUserHistory _getUserHistory = 
+      GetUserHistory(userRepository: _userRepository);
 
   late String _userName = "";
   late String _userStatus = "";
+
+  List<HistoryItem> _userHistory = [];
 
   late String? _userId;
   late User newUser;
@@ -65,6 +75,12 @@ class _HomePageState extends State<HomePage> {
   ScrollController _controllerTips = ScrollController(initialScrollOffset: 0);
   late Stream<List<Test>> _testStream;
   late Stream<List<Tip>> _tipStream;
+  late TooltipBehavior _tooltipBehavior;
+
+  var _listY = ['IMC','Peso','Estatura'];
+  var _viewY = "IMC";
+  var _listX = ['Dia','Semana','Mes','Año'];
+  var _viewX = "Mes";
 
   @override
   void initState() {
@@ -86,7 +102,12 @@ class _HomePageState extends State<HomePage> {
     _testStream = _getTests().asStream();
     _tipStream = _getTips().asStream();
     _getUserInfo();
+    _getHistory();
+
+    _tooltipBehavior = TooltipBehavior(enable: true);
+
     super.initState();
+
   }
 
   @override
@@ -124,7 +145,6 @@ class _HomePageState extends State<HomePage> {
                             fontSize: 27),
                       ),
                       TextSpan(
-                        //text: "Nombre",
                         text: _userName,
                         style: TextStyle(
                             color: primaryColor,
@@ -157,6 +177,129 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
+            Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.only(top: 15),
+              child: Text(text_ChartTitle,
+                          textAlign: TextAlign.center, style: TextStyle(
+                            fontSize: 20, 
+                            color: primaryColor,
+                            fontWeight: FontWeight.w900
+                          ),),
+            ),
+            //User history chart
+            Container(
+              padding: EdgeInsets.only(top: 15),
+              alignment: Alignment.center,
+              child: Row(
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 2),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: colorTextMainButton),
+                        ),
+                        child: DropdownButton(
+                          underline: SizedBox(),
+                          icon: getIcon(AppIcons.arrow_down,color: primaryColor),
+                          iconSize: 30,
+                          style: TextStyle(
+                            fontSize: 15, 
+                          color: primaryColor,
+                          fontWeight: FontWeight.w900
+                          ),
+                          items: _listY.map((String a){
+                            return DropdownMenuItem(
+                              value: a,
+                              child: Text(a),
+                            );
+                          }
+                          ).toList(),
+                          onChanged: (_value)=>{
+                            setState((){
+                              _viewY = _value.toString();
+                            })
+                          },
+                          hint: Text(_viewY,
+                          textAlign: TextAlign.center, style: TextStyle(
+                            fontSize: 15, 
+                            color: primaryColor,
+                            fontWeight: FontWeight.w900
+                          ),),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    child: SfCartesianChart(
+                    primaryXAxis: CategoryAxis(),
+                    // Chart title
+                    //title: ChartTitle(text:"Tu historial."),
+                    // Enable legend
+                    legend: Legend(isVisible: false),
+                    tooltipBehavior: _tooltipBehavior,
+                    series: <LineSeries<HistoryItem,String>>[
+                      LineSeries<HistoryItem,String>(
+                        dataSource: _userHistory,
+                        yValueMapper:
+                        (_viewY == "IMC") 
+                        ? (HistoryItem num, _)=>num.imc :
+                        (_viewY == "Peso") 
+                        ? (HistoryItem num, _)=>num.weight :
+                        (HistoryItem num, _)=>num.height,
+                        xValueMapper: 
+                        (_viewX == "Mes")
+                        ? (HistoryItem num, _)=> num.date.toDate().month.toString() :
+                        (_viewX == "Dia")
+                        ? (HistoryItem num, _)=> num.date.toDate().day.toString() :
+                        (_viewX == "Semana") 
+                        ? (HistoryItem num, _)=> num.date.toDate().weekday.toString() :
+                        (HistoryItem num, _)=> num.date.toDate().year.toString(),
+                      pointColorMapper: (HistoryItem num, _)=> primaryColor,
+                    dataLabelSettings: DataLabelSettings(isVisible: true)
+                      )
+                    ],
+              )
+            ),
+                ],
+              )
+            ),
+
+            Container(
+                padding: EdgeInsets.only(bottom: 0),
+                alignment: Alignment.center,
+                    child: DropdownButton(
+                      underline: SizedBox(),
+                      icon: getIcon(AppIcons.arrow_down,color: primaryColor),
+                      iconSize: 30,
+                      style: TextStyle(
+                            fontSize: 15, 
+                          color: primaryColor,
+                          fontWeight: FontWeight.w900
+                          ),
+                      items: _listX.map((String a){
+                        return DropdownMenuItem(
+                          value: a,
+                          child: Text(a),
+                        );
+                      }
+                      ).toList(),
+                      onChanged: (_value)=>{
+                        setState((){
+                          _viewX = _value.toString();
+                        })
+                      },
+                      hint: Text(_viewX,
+                          textAlign: TextAlign.center, style: TextStyle(
+                            fontSize: 15, 
+                            color: primaryColor,
+                            fontWeight: FontWeight.w900
+                      ),),
+                    ),
+                  ),
 
             HomeSectionComponent(
               onPressed: () {
@@ -199,13 +342,12 @@ class _HomePageState extends State<HomePage> {
                             itemCount: _tips!.length,
                             itemBuilder: (BuildContext context, int index) {
                               return Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:MainAxisAlignment.spaceBetween,
                                 children: [
                                   Container(
                                     height: 60,
                                     width:
-                                        MediaQuery.of(context).size.width / 1.1,
+                                        MediaQuery.of(context).size.width/1.1,
                                     child: TipComponent(
                                       tip: _tips[index],
                                     ),
@@ -221,6 +363,7 @@ class _HomePageState extends State<HomePage> {
                   }
                 },
               ),
+              
             ),
             HomeSectionComponent(
               onPressed: () {
@@ -288,20 +431,23 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
-            ElevatedButton(
-              child: Text('Sing Out'),
-              onPressed: () {
-                _signOut().then(
-                  (value) =>
-                      value ? Navigator.pushNamed(context, login_route) : () {},
-                );
-              },
+            Container(
+              padding: EdgeInsets.all(10),
+              child: MainButton(
+                onPressed: () {
+                  _signOut().then(
+                    (value) =>
+                        value ? Navigator.pushNamed(context, login_route) : () {},
+                  );
+                }, 
+              text: ('Sing Out')),
             ),
           ],
         ),
       ),
     );
   }
+
 
   Future<bool> _signOut() async {
     bool exit = await _signOutUseCase.invoke();
@@ -341,16 +487,18 @@ class _HomePageState extends State<HomePage> {
     return tips;
   }
 
-  /*Future <String> _getUserInfo() async {
-    User info = (await _getUserUseCase.invoke(_userId!))!;
-    return _userName = info.firstName.toString();
-  } */
-
   void _getUserInfo() async {
     User info = (await _getUserUseCase.invoke(_userId!))!;
     setState(() {
       _userName = info.firstName.toString();
       _userStatus = info.status.toString();
+    });
+  }
+
+  void _getHistory() async{
+    List<HistoryItem> history = await _getUserHistory.invoke(_userId!); 
+    setState(() {
+          _userHistory = history;
     });
   }
 
@@ -406,3 +554,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+
+
+  class SalesData {
+    SalesData(this.year, this.sales);
+    final String year;
+    final double sales;
+  }
+

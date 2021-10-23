@@ -4,6 +4,7 @@ import 'package:dietari/utils/colors.dart';
 import 'package:dietari/components/BackButton.dart';
 
 class AppBarComponent extends AppBar {
+
   AppBarComponent(
       {required String textAppBar,
       required Function() onPressed,
@@ -13,14 +14,17 @@ class AppBarComponent extends AppBar {
       : super(
           elevation: 0,
           toolbarHeight: height != null ? height : 80,
-          title: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              textAppBar,
-              style: TextStyle(
-                color: textColor != null ? textColor : primaryColor,
-                fontWeight: FontWeight.w900,
-                fontSize: 30,
+          title: Padding(
+            padding: const EdgeInsets.only(left: 5),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                textAppBar,
+                style: TextStyle(
+                  color: textColor != null ? textColor : primaryColor,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 25,
+                ),
               ),
             ),
           ),
