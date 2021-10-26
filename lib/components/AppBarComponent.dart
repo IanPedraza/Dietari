@@ -10,7 +10,8 @@ class AppBarComponent extends AppBar {
       required Function() onPressed,
       Color? appBarcolor,
       Color? textColor,
-      double? height})
+      double? height,
+      double? textsize})
       : super(
           elevation: 0,
           toolbarHeight: height != null ? height : 80,

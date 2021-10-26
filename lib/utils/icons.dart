@@ -13,14 +13,15 @@ final _icons = <AppIcons, IconData>{
   AppIcons.error: Icons.error_outline,
   AppIcons.settings: Icons.settings_outlined,
   AppIcons.arrow_down: Icons.keyboard_arrow_down,
+  AppIcons.arrow_right: Icons.keyboard_arrow_right,
 };
 
-Icon getIcon(AppIcons name, {Color? color}) {
-  if (color == null) {
-    return Icon(_icons[name]);
-  } else {
-    return Icon(_icons[name], color: color);
-  }
+Icon getIcon(AppIcons name, {Color? color, double? size}) {
+  return Icon(
+    _icons[name],
+    color: color,
+    size: size,
+  );
 }
 
 enum AppIcons {
@@ -36,4 +37,5 @@ enum AppIcons {
   error,
   settings,
   arrow_down
+  arrow_right,
 }

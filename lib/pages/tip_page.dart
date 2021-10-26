@@ -18,14 +18,15 @@ class TipPage extends StatefulWidget {
 }
 
 class _TipPageState extends State<TipPage> {
-  late Tip tip;
+  late Tip? _tip;
 
   @override
   void initState() {
+    super.initState();
+
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       _getArguments();
     });
-    super.initState();
   }
 
   @override
@@ -37,32 +38,41 @@ class _TipPageState extends State<TipPage> {
           Navigator.of(context).pop();
         },
       ),
-      body: ListView(
-        children: [
-          Container(
-            padding: EdgeInsets.only(left: 15, top: 0, right: 15, bottom: 30),
-            alignment: Alignment.center,
-            child: Text(
-              tip.title,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: primaryColor,
-                fontWeight: FontWeight.w900,
-                fontSize: 25,
-              ),
+      body: _tip == null
+          ? Container(
+              child: Center(
+              child: CircularProgressIndicator(),
+            ))
+          : _component(_tip!),
+    );
+  }
+
+  Widget _component(Tip tip) {
+    return ListView(
+      children: [
+        Container(
+          padding: EdgeInsets.only(left: 15, top: 0, right: 15, bottom: 30),
+          alignment: Alignment.center,
+          child: Text(
+            tip.title,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: primaryColor,
+              fontWeight: FontWeight.w900,
+              fontSize: 25,
             ),
           ),
-          Container(
-            padding: EdgeInsets.only(left: 10, top: 0, right: 10, bottom: 30),
-            alignment: Alignment.center,
-            child: Text(
-              tip.body,
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                color: colorTextBlack,
-                fontWeight: FontWeight.w500,
-                fontSize: 18,
-              ),
+        ),
+        Container(
+          padding: EdgeInsets.only(left: 10, top: 0, right: 10, bottom: 30),
+          alignment: Alignment.center,
+          child: Text(
+            tip.body,
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              color: colorTextBlack,
+              fontWeight: FontWeight.w500,
+              fontSize: 18,
             ),
           ),
           Expanded(
@@ -95,8 +105,8 @@ class _TipPageState extends State<TipPage> {
               },
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -107,7 +117,7 @@ class _TipPageState extends State<TipPage> {
       return;
     }
     setState(() {
-      tip = args[tip_args];
+      _tip = args[tip_args];
     });
   }
 

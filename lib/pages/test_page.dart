@@ -1,16 +1,7 @@
 import 'package:dietari/components/AppBarComponent.dart';
 import 'package:dietari/components/TestItemCard.dart';
-import 'package:dietari/data/datasources/AuthDataSource.dart';
-import 'package:dietari/data/datasources/TestsDataSource.dart';
-import 'package:dietari/data/datasources/UserDataSource.dart';
 import 'package:dietari/data/domain/Test.dart';
 import 'package:dietari/data/domain/UserTest.dart';
-import 'package:dietari/data/framework/FireBase/FirebaseAuthDataSource.dart';
-import 'package:dietari/data/framework/FireBase/FirebaseTestsDataSource.dart';
-import 'package:dietari/data/framework/FireBase/FirebaseUserDataSouce.dart';
-import 'package:dietari/data/repositories/AuthRepository.dart';
-import 'package:dietari/data/repositories/TestsRepository.dart';
-import 'package:dietari/data/repositories/UserRepository.dart';
 import 'package:dietari/data/usecases/GetTestsUseCase.dart';
 import 'package:dietari/data/usecases/GetUserIdUseCase.dart';
 import 'package:dietari/data/usecases/GetUserTestUseCase.dart';
@@ -20,6 +11,7 @@ import 'package:dietari/utils/routes.dart';
 import 'package:dietari/utils/strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:injector/injector.dart';
 
 class TestPage extends StatefulWidget {
   TestPage({Key? key}) : super(key: key);
@@ -29,16 +21,10 @@ class TestPage extends StatefulWidget {
 }
 
 class _TestPageState extends State<TestPage> {
-  late AuthDataSource _authDataSource;
-  late AuthRepository _authRepository;
-  late TestsDataSource _testsDataSource;
-  late TestsRepository _testsRepository;
-  late GetTestsUseCase _getTestsUseCase;
-  late UserDataSource _userDataSource;
-  late UserRepository _userRepository;
-  late GetUserTestUseCase _getUserTestUseCase;
-  late GetUserIdUseCase _getUserIdUseCase;
-
+  final _getTestsUseCase = Injector.appInstance.get<GetTestsUseCase>();
+  final _getUserTestUseCase = Injector.appInstance.get<GetUserTestUseCase>();
+  final _getUserIdUseCase = Injector.appInstance.get<GetUserIdUseCase>();
+  
   late String? _userId;
   List<Test> _listTests = [];
   List<UserTest> _listUserTests = [];
@@ -46,18 +32,6 @@ class _TestPageState extends State<TestPage> {
 
   @override
   void initState() {
-    _authDataSource = FirebaseAuthDataSource();
-    _authRepository = AuthRepository(authDataSource: _authDataSource);
-
-    _testsDataSource = FirebaseTestsDataSource();
-    _testsRepository = TestsRepository(testsDataSource: _testsDataSource);
-    _getTestsUseCase = GetTestsUseCase(testsRepository: _testsRepository);
-
-    _userDataSource = FirebaseUserDataSouce();
-    _userRepository = UserRepository(userDataSource: _userDataSource);
-    _getUserTestUseCase = GetUserTestUseCase(userRepository: _userRepository);
-    _getUserIdUseCase = GetUserIdUseCase(authRepository: _authRepository);
-
     _userId = _getUserIdUseCase.invoke();
     _listTestStream = _getTestsUseCase.invoke().asStream();
     super.initState();

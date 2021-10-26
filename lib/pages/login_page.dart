@@ -2,14 +2,8 @@ import 'package:dietari/components/MainButton.dart';
 import 'package:dietari/components/MainTextField.dart';
 import 'package:dietari/components/ShowAlertDialog.dart';
 import 'package:dietari/components/SingButton.dart';
-import 'package:dietari/data/datasources/AuthDataSource.dart';
-import 'package:dietari/data/datasources/UserDataSource.dart';
 import 'package:dietari/data/domain/ExternalUser.dart';
 import 'package:dietari/data/domain/User.dart';
-import 'package:dietari/data/framework/firebase/FirebaseAuthDataSource.dart';
-import 'package:dietari/data/framework/firebase/FirebaseUserDataSouce.dart';
-import 'package:dietari/data/repositories/AuthRepository.dart';
-import 'package:dietari/data/repositories/UserRepository.dart';
 import 'package:dietari/data/usecases/GetUserIdUseCase.dart';
 import 'package:dietari/data/usecases/GetUserUseCase.dart';
 import 'package:dietari/data/usecases/SendPasswordResetEmailUseCase.dart';
@@ -24,39 +18,22 @@ import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 
+import 'package:injector/injector.dart';
+
 class LoginPage extends StatefulWidget {
   @override
   _LoginPage createState() => _LoginPage();
 }
 
 class _LoginPage extends State<LoginPage> {
-  late AuthDataSource _authDataSource = FirebaseAuthDataSource();
-
-  late AuthRepository _authRepository =
-      AuthRepository(authDataSource: _authDataSource);
-
-  late SignInWithGoogleUseCase _signInWithGoogleUseCase =
-      SignInWithGoogleUseCase(authRepository: _authRepository);
-
-  late SignInWithEmailUseCase _signInWithEmailUseCase =
-      SignInWithEmailUseCase(authRepository: _authRepository);
-
-  late SendPasswordResetEmailUseCase _sendPasswordResetEmailUseCase =
-      SendPasswordResetEmailUseCase(authRepository: _authRepository);
-
-  late UserDataSource _userDataSource = FirebaseUserDataSouce();
-
-  late UserRepository _userRepository =
-      UserRepository(userDataSource: _userDataSource);
-
-  late GetUserUseCase _getUserUseCase =
-      GetUserUseCase(userRepository: _userRepository);
-
-  late GetUserIdUseCase _getUserIdUseCase =
-      GetUserIdUseCase(authRepository: _authRepository);
-
-  TextEditingController inputControllerEmail = new TextEditingController();
-  TextEditingController inputControllerPassword = new TextEditingController();
+  final _signInWithGoogleUseCase = Injector.appInstance.get<SignInWithGoogleUseCase>();
+  final _signInWithEmailUseCase = Injector.appInstance.get<SignInWithEmailUseCase>();
+  final _sendPasswordResetEmailUseCase = Injector.appInstance.get<SendPasswordResetEmailUseCase>();
+  final _getUserIdUseCase = Injector.appInstance.get<GetUserIdUseCase>();
+  final _getUserUseCase = Injector.appInstance.get<GetUserUseCase>();
+  
+  TextEditingController _emailController = new TextEditingController();
+  TextEditingController _passwordController = new TextEditingController();
 
   User newUser = User(
     id: "",
@@ -72,10 +49,20 @@ class _LoginPage extends State<LoginPage> {
   );
 
   bool active = true;
+  String? _userId;
+  
+  @override
+  void initState() {
+    super.initState();
+    _userId = _getUserIdUseCase.invoke();
+
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      _isLogin();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    _isLogin();
     return WillPopScope(
       onWillPop: () => exit(0),
       child: Scaffold(
@@ -94,7 +81,7 @@ class _LoginPage extends State<LoginPage> {
                 text: textfield_email,
                 isPassword: false,
                 isPasswordTextStatus: false,
-                textEditingControl: inputControllerEmail,
+                textEditingControl: _emailController,
               ),
             ),
             Container(
@@ -105,7 +92,7 @@ class _LoginPage extends State<LoginPage> {
                 text: textfield_password,
                 isPassword: true,
                 isPasswordTextStatus: active,
-                textEditingControl: inputControllerPassword,
+                textEditingControl: _passwordController,
               ),
             ),
             Container(
@@ -219,12 +206,9 @@ class _LoginPage extends State<LoginPage> {
   }
 
   void _isLogin() {
-    String? id = _getUserIdUseCase.invoke();
-    if (id != null) {
-      _userRegistered(id).then(
-        (user) => user != null ? _nextScreen(home_route, user) : () {},
-      );
-    }
+    _userRegistered(_userId!).then(
+      (user) => user != null ? _nextScreen(home_route, user) : () {},
+    );
   }
 
   void _showPassword() {
@@ -263,17 +247,16 @@ class _LoginPage extends State<LoginPage> {
   }
 
   void _loginWithEmail() {
-    if (inputControllerEmail.text.isNotEmpty &&
-        inputControllerPassword.text.isNotEmpty) {
-      if (EmailValidator.validate(inputControllerEmail.text)) {
-        _signInWithEmail(inputControllerEmail.text.toString(),
-                inputControllerPassword.text.toString())
+    if (_emailController.text.isNotEmpty &&
+        _passwordController.text.isNotEmpty) {
+      if (EmailValidator.validate(_emailController.text)) {
+        _signInWithEmail(_emailController.text.toString(),
+                _passwordController.text.toString())
             .then(
           (userId) => userId != null
               ? _userRegistered(userId).then(
                   (usered) => usered != null
-                      ? _nextScreen(
-                          home_route, usered) /*_saveLogin(home_route, usered)*/
+                      ? _nextScreen(home_route, usered)
                       : _showAlertDialog(context, alert_title_error,
                           alert_content_not_registered),
                 )

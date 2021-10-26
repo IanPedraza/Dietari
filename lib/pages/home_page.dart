@@ -4,27 +4,19 @@ import 'package:dietari/components/HomeSectionComponent.dart';
 import 'package:dietari/components/MainButton.dart';
 import 'package:dietari/components/TestItemCard.dart';
 import 'package:dietari/components/TipComponent.dart';
-import 'package:dietari/data/datasources/AuthDataSource.dart';
-import 'package:dietari/data/datasources/TestsDataSource.dart';
-import 'package:dietari/data/datasources/UserDataSource.dart';
-import 'package:dietari/data/domain/HistoryItem.dart';
+import 'package:dietari/data/domain/Option.dart';
+import 'package:dietari/data/domain/Question.dart';
 import 'package:dietari/data/domain/Test.dart';
 import 'package:dietari/data/domain/Tip.dart';
 import 'package:dietari/data/domain/User.dart';
 import 'package:dietari/data/domain/UserTest.dart';
-import 'package:dietari/data/framework/firebase/FirebaseAuthDataSource.dart';
-import 'package:dietari/data/framework/firebase/FirebaseTestsDataSource.dart';
-import 'package:dietari/data/framework/firebase/FirebaseUserDataSouce.dart';
-import 'package:dietari/data/repositories/AuthRepository.dart';
-import 'package:dietari/data/repositories/TestsRepository.dart';
-import 'package:dietari/data/repositories/UserRepository.dart';
+import 'package:dietari/data/usecases/AddTestUseCase.dart';
 import 'package:dietari/data/usecases/GetTestsUseCase.dart';
 import 'package:dietari/data/usecases/GetUserHistory.dart';
 import 'package:dietari/data/usecases/GetUserIdUseCase.dart';
 import 'package:dietari/data/usecases/GetUserTestUseCase.dart';
 import 'package:dietari/data/usecases/GetUserTipsUseCase.dart';
 import 'package:dietari/data/usecases/GetUserUseCase.dart';
-import 'package:dietari/data/usecases/SignOutUseCase.dart';
 import 'package:dietari/utils/arguments.dart';
 import 'package:dietari/utils/colors.dart';
 import 'package:dietari/utils/routes.dart';
@@ -33,6 +25,7 @@ import 'package:dietari/utils/icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:injector/injector.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key? key, required this.title}) : super(key: key);
@@ -43,23 +36,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late AuthDataSource _authDataSource;
-  late AuthRepository _authRepository;
-  late SignOutUseCase _signOutUseCase;
-  late TestsDataSource _testsDataSource;
-  late TestsRepository _testsRepository;
-  late GetTestsUseCase _getTestsUseCase;
-  late UserDataSource _userDataSource;
-  late UserRepository _userRepository;
-  late GetUserTestUseCase _getUserTestUseCase;
-  late GetUserIdUseCase _getUserIdUseCase;
-  late GetUserTipsUseCase _getUserTipsUseCase;
-
-  late GetUserUseCase _getUserUseCase =
-      GetUserUseCase(userRepository: _userRepository);
-  
-  late GetUserHistory _getUserHistory = 
-      GetUserHistory(userRepository: _userRepository);
+  final _getTestsUseCase = Injector.appInstance.get<GetTestsUseCase>();
+  final _getUserTestUseCase = Injector.appInstance.get<GetUserTestUseCase>();
+  final _getUserIdUseCase = Injector.appInstance.get<GetUserIdUseCase>();
+  final _getUserUseCase = Injector.appInstance.get<GetUserUseCase>();
+  final _getUserTipsUseCase = Injector.appInstance.get<GetUserTipsUseCase>();
 
   late String _userName = "";
   late String _userStatus = "";
@@ -67,6 +48,8 @@ class _HomePageState extends State<HomePage> {
   List<HistoryItem> _userHistory = [];
 
   late String? _userId;
+  String? _userId;
+  
   late User newUser;
   List<UserTest> _userTests = [];
 
@@ -84,20 +67,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    _authDataSource = FirebaseAuthDataSource();
-    _authRepository = AuthRepository(authDataSource: _authDataSource);
-    _signOutUseCase = SignOutUseCase(authRepository: _authRepository);
-
-    _testsDataSource = FirebaseTestsDataSource();
-    _testsRepository = TestsRepository(testsDataSource: _testsDataSource);
-    _getTestsUseCase = GetTestsUseCase(testsRepository: _testsRepository);
-
-    _userDataSource = FirebaseUserDataSouce();
-    _userRepository = UserRepository(userDataSource: _userDataSource);
-    _getUserTestUseCase = GetUserTestUseCase(userRepository: _userRepository);
-    _getUserIdUseCase = GetUserIdUseCase(authRepository: _authRepository);
-    _getUserTipsUseCase = GetUserTipsUseCase(userRepository: _userRepository);
-
     _userId = _getUserIdUseCase.invoke();
     _testStream = _getTests().asStream();
     _tipStream = _getTips().asStream();
@@ -123,12 +92,8 @@ class _HomePageState extends State<HomePage> {
     return WillPopScope(
       onWillPop: () => exit(0),
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
         body: ListView(
           children: [
-            //Home user data
             Container(
               padding: const EdgeInsets.only(
                   top: 20, left: 20, right: 15, bottom: 0),
@@ -147,17 +112,20 @@ class _HomePageState extends State<HomePage> {
                       TextSpan(
                         text: _userName,
                         style: TextStyle(
-                            color: primaryColor,
-                            fontWeight: FontWeight.w900,
-                            fontSize: 27),
+                          color: primaryColor,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 27,
+                        ),
                       ),
                       TextSpan(text: "\n"),
                       TextSpan(
-                          text: _userStatus,
-                          style: TextStyle(
-                              color: colorStatus,
-                              fontWeight: FontWeight.w900,
-                              fontSize: 20))
+                        text: _userStatus,
+                        style: TextStyle(
+                          color: colorStatus,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 20,
+                        ),
+                      ),
                     ]),
                   ),
                   Spacer(),
@@ -170,7 +138,9 @@ class _HomePageState extends State<HomePage> {
                         alignment: Alignment.center,
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushNamed(context, settings_route);
+                    },
                     backgroundColor: colorTextMainButton,
                     elevation: 0,
                   ),
@@ -300,7 +270,6 @@ class _HomePageState extends State<HomePage> {
                       ),),
                     ),
                   ),
-
             HomeSectionComponent(
               onPressed: () {
                 Navigator.pushNamed(context, tips_list_route);
@@ -431,27 +400,10 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
-            Container(
-              padding: EdgeInsets.all(10),
-              child: MainButton(
-                onPressed: () {
-                  _signOut().then(
-                    (value) =>
-                        value ? Navigator.pushNamed(context, login_route) : () {},
-                  );
-                }, 
-              text: ('Sing Out')),
-            ),
           ],
         ),
       ),
     );
-  }
-
-
-  Future<bool> _signOut() async {
-    bool exit = await _signOutUseCase.invoke();
-    return exit;
   }
 
   void _showDetailTest(Test test) {
@@ -471,15 +423,6 @@ class _HomePageState extends State<HomePage> {
   Future<List<Test>> _getTests() async {
     List<Test> tests = await _getTestsUseCase.invoke();
     return tests;
-  }
-
-  void _showAllTests() {
-    Navigator.pushNamed(context, test_route);
-  }
-
-  void _answerTest(String route, Test test) {
-    final args = {test_args: test};
-    Navigator.pushNamed(context, route, arguments: args);
   }
 
   Future<List<Tip>> _getTips() async {

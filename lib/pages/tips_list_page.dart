@@ -1,16 +1,11 @@
 import 'package:dietari/components/AppBarComponent.dart';
 import 'package:dietari/components/TipComponent.dart';
-import 'package:dietari/data/datasources/AuthDataSource.dart';
-import 'package:dietari/data/datasources/UserDataSource.dart';
 import 'package:dietari/data/domain/Tip.dart';
-import 'package:dietari/data/framework/firebase/FirebaseAuthDataSource.dart';
-import 'package:dietari/data/framework/firebase/FirebaseUserDataSouce.dart';
-import 'package:dietari/data/repositories/AuthRepository.dart';
-import 'package:dietari/data/repositories/UserRepository.dart';
 import 'package:dietari/data/usecases/GetUserIdUseCase.dart';
 import 'package:dietari/data/usecases/GetUserTipsUseCase.dart';
 import 'package:dietari/utils/strings.dart';
 import 'package:flutter/material.dart';
+import 'package:injector/injector.dart';
 
 class TipsListPage extends StatefulWidget {
   TipsListPage({Key? key}) : super(key: key);
@@ -20,26 +15,13 @@ class TipsListPage extends StatefulWidget {
 }
 
 class _TipsListPageState extends State<TipsListPage> {
-  late AuthDataSource _authDataSource;
-  late AuthRepository _authRepository;
-  late GetUserIdUseCase _getUserIdUseCase;
-
-  late UserRepository _userRepository;
-  late GetUserTipsUseCase _getUserTipsUseCase;
-  late UserDataSource _userDataSource;
+  final _getUserTipsUseCase = Injector.appInstance.get<GetUserTipsUseCase>();
+  final _getUserIdUseCase = Injector.appInstance.get<GetUserIdUseCase>();
 
   List<Tip> _tips = [];
 
   @override
   void initState() {
-    _authDataSource = FirebaseAuthDataSource();
-    _authRepository = AuthRepository(authDataSource: _authDataSource);
-    _getUserIdUseCase = GetUserIdUseCase(authRepository: _authRepository);
-
-    _userDataSource = FirebaseUserDataSouce();
-    _userRepository = UserRepository(userDataSource: _userDataSource);
-    _getUserTipsUseCase = GetUserTipsUseCase(userRepository: _userRepository);
-
     WidgetsBinding.instance?.addPostFrameCallback((_) {
       _fetchTips();
     });

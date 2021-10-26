@@ -1,11 +1,9 @@
+import 'package:dietari/components/AppBarComponent.dart';
 import 'package:dietari/components/MainButton.dart';
 import 'package:dietari/components/MainTextField.dart';
 import 'package:dietari/components/ShowAlertDialog.dart';
-import 'package:dietari/data/datasources/AuthDataSource.dart';
 import 'package:dietari/data/domain/User.dart';
-import 'package:dietari/data/framework/firebase/FirebaseAuthDataSource.dart';
 import 'package:dietari/data/usecases/GetUserIdUseCase.dart';
-import 'package:dietari/data/repositories/AuthRepository.dart';
 import 'package:dietari/data/usecases/SignUpWithEmailUseCase.dart';
 import 'package:dietari/utils/arguments.dart';
 import 'package:dietari/utils/routes.dart';
@@ -16,6 +14,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/foundation.dart';
 import 'dart:async';
 
+import 'package:injector/injector.dart';
+
 class BaseRegister1Page extends StatefulWidget {
   const BaseRegister1Page({
     Key? key,
@@ -25,33 +25,36 @@ class BaseRegister1Page extends StatefulWidget {
 }
 
 class _BaseRegister1Page extends State<BaseRegister1Page> {
-  late AuthDataSource _authDataSource = FirebaseAuthDataSource();
+  final _getUserIdUseCase = Injector.appInstance.get<GetUserIdUseCase>();
+  final _signUpWithEmailUseCase = Injector.appInstance.get<SignUpWithEmailUseCase>();
 
-  late AuthRepository _authRepository =
-      AuthRepository(authDataSource: _authDataSource);
-
-  late GetUserIdUseCase _getUserIdUseCase =
-      GetUserIdUseCase(authRepository: _authRepository);
-
-  late SignUpWithEmailUseCase _signUpWithEmailUseCase =
-      SignUpWithEmailUseCase(authRepository: _authRepository);
-
-  TextEditingController inputControllerEmail = new TextEditingController();
-  TextEditingController inputControllerPassword = new TextEditingController();
-  TextEditingController inputControllerRepeatPassword =
-      new TextEditingController();
+  TextEditingController _emailController = new TextEditingController();
+  TextEditingController _passwordController = new TextEditingController();
+  TextEditingController _repeatPasswordController = new TextEditingController();
 
   late User newUser;
+  bool active1 = true;
+  bool active2 = true;
 
-  bool activar1 = true;
-  bool activar2 = true;
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance?.addPostFrameCallback((_) {
+      _getArguments();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    _getArguments();
     return Scaffold(
-      appBar: AppBar(
-        title: Text(registration_form),
+      resizeToAvoidBottomInset: false,
+      appBar: AppBarComponent(
+        textAppBar: registration_form,
+        textsize: 25,
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
       ),
       body: ListView(
         children: [
@@ -63,7 +66,7 @@ class _BaseRegister1Page extends State<BaseRegister1Page> {
               text: textfield_email,
               isPassword: false,
               isPasswordTextStatus: false,
-              textEditingControl: inputControllerEmail,
+              textEditingControl: _emailController,
             ),
           ),
           Container(
@@ -72,8 +75,8 @@ class _BaseRegister1Page extends State<BaseRegister1Page> {
             child: MainTextField(
               text: textfield_password,
               isPassword: true,
-              isPasswordTextStatus: activar1,
-              textEditingControl: inputControllerPassword,
+              isPasswordTextStatus: active1,
+              textEditingControl: _passwordController,
               onTap: _showPassword1,
             ),
           ),
@@ -84,8 +87,8 @@ class _BaseRegister1Page extends State<BaseRegister1Page> {
               onTap: _showPassword2,
               text: textfield_repeat_password,
               isPassword: true,
-              isPasswordTextStatus: activar2,
-              textEditingControl: inputControllerRepeatPassword,
+              isPasswordTextStatus: active2,
+              textEditingControl: _repeatPasswordController,
             ),
           ),
           Container(
@@ -105,13 +108,13 @@ class _BaseRegister1Page extends State<BaseRegister1Page> {
 
   void _showPassword1() {
     setState(() {
-      activar1 = !activar1;
+      active1 = !active1;
     });
   }
 
   void _showPassword2() {
     setState(() {
-      activar2 = !activar2;
+      active2 = !active2;
     });
   }
 
@@ -136,33 +139,32 @@ class _BaseRegister1Page extends State<BaseRegister1Page> {
   }
 
   void _continueRegister() {
-    if (inputControllerEmail.text.isNotEmpty &&
-        inputControllerPassword.text.isNotEmpty &&
-        inputControllerRepeatPassword.text.isNotEmpty) {
-      inputControllerEmail.text = inputControllerEmail.text.split(' ').first;
-      if (EmailValidator.validate(inputControllerEmail.text)) {
-        if (inputControllerPassword.text ==
-            inputControllerRepeatPassword.text) {
+    if (_emailController.text.isNotEmpty &&
+        _passwordController.text.isNotEmpty &&
+        _repeatPasswordController.text.isNotEmpty) {
+      _emailController.text = _emailController.text.split(' ').first;
+      if (EmailValidator.validate(_emailController.text)) {
+        if (_passwordController.text == _repeatPasswordController.text) {
           _getUserId().then(
-            (iduser) => iduser != null
+            (idUser) => idUser != null
                 ? _nextScreen(
                     base_register_2_route,
                     _saveChange(
-                      inputControllerEmail.text.toString(),
-                      inputControllerPassword.text.toString(),
-                      iduser,
+                      _emailController.text.toString(),
+                      _passwordController.text.toString(),
+                      idUser,
                     ),
                   )
                 : _signUpWithEmail(
-                        inputControllerEmail.text, inputControllerPassword.text)
+                        _emailController.text, _passwordController.text)
                     .then(
-                    (idvalue) => idvalue != null
+                    (idValue) => idValue != null
                         ? _nextScreen(
                             base_register_2_route,
                             _saveChange(
-                              inputControllerEmail.text.toString(),
-                              inputControllerPassword.text.toString(),
-                              idvalue,
+                              _emailController.text.toString(),
+                              _passwordController.text.toString(),
+                              idValue,
                             ),
                           )
                         : _showAlertDialog(context, alert_title_error,
