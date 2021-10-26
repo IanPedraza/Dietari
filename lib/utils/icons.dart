@@ -12,6 +12,7 @@ final _icons = <AppIcons, IconData>{
   AppIcons.clock: Icons.query_builder,
   AppIcons.error: Icons.error_outline,
   AppIcons.settings: Icons.settings_outlined,
+  AppIcons.arrow_down: Icons.keyboard_arrow_down,
   AppIcons.arrow_right: Icons.keyboard_arrow_right,
 };
 
@@ -35,5 +36,6 @@ enum AppIcons {
   clock,
   error,
   settings,
+  arrow_down
   arrow_right,
 }

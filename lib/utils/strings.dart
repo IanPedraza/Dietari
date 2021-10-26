@@ -61,6 +61,7 @@ const text_description = "Descripción";
 const text_result = "Resultados";
 const text_without_result = "Sin Resultados";
 const text_welcome = "Bienvenido ";
+const text_ChartTitle = "Su historial";
 
 //Cuadro de Alerta
 const alert_title = "Alerta";
@@ -88,3 +89,5 @@ const alert_content_answer_question = "Responda la pregunta antes de continuar";
 const alert_content_not_aggregated_responses =
     "No fue posible registrar sus respuestas, intentelo de nuevo";
 const alert_content_is_empty = "Lista vacia";
+
+

@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dietari/components/HomeSectionComponent.dart';
+import 'package:dietari/components/MainButton.dart';
 import 'package:dietari/components/TestItemCard.dart';
 import 'package:dietari/components/TipComponent.dart';
 import 'package:dietari/data/domain/Option.dart';
@@ -10,6 +12,7 @@ import 'package:dietari/data/domain/User.dart';
 import 'package:dietari/data/domain/UserTest.dart';
 import 'package:dietari/data/usecases/AddTestUseCase.dart';
 import 'package:dietari/data/usecases/GetTestsUseCase.dart';
+import 'package:dietari/data/usecases/GetUserHistory.dart';
 import 'package:dietari/data/usecases/GetUserIdUseCase.dart';
 import 'package:dietari/data/usecases/GetUserTestUseCase.dart';
 import 'package:dietari/data/usecases/GetUserTipsUseCase.dart';
@@ -21,6 +24,7 @@ import 'package:dietari/utils/strings.dart';
 import 'package:dietari/utils/icons.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:injector/injector.dart';
 
 class HomePage extends StatefulWidget {
@@ -41,7 +45,11 @@ class _HomePageState extends State<HomePage> {
   late String _userName = "";
   late String _userStatus = "";
 
+  List<HistoryItem> _userHistory = [];
+
+  late String? _userId;
   String? _userId;
+  
   late User newUser;
   List<UserTest> _userTests = [];
 
@@ -50,6 +58,12 @@ class _HomePageState extends State<HomePage> {
   ScrollController _controllerTips = ScrollController(initialScrollOffset: 0);
   late Stream<List<Test>> _testStream;
   late Stream<List<Tip>> _tipStream;
+  late TooltipBehavior _tooltipBehavior;
+
+  var _listY = ['IMC','Peso','Estatura'];
+  var _viewY = "IMC";
+  var _listX = ['Dia','Semana','Mes','Año'];
+  var _viewX = "Mes";
 
   @override
   void initState() {
@@ -57,7 +71,12 @@ class _HomePageState extends State<HomePage> {
     _testStream = _getTests().asStream();
     _tipStream = _getTips().asStream();
     _getUserInfo();
+    _getHistory();
+
+    _tooltipBehavior = TooltipBehavior(enable: true);
+
     super.initState();
+
   }
 
   @override
@@ -128,6 +147,129 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
+            Container(
+              alignment: Alignment.center,
+              padding: EdgeInsets.only(top: 15),
+              child: Text(text_ChartTitle,
+                          textAlign: TextAlign.center, style: TextStyle(
+                            fontSize: 20, 
+                            color: primaryColor,
+                            fontWeight: FontWeight.w900
+                          ),),
+            ),
+            //User history chart
+            Container(
+              padding: EdgeInsets.only(top: 15),
+              alignment: Alignment.center,
+              child: Row(
+                children: [
+                  Container(
+                    alignment: Alignment.center,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 2),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: colorTextMainButton),
+                        ),
+                        child: DropdownButton(
+                          underline: SizedBox(),
+                          icon: getIcon(AppIcons.arrow_down,color: primaryColor),
+                          iconSize: 30,
+                          style: TextStyle(
+                            fontSize: 15, 
+                          color: primaryColor,
+                          fontWeight: FontWeight.w900
+                          ),
+                          items: _listY.map((String a){
+                            return DropdownMenuItem(
+                              value: a,
+                              child: Text(a),
+                            );
+                          }
+                          ).toList(),
+                          onChanged: (_value)=>{
+                            setState((){
+                              _viewY = _value.toString();
+                            })
+                          },
+                          hint: Text(_viewY,
+                          textAlign: TextAlign.center, style: TextStyle(
+                            fontSize: 15, 
+                            color: primaryColor,
+                            fontWeight: FontWeight.w900
+                          ),),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    child: SfCartesianChart(
+                    primaryXAxis: CategoryAxis(),
+                    // Chart title
+                    //title: ChartTitle(text:"Tu historial."),
+                    // Enable legend
+                    legend: Legend(isVisible: false),
+                    tooltipBehavior: _tooltipBehavior,
+                    series: <LineSeries<HistoryItem,String>>[
+                      LineSeries<HistoryItem,String>(
+                        dataSource: _userHistory,
+                        yValueMapper:
+                        (_viewY == "IMC") 
+                        ? (HistoryItem num, _)=>num.imc :
+                        (_viewY == "Peso") 
+                        ? (HistoryItem num, _)=>num.weight :
+                        (HistoryItem num, _)=>num.height,
+                        xValueMapper: 
+                        (_viewX == "Mes")
+                        ? (HistoryItem num, _)=> num.date.toDate().month.toString() :
+                        (_viewX == "Dia")
+                        ? (HistoryItem num, _)=> num.date.toDate().day.toString() :
+                        (_viewX == "Semana") 
+                        ? (HistoryItem num, _)=> num.date.toDate().weekday.toString() :
+                        (HistoryItem num, _)=> num.date.toDate().year.toString(),
+                      pointColorMapper: (HistoryItem num, _)=> primaryColor,
+                    dataLabelSettings: DataLabelSettings(isVisible: true)
+                      )
+                    ],
+              )
+            ),
+                ],
+              )
+            ),
+
+            Container(
+                padding: EdgeInsets.only(bottom: 0),
+                alignment: Alignment.center,
+                    child: DropdownButton(
+                      underline: SizedBox(),
+                      icon: getIcon(AppIcons.arrow_down,color: primaryColor),
+                      iconSize: 30,
+                      style: TextStyle(
+                            fontSize: 15, 
+                          color: primaryColor,
+                          fontWeight: FontWeight.w900
+                          ),
+                      items: _listX.map((String a){
+                        return DropdownMenuItem(
+                          value: a,
+                          child: Text(a),
+                        );
+                      }
+                      ).toList(),
+                      onChanged: (_value)=>{
+                        setState((){
+                          _viewX = _value.toString();
+                        })
+                      },
+                      hint: Text(_viewX,
+                          textAlign: TextAlign.center, style: TextStyle(
+                            fontSize: 15, 
+                            color: primaryColor,
+                            fontWeight: FontWeight.w900
+                      ),),
+                    ),
+                  ),
             HomeSectionComponent(
               onPressed: () {
                 Navigator.pushNamed(context, tips_list_route);
@@ -169,13 +311,12 @@ class _HomePageState extends State<HomePage> {
                             itemCount: _tips!.length,
                             itemBuilder: (BuildContext context, int index) {
                               return Column(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:MainAxisAlignment.spaceBetween,
                                 children: [
                                   Container(
                                     height: 60,
                                     width:
-                                        MediaQuery.of(context).size.width / 1.1,
+                                        MediaQuery.of(context).size.width/1.1,
                                     child: TipComponent(
                                       tip: _tips[index],
                                     ),
@@ -191,6 +332,7 @@ class _HomePageState extends State<HomePage> {
                   }
                 },
               ),
+              
             ),
             HomeSectionComponent(
               onPressed: () {
@@ -296,6 +438,13 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _getHistory() async{
+    List<HistoryItem> history = await _getUserHistory.invoke(_userId!); 
+    setState(() {
+          _userHistory = history;
+    });
+  }
+
   void _getUserTests() async {
     List<Future<UserTest?>> futures = [];
     _tests.forEach((test) {
@@ -348,3 +497,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+
+
+  class SalesData {
+    SalesData(this.year, this.sales);
+    final String year;
+    final double sales;
+  }
+

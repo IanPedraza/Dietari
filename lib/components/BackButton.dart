@@ -11,17 +11,20 @@ class BackButtonDietari extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FloatingActionButton(
-      child: Container(
-        child: Transform.scale(
-          scale: 1.5,
-          child: getIcon(AppIcons.arrow_back,color: primaryColor),
-          alignment: Alignment.center,
+    return Padding(
+      padding: const EdgeInsets.only(top: 5),
+      child: FloatingActionButton(
+        child: Container(
+          child: Transform.scale(
+            scale: 1.5,
+            child: getIcon(AppIcons.arrow_back,color: primaryColor),
+            alignment: Alignment.center,
+          ),
         ),
+        onPressed: onPressed,
+        backgroundColor: colorTextMainButton,
+        elevation: 7,
       ),
-      onPressed: onPressed,
-      backgroundColor: colorTextMainButton,
-      elevation: 7,
     );
   }
 
