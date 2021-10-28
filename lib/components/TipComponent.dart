@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dietari/utils/colors.dart';
 import 'package:dietari/utils/icons.dart';
-import 'package:sizer/sizer.dart';
 
 class TipComponent extends StatelessWidget {
   final Tip tip;
@@ -18,9 +17,8 @@ class TipComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     double getResponsiveText(double size) =>
-      size * sizeReference / MediaQuery.of(context).size.longestSide; 
+        size * sizeReference / MediaQuery.of(context).size.longestSide;
 
     return FloatingActionButton(
       onPressed: () {
@@ -42,7 +40,7 @@ class TipComponent extends StatelessWidget {
             ),
           ),
           Expanded(
-            child:Text(
+            child: Text(
               tip.title,
               style: TextStyle(
                   color: colorTextBlack,
@@ -54,9 +52,5 @@ class TipComponent extends StatelessWidget {
         ],
       ),
     );
-    
   }
-
-  
-  
 }
