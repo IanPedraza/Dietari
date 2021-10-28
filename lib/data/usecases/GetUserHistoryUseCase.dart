@@ -6,7 +6,7 @@ class GetUserHistoryUseCase {
 
   GetUserHistoryUseCase({required this.userRepository});
 
-  Future<List<HistoryItem>> invoke(String userId) {
+  Stream<List<HistoryItem>> invoke(String userId) {
     return userRepository.getHistory(userId);
   }
 }

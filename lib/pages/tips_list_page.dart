@@ -18,8 +18,6 @@ class _TipsListPageState extends State<TipsListPage> {
   final _getUserTipsUseCase = Injector.appInstance.get<GetUserTipsUseCase>();
   final _getUserIdUseCase = Injector.appInstance.get<GetUserIdUseCase>();
 
-  List<Tip> _tips = [];
-
   @override
   void initState() {
     WidgetsBinding.instance?.addPostFrameCallback((_) {
@@ -29,45 +27,53 @@ class _TipsListPageState extends State<TipsListPage> {
     super.initState();
   }
 
-  Future<void> _fetchTips() async {
-    setState(() {
-      _tips = [];
-    });
-
+  Stream<List<Tip>>? _fetchTips() {
     final userId = _getUserIdUseCase.invoke();
 
-    List<Tip> tips =
-        userId != null ? await _getUserTipsUseCase.invoke(userId) : [];
+    if (userId == null) {
+      return null;
+    }
 
-    setState(() {
-      _tips = tips;
-    });
+    return _getUserTipsUseCase.invoke(userId);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBarComponent(
-        textAppBar: tips_list,
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
-      body: RefreshIndicator(
-        onRefresh: _fetchTips,
-        child: ListView.builder(
-          itemCount: _tips.length,
-          itemBuilder: (contex, index) {
-            return Padding(
-              padding: const EdgeInsets.all(10),
-              child: TipComponent(
-                tip: _tips[index],
+        backgroundColor: Colors.white,
+        appBar: AppBarComponent(
+          textAppBar: tips_list,
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+        body: StreamBuilder<List<Tip>>(
+          stream: _fetchTips(),
+          builder: (context, data) {
+            if (data.hasData) {
+              return _component(data.data!);
+            }
+
+            return Container(
+              child: Center(
+                child: CircularProgressIndicator(),
               ),
             );
           },
-        ),
-      ),
+        ));
+  }
+
+  Widget _component(List<Tip> tips) {
+    return ListView.builder(
+      itemCount: tips.length,
+      itemBuilder: (contex, index) {
+        return Padding(
+          padding: const EdgeInsets.all(10),
+          child: TipComponent(
+            tip: tips[index],
+          ),
+        );
+      },
     );
   }
 }

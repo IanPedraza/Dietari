@@ -6,7 +6,7 @@ class GetUserTipsUseCase {
 
   GetUserTipsUseCase({required this.userRepository});
 
-  Future<List<Tip>> invoke(String userId) {
+  Stream<List<Tip>> invoke(String userId) {
     return userRepository.getUserTips(userId);
   }
 }

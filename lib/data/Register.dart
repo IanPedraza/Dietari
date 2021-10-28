@@ -16,6 +16,7 @@ import 'package:dietari/data/usecases/GetTestsUseCase.dart';
 import 'package:dietari/data/usecases/GetTipsUseCase.dart';
 import 'package:dietari/data/usecases/GetUserHistoryUseCase.dart';
 import 'package:dietari/data/usecases/GetUserIdUseCase.dart';
+import 'package:dietari/data/usecases/GetUserListenerUseCase.dart';
 import 'package:dietari/data/usecases/GetUserTestUseCase.dart';
 import 'package:dietari/data/usecases/GetUserTipsUseCase.dart';
 import 'package:dietari/data/usecases/GetUserUseCase.dart';
@@ -69,6 +70,9 @@ class Register {
 
     injector.registerDependency<AddUserUseCase>(
         () => AddUserUseCase(userRepository: injector.get<UserRepository>()));
+
+    injector.registerDependency<GetUserListenerUseCase>(() =>
+        GetUserListenerUseCase(userRepository: injector.get<UserRepository>()));
 
     injector.registerDependency<GetTestsUseCase>(() =>
         GetTestsUseCase(testsRepository: injector.get<TestsRepository>()));

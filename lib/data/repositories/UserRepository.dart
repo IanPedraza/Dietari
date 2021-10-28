@@ -25,15 +25,19 @@ class UserRepository {
     return userDataSource.addUserTest(userId, test);
   }
 
-  Future<List<Tip>> getUserTips(String userId) {
+  Stream<List<Tip>> getUserTips(String userId) {
     return userDataSource.getUserTips(userId);
   }
 
-  Future<List<HistoryItem>> getHistory(String userId) {
+  Stream<List<HistoryItem>> getHistory(String userId) {
     return userDataSource.getHistory(userId);
   }
 
   Future<bool> updateUser(String userId, Map<String, dynamic> changes) {
     return userDataSource.updateUser(userId, changes);
+  }
+
+  Stream<User?> getUserListener(String id) {
+    return userDataSource.getUserListener(id);
   }
 }

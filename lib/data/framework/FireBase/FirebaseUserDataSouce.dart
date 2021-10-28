@@ -84,79 +84,83 @@ class FirebaseUserDataSouce extends UserDataSource {
   }
 
   @override
-  Future<List<Tip>> getUserTips(String userId) async {
+  Stream<List<Tip>> getUserTips(String userId) async* {
     try {
       if (userId.isEmpty) {
         throw new Exception("user id must not be empty");
       }
 
-      final snapshot =
-          await _database.collection(COLLECTION_USERS).doc(userId).get();
+      final snapshots =
+          _database.collection(COLLECTION_USERS).doc(userId).snapshots();
 
-      if (!snapshot.exists) {
-        return [];
-      }
-
-      final user = User.fromMap(snapshot.data()!);
-
-      TipsDataSource tipsDataSource = FirebaseTipsDataSource();
-
-      TipsRepository tipsRepository =
-          TipsRepository(tipsDataSource: tipsDataSource);
-
-      GetTipsUseCase getTipsUseCase =
-          GetTipsUseCase(tipsRepository: tipsRepository);
-
-      List<Tip> tips = [];
-
-      List<Future<Tip?>> futures = [];
-
-      user.tips.forEach((tipId) {
-        Future<Tip?> future = getTipsUseCase.invoke(tipId);
-        futures.add(future);
-      });
-
-      List<Tip?> results = await Future.wait(futures);
-
-      results.forEach((tip) {
-        if (tip != null) {
-          tips.add(tip);
+      await for (final snapshot in snapshots) {
+        if (!snapshot.exists) {
+          yield [];
         }
-      });
 
-      return tips;
+        final user = User.fromMap(snapshot.data()!);
+
+        TipsDataSource tipsDataSource = FirebaseTipsDataSource();
+
+        TipsRepository tipsRepository =
+            TipsRepository(tipsDataSource: tipsDataSource);
+
+        GetTipsUseCase getTipsUseCase =
+            GetTipsUseCase(tipsRepository: tipsRepository);
+
+        List<Tip> tips = [];
+
+        List<Future<Tip?>> futures = [];
+
+        user.tips.forEach((tipId) {
+          Future<Tip?> future = getTipsUseCase.invoke(tipId);
+          futures.add(future);
+        });
+
+        List<Tip?> results = await Future.wait(futures);
+
+        results.forEach((tip) {
+          if (tip != null) {
+            tips.add(tip);
+          }
+        });
+
+        yield tips;
+      }
     } catch (error) {
       print("$TAG:getUserTips:Error: $error");
-      return [];
+      yield [];
     }
   }
 
   @override
-  Future<List<HistoryItem>> getHistory(String userId) async {
+  Stream<List<HistoryItem>> getHistory(String userId) async* {
     try {
       if (userId.isEmpty) {
         throw new Exception("user id must not be empty");
       }
 
-      final snapshot = await _database
+      final snapshots = _database
           .collection(COLLECTION_USERS)
           .doc(userId)
           .collection(COLLECTION_HISTORY)
-          .get();
+          .snapshots();
 
-      List<HistoryItem> history = [];
+      await for (final snapshot in snapshots) {
+        List<HistoryItem> history = [];
 
-      snapshot.docs.forEach((document) {
-        if (document.exists) {
-          HistoryItem historyItem = HistoryItem.fromMap(document.data());
-          history.add(historyItem);
-        }
-      });
+        snapshot.docs.forEach((document) {
+          if (document.exists) {
+            HistoryItem historyItem = HistoryItem.fromMap(document.data());
+            history.add(historyItem);
+          }
+        });
 
-      return history;
+        yield history;
+      }
     } catch (error) {
       print("$TAG:getHistory:Error: $error");
-      return [];
+      yield [];
     }
   }
 
@@ -173,6 +177,18 @@ class FirebaseUserDataSouce extends UserDataSource {
     } catch (error) {
       print("$TAG:updateUser:Error: $error");
       return false;
+    }
+  }
+
+  @override
+  Stream<User?> getUserListener(String id) async* {
+    final snapshots =
+        _database.collection(COLLECTION_USERS).doc(id).snapshots();
+
+    await for (final snapshot in snapshots) {
+      if (snapshot.exists && snapshot.data() != null) {
+        yield User.fromMap(snapshot.data()!);
+      }
     }
   }
 }
